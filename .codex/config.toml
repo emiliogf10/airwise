@@ -1,0 +1,5 @@
+# Configuración del repositorio; conserva el modelo y los permisos del usuario.
+# Solo se aplica en proyectos confiables según las reglas de Codex.
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 3

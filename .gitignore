@@ -1,0 +1,46 @@
+# Secretos y estado local de herramientas
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+.local/
+.codex/auth.json
+.codex/config.local.toml
+.codex/sessions/
+.codex/log/
+
+# Nombres exactos de credenciales, en cualquier nivel
+credentials.json
+secrets.json
+id_rsa
+id_ed25519
+
+# Informes privados bajo reports/ en la raíz; los públicos siguen visibles
+reports/private/
+
+# Temporales y copias de seguridad, en cualquier nivel
+*.tmp
+*.temp
+*.bak
+*~
+*.swp
+
+# Salidas de construcción y pruebas
+**/target/
+**/node_modules/
+**/dist/
+**/coverage/
+**/playwright-report/
+**/test-results/
+*.log
+*.jfr
+
+# Editor y sistema; los agentes y las skills del repo sí se versionan
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
