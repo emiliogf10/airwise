@@ -78,39 +78,42 @@ Transiciones: Propuesta → Pendiente cuando se acuerde alcance; Pendiente → E
 - Dependencias: AIR-003.
 - Aceptación: evidencia de catálogo/selección o prueba acotada de un especialista; distinguir límites de la sesión actual y no invocar todos automáticamente.
 - Evidencia: 11/11/2026, los seis especialistas expuestos en `collaboration.spawn_agent.agent_type`, con descripciones coincidentes con sus TOML; invocación real de `backend` en `/root/air006_backend_readonly`, confirmada por `list_agents` como `completed` y por su informe final. Dos lecturas con código 0 (`chunk_id=3165b7` y `c16188`): Java 21, Spring Boot 4.1.2 y 15 dependencias declaradas. Las cinco skills figuran en el catálogo de esta sesión. `py -3.14 scripts/validate_repository.py` dio código 0 y RESULTADO CORRECTO: seis TOML, cinco skills, 60 enlaces, 17 tareas y diez archivos backend preservados mediante SHA-256. Revisión de fuentes, documentos y límites completada; DoD satisfecha tras pasar por En curso y En revisión. Mecanismo, informe, trazabilidad y límites en [CODEX_SETUP.md](../docs/developer-guide/CODEX_SETUP.md).
-- Límites: ejecución individual de `frontend`, `database`, `security_qa`, `devops` y `documentation` sin probar, aunque seleccionables; selector visual y otras sesiones/clientes no verificados. No se invocaron todos ni se ejecutaron compilaciones, instalaciones o APIs externas; backend preservado.
+- Límites al cierre de AIR-006: ejecución individual de los otros cinco sin probar entonces; el seguimiento de AIR-010 registra después `frontend`, `database` y `security_qa`. Selector visual y otras sesiones/clientes no verificados. No se invocaron todos ni se ejecutaron compilaciones, instalaciones o APIs externas; backend preservado.
 
-## Fases posteriores — no iniciadas
+## Diseño y fases posteriores
+
+AIR-010 autoriza únicamente análisis y documentación de diseño. Las tareas de implementación, validación ejecutable e integración posteriores necesitan petición expresa.
 
 ### AIR-010 — Validar alcance MVP y arquitectura modular
 
-- Descripción: acordar casos mínimos, módulos, dependencias y categorías de precio; convertir ADR propuestos en decisiones revisadas cuando corresponda.
+- Descripción: acordar MVP demo ida/ida-vuelta, módulos, dominio, persistencia, proveedores, comparación, contratos HTTP conceptuales, UX y riesgos; convertir propuestas relevantes en decisiones de diseño.
 - Prioridad: P0.
-- Estado: Pendiente.
+- Estado: Hecha.
 - Responsable: Orchestrator Agent.
 - Dependencias: AIR-001, AIR-002, AIR-005.
-- Aceptación: MVP acotado, contexto y límites modulares, no objetivos explícitos y criterios verificables; sin estructuras vacías.
-- Evidencia: no ejecutada; [ADR-0002](../docs/decisions/0002-modular-monolith.md) es propuesta.
+- Aceptación: límites funcionales explícitos; cuatro módulos sin sobreingeniería; dominio para ida/ida-vuelta, tiempos y dinero; proveedores/capacidades diferenciados; reglas de comparación; persistencia justificada; contratos HTTP conceptuales coherentes; riesgos/pruebas; roadmap/backlog y documentos verificables. Sin código, BD, llamadas externas o estructuras vacías.
+- Evidencia: 11/11/2026, dependencias AIR-001, AIR-002 y AIR-005 satisfechas; análisis real de `backend`, `database`, `frontend` y `security_qa`, todos de solo lectura. Diseño integrado en [OVERVIEW](../docs/architecture/OVERVIEW.md), MODULES, DOMAIN_MODEL, PROVIDERS, TRAVEL_COST_ENGINE, API_DESIGN y BASELINE; ADR-0002/0003 aceptados con historial y ADR-0004 añadido. `security_qa` revisó el diseño y confirmó resueltas sus dos observaciones. `py -3.14 scripts/validate_repository.py`: código 0, RESULTADO CORRECTO (101 enlaces, seis TOML, cinco skills, 17 tareas, diez archivos backend con SHA-256 preservados); `git diff --check` código 0 y revisión de archivos nuevos sin errores. Diez criterios, comandos y trazabilidad en [VALIDATION](../docs/developer-guide/VALIDATION.md); DoD satisfecha tras En curso y En revisión. Validador, backend, HEAD e índice preservados. Sin ejecutar AIR-011 ni otras tareas.
 
 ### AIR-011 — Validar construcción y entorno del backend existente
 
 - Descripción: comprobar wrapper, dependencias resueltas, versión de Jupiter y requisitos del test de contexto sin sustituir la base.
 - Prioridad: P0.
-- Estado: Pendiente.
+- Estado: Hecha.
 - Responsable: Backend Agent.
 - Dependencias: AIR-010.
-- Aceptación: comandos/resultados reproducibles, necesidades de BD/test identificadas y plan de corrección si falla. Cualquier cambio de POM, wrapper o configuración deberá justificarse y autorizarse antes.
-- Evidencia: no ejecutada; construcción, arranque y contexto Spring no probados en fase 1.
+- Aceptación: Wrapper test satisfactorio e inicialización real del contexto demo sin persistencia; exclusión local al test y comportamiento de producción preservado. Validador satisfactorio con artefactos excluidos e histórico conservado. Integración PostgreSQL/JPA/Flyway pendiente explícitamente; documentación y pruebas pertinentes verificadas.
+- Evidencia: 12/11/2026, diagnóstico inicial de `backend`, `database` y `security_qa` conservado, con Temurin 21.0.12+8, Wrapper 3.3.4/Maven 3.10.0 y Boot 4.1.2. Tras autorización expresa se modificó solo BackendApplicationTests.java dentro del backend. `mvnw.cmd test` código 0, un test, cero fallos/errores/omitidos; contexto activo, bean BackendApplication y cero DataSources comprobados. Exclusión DataSourceAutoConfiguration compatible con Boot 4.1.2, sin exclusiones adicionales. `py -3.14 scripts/validate_repository.py` código 0, 107 enlaces, seis TOML, cinco skills y 17 tareas; cinco regresiones aisladas del validador satisfactorias. Relectura real de security_qa aprobada. `git diff --check` código 0; snapshot histórico intacto, nueve originales idénticos y test autorizado modificado. Comandos, logs, alcance y limitaciones en [VALIDATION](../docs/developer-guide/VALIDATION.md). DoD satisfecha tras reanudar En curso y pasar por En revisión. AIR-012 sigue Pendiente.
+- Límites: se valida el contexto demo configurado en el test. PostgreSQL, JPA y Flyway requieren integración posterior, y el arranque con configuración principal sigue pendiente. El histórico SHA-256 es informativo y las fuentes esenciales continúan comprobándose.
 
 ### AIR-012 — Definir contrato normalizado y capacidades de proveedores
 
 - Descripción: separar DTO externo, itinerario, trayectos y ámbito monetario; representar fuente, tiempos, moneda, errores y desconocidos.
 - Prioridad: P0.
-- Estado: Pendiente.
+- Estado: Hecha.
 - Responsable: Backend Agent.
 - Dependencias: AIR-010, AIR-011.
-- Aceptación: contrato revisado, ejemplos sintéticos y casos negativos; observado/reciente/estimado/confirmado diferenciados, tokens fuera del dominio persistente.
-- Evidencia: no ejecutada; [ADR-0003](../docs/decisions/0003-provider-boundaries.md) es propuesta.
+- Aceptación: campos, tipos, nulabilidad e invariantes de búsqueda, vuelos/precios, puerto/capacidades y DTO HTTP precisos; identidad demo, estados/errores, límites y ejemplos coherentes; sin implementación ni tokens externos en dominio.
+- Evidencia: 12/11/2026, contratos airwise-v1, 18 ejemplos JSON y matriz CT-01 a CT-37; delegación real y relecturas conformes de backend y security_qa. Comprobador documental local código 0, 1531 aserciones; validador del repositorio código 0; git diff --check código 0. SHA-256 confirma los 19 archivos backend, validador e índice intactos respecto al inicio; HEAD sin cambios. Puertos/normalización, moneda/ámbito, identidad de segmentos y ranking con TIE_UNRESOLVED revisados. Registro y límites en [VALIDATION](../docs/developer-guide/VALIDATION.md), tipos en [contrato normativo](../docs/architecture/NORMALIZED_CONTRACTS.md), HTTP y ejemplos enlazados desde allí. DoD documental satisfecha tras En curso → En revisión → Hecha. Tests Java de contratos, ejecución demo e integración PostgreSQL/JPA/Flyway pendientes; AIR-013/AIR-016 no iniciadas.
 
 ### AIR-013 — Implementar proveedor demo identificado
 
@@ -119,17 +122,17 @@ Transiciones: Propuesta → Pendiente cuando se acuerde alcance; Pendiente → E
 - Estado: Pendiente.
 - Responsable: Backend Agent.
 - Dependencias: AIR-012.
-- Aceptación: origen demo visible, resultados deterministas y parciales probados; ningún fallo real sustituido silenciosamente por demo; sin red.
+- Aceptación: origen demo visible, fixtures/catálogo/calendario/reloj por versión, resultados e IDs deterministas; ida/ida-vuelta, varios orígenes, vacío, desconocidos, monedas y fallos parciales/totales probados; ningún fallback silencioso; sin red ni BD de negocio.
 - Evidencia: no implementado.
 
 ### AIR-014 — Implementar búsqueda y normalización con demo
 
-- Descripción: exponer el caso de búsqueda por ruta/fecha bajo el contrato aprobado, con validación y errores explícitos.
+- Descripción: exponer catálogo y búsqueda demo por aeropuertos/fechas bajo contrato aprobado, con validación, filtros, orden, paginación y errores explícitos.
 - Prioridad: P1.
 - Estado: Pendiente.
 - Responsable: Backend Agent.
 - Dependencias: AIR-013, AIR-016.
-- Aceptación: búsqueda reproducible, validación/errores/cero resultados diferenciados y tests; contrato API documentado cuando exista.
+- Aceptación: ida/ida-vuelta y 1–3 orígenes, búsqueda reproducible, paginación estable, observaciones separadas, validación/vacío/fallo total/parcial diferenciados y tests; API documentada según implementación, sin fuente real oculta.
 - Evidencia: no implementada; no hay endpoints de negocio actuales.
 
 ### AIR-015 — Comparar alternativas de viaje con criterios transparentes
@@ -139,18 +142,18 @@ Transiciones: Propuesta → Pendiente cuando se acuerde alcance; Pendiente → E
 - Estado: Pendiente.
 - Responsable: Backend Agent.
 - Dependencias: AIR-014.
-- Aceptación: alternativas comparables, reglas explicables y tratamiento de desconocidos; sin inventar equipaje ni total puerta a puerta.
+- Aceptación: selección de 2–4 ofertas reconstituida en servidor; grupos de moneda/evidencia/ámbito, prioridades/desempates explicables y desconocidos probados. Estimaciones opcionales separadas, sin duplicación ni total exacto; sin inventar equipaje o viaje completo desde un trayecto.
 - Evidencia: no implementado.
 
 ### AIR-016 — Definir seguridad y estrategia de pruebas del MVP
 
-- Descripción: acordar superficies públicas/privadas, errores, secretos y pruebas unitarias, de contrato e integración apropiadas al alcance.
+- Descripción: concretar superficies públicas/operativas, configuración de seguridad y estrategia de pruebas del MVP a partir de la baseline conceptual de AIR-010 y el entorno validado en AIR-011.
 - Prioridad: P0.
 - Estado: Pendiente.
 - Responsable: Security & QA Agent.
 - Dependencias: AIR-010, AIR-011.
 - Aceptación: criterios de seguridad verificables, aislamiento de proveedores y herramientas/versiones justificadas; no obliga a introducir cuentas de usuario en el MVP.
-- Evidencia: no ejecutada; [baseline](../docs/security/BASELINE.md) contiene criterios iniciales.
+- Evidencia: pendiente de ejecución; [baseline](../docs/security/BASELINE.md) contiene requisitos y matriz conceptual aceptados en AIR-010, no configuración o pruebas de runtime verificadas.
 
 ### AIR-017 — Acordar persistencia y entorno de pruebas, si lo exige el MVP
 
@@ -160,7 +163,7 @@ Transiciones: Propuesta → Pendiente cuando se acuerde alcance; Pendiente → E
 - Responsable: Database Agent.
 - Dependencias: AIR-010, AIR-011, AIR-016.
 - Aceptación: necesidad de persistencia demostrada o decisión explícita de posponerla; si se introduce, migraciones probadas sin datos/servicios de producción.
-- Evidencia: no ejecutada; no hay base ni entidades creadas.
+- Evidencia: pendiente de ejecución; AIR-010 justifica MVP sin BD de negocio ni migraciones iniciales. AIR-017 ratificará aplazamiento o justificará un caso durable concreto; no hay base ni entidades creadas.
 
 ### AIR-018 — Preparar experiencia frontend tras aprobar el contrato
 
@@ -170,7 +173,7 @@ Transiciones: Propuesta → Pendiente cuando se acuerde alcance; Pendiente → E
 - Responsable: Frontend Agent.
 - Dependencias: AIR-014, AIR-015, AIR-016.
 - Aceptación: flujo acotado, contratos y estados de carga/vacío/error/parcialidad aprobados; herramientas justificadas antes de instalar.
-- Evidencia: no ejecutada; no hay frontend ni pantallas.
+- Evidencia: pendiente de ejecución; AIR-010 define flujo, estados, accesibilidad y necesidades de contrato, sin componentes, prototipos ni frontend generado. AIR-018 concretará su preparación tras contratos/componentes backend disponibles.
 
 ### AIR-019 — Aclarar permisos y presupuesto antes de adaptadores reales
 

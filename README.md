@@ -2,28 +2,28 @@
 
 Proyecto de portfolio full stack para explorar y comparar alternativas de viaje: precio del vuelo, aeropuerto de origen, fechas, escalas, duración y estimaciones de transporte terrestre. Su propuesta es explicar los compromisos entre coste y comodidad con información trazable.
 
-**Estado actual: fase 1 de organización y planificación.** Existe un backend generado con Spring Initializr y conservado sin modificaciones. No hay funcionalidades de negocio, frontend, base de datos provisionada ni despliegue. No se han ejecutado llamadas a proveedores durante esta fase.
+**Estado actual: contratos documentales ratificados en AIR-012 y contexto demo de test validado en AIR-011.** Existe un backend generado con Spring Initializr y un ajuste autorizado en su test de contexto. La implementación de funcionalidades de negocio, frontend y persistencia se planifica en tareas posteriores.
 
 ## Qué está presente y qué está previsto
 
 | Área | Presente en este checkout | Previsto, aún sin implementar o validar |
 |---|---|---|
-| Backend | Java 21 declarado, Spring Boot 4.1.2, Maven; clase de arranque y test de contexto | Monolito modular, dominio, búsqueda, normalización y comparación |
-| Dependencias backend | Web MVC, Security, Data JPA, Validation, Flyway, PostgreSQL, Actuator y DevTools | Configuración de persistencia/seguridad de negocio y validación de versiones resueltas |
-| Pruebas | Test generado con import de JUnit Jupiter; no ejecutado en esta fase | Estrategia de tests, Testcontainers y validación de compatibilidad del objetivo JUnit 5 |
+| Backend | Java 21, Spring Boot 4.1.2 y Wrapper Maven 3.10.0 comprobados; compilación correcta | Monolito modular, dominio, búsqueda, normalización y comparación |
+| Dependencias backend | Web MVC, Security, Data JPA, Validation, Flyway, PostgreSQL, Actuator y DevTools resueltos | Configuración de persistencia/seguridad de negocio e integración completa |
+| Pruebas | Jupiter 6.0.3; contexto demo sin persistencia comprobado, un test satisfactorio | Pruebas de negocio e integración PostgreSQL/JPA/Flyway cuando existan componentes |
 | Frontend | No existe | React, TypeScript, Vite, Tailwind CSS, TanStack Query; Vitest y Playwright |
 | Infraestructura | Git inicializado y plantillas GitHub | Docker Compose, GitHub Actions, observabilidad y despliegue |
-| Documentación | Instrucciones, roles, skills, planificación y ADR iniciales | OpenAPI, Javadoc del dominio y manual de funciones cuando existan |
+| Documentación | Instrucciones, roles, skills, planificación, ADR y [contratos normalizados](docs/architecture/NORMALIZED_CONTRACTS.md) con [ejemplos JSON](docs/api/EXAMPLES.md) | OpenAPI, Javadoc del dominio y manual de funciones cuando existan |
 
 El [inventario tecnológico](docs/developer-guide/TECHNOLOGY_INVENTORY.md) detalla las 15 dependencias directas y las comprobaciones pendientes. Una dependencia declarada no demuestra que una funcionalidad esté implementada o que el contexto Spring arranque.
 
-## Alcance funcional propuesto
+## Alcance del MVP acordado
 
-El primer alcance a validar prioriza exploración con proveedor demo identificado, búsqueda por ruta/fecha, normalización y comparación transparente de alternativas. Usuarios, preferencias y favoritos necesitarán una decisión de alcance posterior; historial y alertas quedan fuera del MVP inicial hasta aclarar permisos y consumo.
+El MVP será demo determinista sin Internet: búsqueda ida/ida-vuelta, 1–3 aeropuertos de origen, un destino, un adulto/turista, itinerarios, filtros/orden/paginación y comparación explicable. Las preferencias son transitorias y las estimaciones terrestres manuales opcionales. Cuentas, favoritos persistentes, historial, alertas, compra/pagos y proveedores reales se aplazan; no se necesita BD de negocio inicial. Requisitos y UX en la visión arquitectónica.
 
-La arquitectura prevista es un monolito modular con adaptadores independientes para Travelpayouts, SerpApi y datos demo. Las capas de dominio, aplicación, infraestructura y API se introducirán donde aporten valor, sin crear estructuras vacías. Véanse la [visión arquitectónica](docs/architecture/OVERVIEW.md) y las [decisiones](docs/decisions/README.md).
+La arquitectura aceptada como diseño es un monolito con cuatro límites: Airport, Flight Search, Flight Provider y Flight Comparison. Adaptadores demo y futuros Travelpayouts/SerpApi permanecen independientes. Las capas se introducirán donde aporten valor, sin estructuras vacías. Véanse la [visión arquitectónica](docs/architecture/OVERVIEW.md) y las [decisiones](docs/decisions/README.md).
 
-Toda presentación deberá distinguir **precio observado**, **resultado reciente de búsqueda**, **estimación** y **precio confirmado por un vendedor**. No se inventarán disponibilidad, equipaje, tarifas ni datos ausentes.
+Toda presentación deberá distinguir **precio observado**, **resultado reciente**, **precio anunciado por vendedor**, **confirmación en reserva**, **estimación** y **desconocido**. Demo siempre significa datos sintéticos. No se inventarán disponibilidad, equipaje, tarifas ni datos ausentes.
 
 ## Evidencia previa de proveedores
 
@@ -49,7 +49,7 @@ airwise/
 ├── docs/
 │   ├── user-manual/                  # Alcance del manual, sin pantallas ficticias
 │   ├── developer-guide/              # Entorno real, flujo Codex y validación
-│   ├── architecture/                 # Diseño propuesto y evidencia de proveedores
+│   ├── architecture/                 # Diseño acordado, todavía sin implementar
 │   ├── api/                          # Límites del contrato y política de proveedores
 │   ├── security/                     # Criterios iniciales y gestión de secretos
 │   └── decisions/                    # ADR y estado de cada decisión
@@ -89,4 +89,4 @@ Skills locales: `$task-planning`, `$api-integration`, `$database-migrations`, `$
 - [Changelog](planning/CHANGELOG.md): cambios sin versión publicada.
 - [Contribución y revisión](CONTRIBUTING.md), [seguridad](SECURITY.md) y [manual de usuario](docs/user-manual/README.md).
 
-El siguiente hito recomendado es **AIR-010: validar alcance del MVP y diseño modular**. No se inicia automáticamente. No se ha hecho ningún commit, push, publicación ni release.
+AIR-011 valida el contexto demo mediante exclusión de DataSourceAutoConfiguration limitada al test y aserciones de inicialización real. El diagnóstico inicial y el resultado corregido constan en el registro de validación. PostgreSQL, JPA y Flyway mantienen sus pruebas de integración pendientes. AIR-012 conserva su estado Pendiente. Ya existe un primer commit local.

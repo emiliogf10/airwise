@@ -15,3 +15,5 @@ No modificar ningún archivo del backend durante la preparación organizativa. C
 ## Consecuencias y verificación
 
 El inventario distingue declarado de resuelto y previsto. La compilación/arranque del backend se mantiene pendiente, sin corregir supuestos problemas. Se compara el conjunto y hash de sus archivos antes/después de la entrega; evidencia en [VALIDATION.md](../developer-guide/VALIDATION.md).
+
+Seguimiento AIR-010: continúa la preservación íntegra durante el análisis/diseño autorizado. Esta decisión no impone hashes inmutables para siempre: una tarea futura que autorice cambios concretos deberá registrar la evolución y ajustar expresamente el criterio de validación sin borrar la evidencia histórica ni regenerar el snapshot para ocultar diferencias.

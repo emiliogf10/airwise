@@ -1,4 +1,4 @@
-"""Validate phase-one repository artifacts locally; never starts the backend or calls an API."""
+"""Validate repository sources locally and report the historical phase-one snapshot."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
-IGNORED = {".git", ".local", "target", "node_modules", "__pycache__"}
+IGNORED = {".git", ".local", "node_modules", "__pycache__"}
 SKILLS = {"task-planning", "api-integration", "database-migrations", "testing-and-review", "documentation-sync"}
 AGENTS = {"backend", "frontend", "database", "security_qa", "devops", "documentation"}
 ERRORS: list[str] = []
@@ -25,8 +25,14 @@ def check(condition: bool, message: str) -> None:
         ERRORS.append(message)
 
 
+def is_ignored(path: Path) -> bool:
+    """Exclude tool state and backend build output while retaining source directories."""
+    parts = path.relative_to(ROOT).parts
+    return bool(IGNORED.intersection(parts)) or parts[:2] == ("backend", "target")
+
+
 def files() -> list[Path]:
-    return sorted(p for p in ROOT.rglob("*") if p.is_file() and not IGNORED.intersection(p.relative_to(ROOT).parts))
+    return sorted(p for p in ROOT.rglob("*") if p.is_file() and not is_ignored(p))
 
 
 def metadata(path: Path) -> dict[str, str]:
@@ -126,20 +132,41 @@ def validate_backlog() -> None:
 
 
 def validate_backend() -> None:
+    required_sources = (
+        "pom.xml", "mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties",
+        "src/main/java/com/airwise/backend/BackendApplication.java",
+        "src/main/resources/application.properties",
+        "src/test/java/com/airwise/backend/BackendApplicationTests.java",
+    )
+    for relative in required_sources:
+        check((ROOT / "backend" / relative).is_file(), f"Falta archivo esencial del backend: {relative}")
     ns = {"m": "http://maven.apache.org/POM/4.0.0"}
     pom = ET.parse(ROOT / "backend/pom.xml").getroot()
     check(pom.findtext("m:parent/m:version", namespaces=ns) == "4.1.2", "El parent del backend difiere del inventario inicial")
     check(pom.findtext("m:properties/m:java.version", namespaces=ns) == "21", "Java del backend difiere del inventario inicial")
     check(len(pom.findall("m:dependencies/m:dependency", ns)) == 15, "Número de dependencias directas distinto del inventario")
+    actual = {
+        p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in (ROOT / "backend").rglob("*")
+        if p.is_file() and not is_ignored(p)
+    }
+    print(f"Backend: {len(actual)} archivos fuente/configuración enumerados; POM inspeccionado")
     baseline = ROOT / ".local/backend-phase1-baseline.json"
     if not baseline.exists():
-        print("Backend: inspección XML correcta; preservación histórica NO COMPROBADA (sin snapshot local)")
+        print("Histórico fase 1: contraste NO COMPROBADO (sin snapshot local)")
         return
     previous = json.loads(baseline.read_text(encoding="utf-8-sig"))
-    actual = {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT / "backend").rglob("*") if p.is_file()}
     expected = {row["path"]: row["sha256"] for row in previous}
-    check(actual == expected, "Backend: conjunto de archivos o contenido distinto del snapshot de fase 1")
-    print(f"Backend: {len(actual)} archivos, conjunto y SHA-256 preservados; sin build ni ejecución")
+    changed = sorted(path for path in actual.keys() & expected.keys() if actual[path] != expected[path])
+    added = sorted(actual.keys() - expected.keys())
+    removed = sorted(expected.keys() - actual.keys())
+    unchanged = len(actual.keys() & expected.keys()) - len(changed)
+    print(f"Histórico fase 1: {len(expected)} archivos registrados; {unchanged} idénticos, "
+          f"{len(changed)} modificados, {len(added)} nuevos y {len(removed)} ausentes")
+    for status, paths in (("modificado", changed), ("nuevo", added), ("ausente", removed)):
+        for path in paths:
+            print(f"Histórico informativo ({status}): {path}")
+    print("Las diferencias históricas requieren revisión del alcance autorizado y su evidencia en el backlog")
 
 
 def validate_safety(repository_files: list[Path]) -> None:
@@ -154,7 +181,7 @@ def validate_safety(repository_files: list[Path]) -> None:
         check(not any(marker in text for marker in private_markers), f"Posible clave privada en {path.relative_to(ROOT)}; contenido omitido")
     preserved_empty = 0
     for path in ROOT.rglob("*"):
-        if path.is_dir() and not IGNORED.intersection(path.relative_to(ROOT).parts):
+        if path.is_dir() and not is_ignored(path):
             if not any(path.iterdir()):
                 if path.relative_to(ROOT).parts[0] == "backend":
                     preserved_empty += 1

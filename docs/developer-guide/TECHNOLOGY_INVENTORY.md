@@ -1,23 +1,23 @@
 # Inventario tecnológico observado
 
-Inspección del checkout: **11/11/2026**. Fuentes: [POM](../../backend/pom.xml), clases generadas, `application.properties`, wrapper y archivos de herramientas. No se modificó ningún archivo de `backend/` ni se resolvieron sus dependencias.
+Inventario inicial del **11/11/2026**, actualizado con el cierre autorizado de AIR-011 el **12/11/2026**. Fuentes del estado actual son el [POM](../../backend/pom.xml), POM efectivo, árbol resuelto, ejecución del Wrapper y reporte Surefire. El histórico conserva diez originales, nueve idénticos y el test modificado por autorización expresa. Maven regeneró artefactos ignorados en `backend/target/`.
 
 ## Base existente
 
 | Elemento | Evidencia observada | Límite de la afirmación |
 |---|---|---|
 | Coordenadas Maven | `com.airwise:backend:0.0.1-SNAPSHOT` | Versión de artefacto generada; no es una release publicada |
-| Java | Propiedad `java.version=21` | JDK instalado Temurin 21.0.12; no se ejecutó compilación backend |
-| Spring Boot | Parent `spring-boot-starter-parent:4.1.2` | Versión declarada; no se ha resuelto el árbol efectivo |
-| Maven instalado | `mvn -version`: 3.9.16 | Distinto de la distribución declarada por el wrapper |
-| Maven Wrapper | Wrapper 3.3.4, `only-script`; distribución Maven 3.10.0 | `mvnw`/`mvnw.cmd` presentes; descarga/ejecución no comprobadas |
-| Arranque | `com.airwise.backend.BackendApplication`, `@SpringBootApplication` | Solo arranque generado; sin funcionalidad de negocio |
+| Java | Propiedad `java.version=21`; Temurin 21.0.12+8-LTS efectivo, Eclipse Adoptium | Fuente principal y test compilados con `release 21` |
+| Spring Boot | Parent `spring-boot-starter-parent:4.1.2`, resuelto | Contexto demo de prueba inicializado satisfactoriamente con exclusión local de DataSourceAutoConfiguration |
+| Maven instalado | `mvn -version` devuelve 3.9.16 | Inspección del entorno; los comandos del proyecto se ejecutaron con Wrapper |
+| Maven Wrapper | Script 3.3.4, `only-script`; Maven 3.10.0 ejecutado, revisión `c43a36b8d67be7e0805a411bc0898af1a51f5472` | Distribución descargada en `.local/air011/maven-home/`; reintento autorizado tras error de transporte dentro del sandbox |
+| Arranque | `com.airwise.backend.BackendApplication`, `@SpringBootApplication` | Bean principal y contexto activo comprobados en el test demo; arranque con configuración principal pendiente |
 | Configuración | `spring.application.name=backend` | No hay conexión de BD, perfiles o claves de proveedor configurados en ese archivo |
-| Test | `BackendApplicationTests.contextLoads`, `@SpringBootTest`, import JUnit Jupiter | Existe; no ejecutado. El import no demuestra una versión mayor concreta de JUnit |
+| Test | `demoContextLoadsWithoutPersistence`, `@SpringBootTest`, Jupiter 6.0.3 | Un test, cero fallos, cero errores y cero omitidos; contexto activo, bean principal presente y cero DataSources |
 
 ## Dependencias directas declaradas: 15
 
-Las versiones se heredan del parent o de su gestión transitiva; no se atribuye una versión resuelta sin ejecutar Maven.
+Las quince dependencias se comprobaron en el POM efectivo y el árbol resuelto de AIR-011. Los artefactos de Spring Boot usan 4.1.2, `flyway-database-postgresql` usa 12.4.0 y `postgresql` usa 42.7.14. Se conservan a continuación los scopes y la distinción entre dependencia y funcionalidad implementada.
 
 | Dependencia | Scope / atributo | Presencia frente a implementación |
 |---|---|---|
@@ -37,17 +37,38 @@ Las versiones se heredan del parent o de su gestión transitiva; no se atribuye 
 | `org.springframework.boot:spring-boot-starter-validation-test` | test | Declarado |
 | `org.springframework.boot:spring-boot-starter-webmvc-test` | test | Declarado |
 
-Plugin explícito: `spring-boot-maven-plugin`, sin versión local independiente. No hay POM agregador en la raíz.
+Plugin explícito `spring-boot-maven-plugin`, resuelto a 4.1.2 por herencia. El parent resuelto hereda `spring-boot-dependencies:4.1.2`, que gestiona entre otros los BOM de Spring Framework, Spring Security y JUnit. No hay POM agregador en la raíz.
+
+## Versiones resueltas y compatibilidad observada en AIR-011
+
+| Componente | Versión comprobada |
+|---|---|
+| Spring Framework | 7.0.10 |
+| Spring Security | 7.1.2 |
+| Hibernate ORM | 7.4.13.Final |
+| Flyway Core y soporte PostgreSQL | 12.4.0 |
+| PostgreSQL JDBC | 42.7.14 |
+| HikariCP | 7.0.2 |
+| JUnit Jupiter API y Engine | 6.0.3 |
+| JUnit Platform Engine | 6.0.3 |
+| Maven Compiler / Surefire | 3.15.0 / 3.5.6 |
+| Maven Clean / Resources / Jar | 3.5.0 / 3.5.0 / 3.5.1 |
+| Maven Install / Deploy / Site | 3.1.4 / 3.1.4 / 3.22.0, configurados por herencia |
+| Plugins diagnósticos Help / Dependency | 3.5.2 / 3.10.0, ejecutados |
+
+`clean compile` terminó con código 0 durante el diagnóstico inicial. Tras la corrección autorizada, `test` recompiló el test y terminó con BUILD SUCCESS y código 0. La prueba verifica la inicialización real del contexto demo con Java 21. Las integraciones de persistencia y el arranque con la configuración principal permanecen pendientes.
+
+El diagnóstico inicial reprodujo `Failed to determine a suitable driver class` al faltar URL y una BD embebida configurable, con driver PostgreSQL resuelto. El ajuste autorizado excluye solo DataSourceAutoConfiguration mediante una propiedad de `@SpringBootTest`. El contexto demo inicia satisfactoriamente y sus autoconfiguraciones de persistencia condicionadas quedan fuera de esa prueba. Los resultados anteriores y el cierre se conservan en [VALIDATION.md](VALIDATION.md).
 
 El generado incluye directorios vacíos `src/main/resources/static`, `templates` y `db/migration`. Se conservan por la instrucción de preservar el backend; no indican frontend ni migraciones implementadas. No se crearon nuevos directorios vacíos fuera de esa base.
 
-## Tecnologías previstas que no se confirman como instaladas/integradas
+## Objetivos documentales y componentes pendientes
 
-- **JUnit 5** es el objetivo del proyecto; la versión resuelta de JUnit Jupiter no se ha comprobado. Debe revisarse su compatibilidad con el parent existente, sin degradar ni sustituir dependencias automáticamente.
-- Testcontainers y una herramienta OpenAPI no aparecen como dependencias directas; no se afirma su disponibilidad transitiva. No hay especificación OpenAPI ni Javadoc del dominio.
+- **JUnit 5** fue el objetivo documental inicial. AIR-011 comprobó Jupiter/Platform **6.0.3**, gestionados por el parent actual. La propiedad heredada `junit.version=4.13.2` no supone que JUnit 4 participe en las pruebas. El árbol examinado carece de `junit:junit`. Se actualiza la descripción al resultado ejecutado.
+- H2 y Testcontainers están ausentes del árbol resuelto. Una herramienta OpenAPI no aparece como dependencia directa. No hay especificación OpenAPI ejecutable ni Javadoc del dominio.
 - React, TypeScript, Vite, Tailwind CSS, TanStack Query, Vitest y Playwright: sin proyecto frontend ni `package.json`.
 - PostgreSQL como servidor, Docker Compose y GitHub Actions: previstos; no se han configurado ni comprobado servicios.
-- Monolito modular y adaptadores de proveedores: propuesta arquitectónica, todavía sin paquetes de negocio.
+- Monolito modular y adaptadores de proveedores: diseño aceptado en AIR-010, todavía sin paquetes de negocio ni adaptadores implementados.
 
 ## Entorno de agentes observado
 
@@ -55,4 +76,8 @@ Extensión instalada `openai.chatgpt` **26.51106.51428**, con requisito VS Code 
 
 ## Pendientes y tratamiento
 
-No se arrancó Spring ni se ejecutó `contextLoads`: JPA/Flyway pueden requerir un entorno de persistencia y hay que comprobarlo, no asumir éxito o fallo. Tampoco se descargó el Maven del wrapper. Resolver esas comprobaciones corresponde a AIR-011; cualquier corrección del POM, wrapper, código o configuración necesitará autorización previa y evidencia del problema.
+AIR-011 valida el contexto demo sin persistencia tras aplicar el cambio autorizado al único archivo de test. El test conserva SpringBootTest y comprueba contexto activo, configuración principal presente como bean y ausencia de DataSources. La configuración de producción conserva su contenido.
+
+PostgreSQL, JPA y Flyway siguen pendientes de pruebas de integración. Una prueba de ese alcance requerirá PostgreSQL aislado y configuración externa cuando se autorice persistencia real. La prueba actual utiliza propiedades locales a la anotación y el perfil Spring predeterminado; no crea un perfil de producción denominado demo.
+
+Actuator, reglas de acceso HTTP, conexiones PostgreSQL, transacciones y migraciones permanecen sin validar en runtime. Maven emitió advertencias HTTP 401 al pedir metadatos de prefijos a dos repositorios adicionales heredados de Flyway. Compilación, árbol y POM efectivo completaron sus operaciones. La propiedad `distributionSha256Sum` del Wrapper está ausente y su incorporación requiere una propuesta autorizada con checksum oficial verificado.

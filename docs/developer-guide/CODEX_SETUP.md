@@ -15,10 +15,10 @@ La documentación actual admite archivos TOML independientes en `.codex/agents/`
 | Rol | Configuración | Uso previsto y estado comprobado |
 |---|---|---|
 | Orchestrator Agent | [AGENTS.md](../../AGENTS.md) | Agente principal: planificación, coordinación, revisión y cierre. Sus instrucciones aparecieron en el renderizador local de Codex; no es otro subproceso |
-| Backend Agent | `.codex/agents/backend.toml`, nombre `backend` | Expuesto en `spawn_agent.agent_type`; invocación real completada en AIR-006 |
-| Frontend Agent | `.codex/agents/frontend.toml`, nombre `frontend` | Expuesto en `spawn_agent.agent_type`; ejecución individual no probada |
-| Database Agent | `.codex/agents/database.toml`, nombre `database` | Expuesto en `spawn_agent.agent_type`; ejecución individual no probada |
-| Security & QA Agent | `.codex/agents/security-qa.toml`, nombre `security_qa` | Expuesto en `spawn_agent.agent_type`; ejecución individual no probada |
+| Backend Agent | `.codex/agents/backend.toml`, nombre `backend` | Invocaciones reales completadas en AIR-006 y análisis de AIR-010 |
+| Frontend Agent | `.codex/agents/frontend.toml`, nombre `frontend` | Invocación real de solo lectura completada en AIR-010 |
+| Database Agent | `.codex/agents/database.toml`, nombre `database` | Invocación real de solo lectura completada en AIR-010 |
+| Security & QA Agent | `.codex/agents/security-qa.toml`, nombre `security_qa` | Invocaciones reales en revisión previa al commit y análisis de AIR-010 |
 | DevOps Agent | `.codex/agents/devops.toml`, nombre `devops` | Expuesto en `spawn_agent.agent_type`; ejecución individual no probada |
 | Documentation Agent | `.codex/agents/documentation.toml`, nombre `documentation` | Expuesto en `spawn_agent.agent_type`; ejecución individual no probada |
 
@@ -26,7 +26,7 @@ Se omiten modelo y esfuerzo para heredar los elegidos en la sesión. `.codex/con
 
 Para utilizarlos en una sesión nueva del proyecto confiable, pida explícitamente, por ejemplo: «Delega una revisión de AIR-010 al agente personalizado `backend`; solo lectura, sin tocar el backend. Integra sus observaciones antes de cerrar». Sustituya el nombre por `frontend`, `database`, `security_qa`, `devops` o `documentation` según la tarea. El coordinador define límites y archivos; no invoca los seis para cualquier solicitud.
 
-**Los seis especialistas están disponibles para selección en el catálogo ejecutable de esta sesión; `backend` fue invocado y terminó correctamente.** La ejecución individual de los otros cinco queda sin probar, conforme al criterio de AIR-006 de no invocarlos todos automáticamente. En un cliente sin selector, aplicar manualmente un TOML sigue siendo un uso de instrucciones de rol y debe identificarse como tal; no demuestra delegación real.
+**Los seis especialistas están disponibles para selección en el catálogo ejecutable de esta sesión.** Tras AIR-010 hay ejecución real comprobada de `backend`, `database`, `frontend` y `security_qa`; `devops` y `documentation` siguen sin probar individualmente. AIR-006 solo probó backend; el historial se conserva abajo. En un cliente sin selector, aplicar manualmente un TOML sigue siendo uso de instrucciones de rol y no demuestra delegación real.
 
 ## Skills del repositorio
 
@@ -95,6 +95,10 @@ Antes de compilar, en una tarea posterior autorizada, habrá que comprobar JDK s
 
 El coordinador ejecutó `py -3.14 scripts/validate_repository.py`: código 0, **RESULTADO: CORRECTO**. Verificó sintaxis/campos de seis especialistas TOML, metadatos de cinco skills, enlaces locales, estados/dependencias de las 17 tareas y preservación de los diez archivos de `backend/` frente a la instantánea existente mediante SHA-256. Este chequeo estático complementa la prueba de ejecución; por sí solo no invoca agentes.
 
-AIR-006 satisface su aceptación mediante catálogo efectivo, prueba acotada real de un especialista y descubrimiento de las cinco skills. No se observaron bloqueos de configuración, cliente ni entorno para esta prueba; no hubo que alterar permisos ni configuración. Quedan sin probar la ejecución individual de los otros cinco especialistas y la interfaz visual del selector; la disponibilidad en otros clientes o sesiones depende de su catálogo y políticas efectivos.
+AIR-006 satisfizo su aceptación mediante catálogo efectivo, prueba acotada real de un especialista y descubrimiento de las cinco skills. No se observaron bloqueos de configuración, cliente ni entorno para esa prueba. Al cerrar AIR-006 quedaron sin probar los otros cinco; AIR-010 actualiza el estado de tres de ellos. La interfaz visual y otras sesiones/clientes siguen sin verificar.
 
 No se modificó `backend/`, no se instalaron dependencias ni se ejecutaron compilaciones, tests de producto, APIs externas, cambios globales, commits o push. La única delegación fue el hilo de `backend` autorizado para AIR-006.
+
+## Seguimiento AIR-010
+
+Invocaciones reales mediante `collaboration.spawn_agent` con `agent_type` específico, sin sobrescribir modelo/esfuerzo. Los cuatro hilos devolvieron informes finales de solo lectura: `/root/air010_backend_design`, `/root/air010_database_design`, `/root/air010_frontend_design` y `/root/air010_security_design`. El coordinador fue el único escritor. No se invocaron DevOps ni Documentation por no necesitar otra especialidad. La trazabilidad y revisión integrada se registran en [VALIDATION.md](VALIDATION.md).

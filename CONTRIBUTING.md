@@ -1,6 +1,6 @@
 # Contribuir a Airwise
 
-Antes de editar, consulta [AGENTS.md](AGENTS.md), el [backlog](planning/BACKLOG.md), el [roadmap](planning/ROADMAP.md) y los ADR relevantes. Esta fase prepara organización; no autoriza implementar negocio ni cambiar la base generada de `backend/`.
+Antes de editar, consulta [AGENTS.md](AGENTS.md), el [backlog](planning/BACKLOG.md), el [roadmap](planning/ROADMAP.md) y los ADR relevantes. Cada tarea necesita alcance autorizado; aceptar un diseño no autoriza implementar negocio ni cambiar la base generada de `backend/`. AIR-010 es exclusivamente documental.
 
 ## Flujo de trabajo
 
