@@ -1,6 +1,6 @@
 # Módulos y persistencia
 
-**Límites aceptados en AIR-010 y contratos ratificados en AIR-012.** [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md) fija los tipos compartidos y [API_DESIGN.md](../api/API_DESIGN.md) los DTO HTTP. Se conserva un solo backend Java 21/Spring Boot. La estructura siguiente se materializará cuando existan componentes autorizados.
+**Límites aceptados en AIR-010 y contratos ratificados en AIR-012.** [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md) fija los tipos compartidos y [API_DESIGN.md](../api/API_DESIGN.md) los DTO HTTP. Se conserva un solo backend Java 21/Spring Boot. AIR-013 materializa Airport/domain, Flight Search/domain y application, y Flight Provider/demo; las fronteras HTTP y Comparison siguen pendientes.
 
 ## Dependencias permitidas
 
@@ -100,11 +100,11 @@ Los adaptadores HTTP transversales dependen de las APIs públicas de los cuatro 
 
 Los objetos de dominio carecen de anotaciones de Spring/JPA. Los DTO mantienen el contrato JSON y se mapean en API. Las fixtures pertenecen al adaptador demo. Si más adelante existe persistencia, sus entidades y repositorios quedarían en infraestructura del módulo que posea ese caso durable.
 
-## Orden de implementación posterior
+## Estado de implementación y orden posterior
 
-1. Implementar valores Airport/Money/consulta y catálogo mínimo, con invariantes y tests puros.
-2. Crear puerto y adaptador demo con un caso vertical de ida directa, resultado normalizado, reloj y versión.
-3. Completar ida/vuelta, varios orígenes, segmentos/conexiones, identidad y estados difíciles para satisfacer toda AIR-013.
+1. AIR-013 implementa valores Airport/Money/consulta y catálogo mínimo, con invariantes y tests puros.
+2. AIR-013 incorpora puerto y adaptador demo con resultado normalizado, reloj y versión.
+3. AIR-013 completa ida/vuelta, varios orígenes, segmentos/conexiones, identidad y estados difíciles; fixtures en recursos demo.
 4. Exponer catálogo y búsqueda con filtros/orden/página en AIR-014, tras la preparación de seguridad prevista.
 5. Implementar comparación en AIR-015 y preparación de UI en AIR-018.
 

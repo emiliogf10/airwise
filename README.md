@@ -2,15 +2,15 @@
 
 Proyecto de portfolio full stack para explorar y comparar alternativas de viaje: precio del vuelo, aeropuerto de origen, fechas, escalas, duración y estimaciones de transporte terrestre. Su propuesta es explicar los compromisos entre coste y comodidad con información trazable.
 
-**Estado actual: contratos documentales ratificados en AIR-012 y contexto demo de test validado en AIR-011.** Existe un backend generado con Spring Initializr y un ajuste autorizado en su test de contexto. La implementación de funcionalidades de negocio, frontend y persistencia se planifica en tareas posteriores.
+**Estado actual: proveedor demo determinista implementado y probado en AIR-013.** El backend incorpora modelos de dominio puros, puerto de proveedor y fixtures sintéticas versionadas. Los endpoints REST, frontend y motor de comparación siguen pendientes.
 
 ## Qué está presente y qué está previsto
 
 | Área | Presente en este checkout | Previsto, aún sin implementar o validar |
 |---|---|---|
-| Backend | Java 21, Spring Boot 4.1.2 y Wrapper Maven 3.10.0 comprobados; compilación correcta | Monolito modular, dominio, búsqueda, normalización y comparación |
+| Backend | Java 21, Spring Boot 4.1.2, modelos, puerto y proveedor demo; compilación offline correcta | Búsqueda REST, wiring de ejecución demo y comparación |
 | Dependencias backend | Web MVC, Security, Data JPA, Validation, Flyway, PostgreSQL, Actuator y DevTools resueltos | Configuración de persistencia/seguridad de negocio e integración completa |
-| Pruebas | Jupiter 6.0.3; contexto demo sin persistencia comprobado, un test satisfactorio | Pruebas de negocio e integración PostgreSQL/JPA/Flyway cuando existan componentes |
+| Pruebas | Jupiter 6.0.3; 62 casos satisfactorios de contexto, dominio, proveedor, corpus y aislamiento | Pruebas HTTP y de integración PostgreSQL/JPA/Flyway |
 | Frontend | No existe | React, TypeScript, Vite, Tailwind CSS, TanStack Query; Vitest y Playwright |
 | Infraestructura | Git inicializado y plantillas GitHub | Docker Compose, GitHub Actions, observabilidad y despliegue |
 | Documentación | Instrucciones, roles, skills, planificación, ADR y [contratos normalizados](docs/architecture/NORMALIZED_CONTRACTS.md) con [ejemplos JSON](docs/api/EXAMPLES.md) | OpenAPI, Javadoc del dominio y manual de funciones cuando existan |
@@ -21,7 +21,7 @@ El [inventario tecnológico](docs/developer-guide/TECHNOLOGY_INVENTORY.md) detal
 
 El MVP será demo determinista sin Internet: búsqueda ida/ida-vuelta, 1–3 aeropuertos de origen, un destino, un adulto/turista, itinerarios, filtros/orden/paginación y comparación explicable. Las preferencias son transitorias y las estimaciones terrestres manuales opcionales. Cuentas, favoritos persistentes, historial, alertas, compra/pagos y proveedores reales se aplazan; no se necesita BD de negocio inicial. Requisitos y UX en la visión arquitectónica.
 
-La arquitectura aceptada como diseño es un monolito con cuatro límites: Airport, Flight Search, Flight Provider y Flight Comparison. Adaptadores demo y futuros Travelpayouts/SerpApi permanecen independientes. Las capas se introducirán donde aporten valor, sin estructuras vacías. Véanse la [visión arquitectónica](docs/architecture/OVERVIEW.md) y las [decisiones](docs/decisions/README.md).
+La arquitectura aceptada como diseño es un monolito con cuatro límites: Airport, Flight Search, Flight Provider y Flight Comparison. El [adaptador demo](docs/architecture/PROVIDERS.md) ya implementa el puerto de Search; Travelpayouts/SerpApi siguen sin implementar. Las capas se introducirán donde aporten valor, sin estructuras vacías. Véanse la [visión arquitectónica](docs/architecture/OVERVIEW.md) y las [decisiones](docs/decisions/README.md).
 
 Toda presentación deberá distinguir **precio observado**, **resultado reciente**, **precio anunciado por vendedor**, **confirmación en reserva**, **estimación** y **desconocido**. Demo siempre significa datos sintéticos. No se inventarán disponibilidad, equipaje, tarifas ni datos ausentes.
 

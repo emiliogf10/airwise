@@ -1,6 +1,6 @@
 # Arquitectura y alcance del MVP
 
-**Diseño aceptado en AIR-010 y contratos ratificados en AIR-012; producto sin implementar.** AIR-011 verificó Java 21, Spring Boot 4.1.2, dependencias, compilación y contexto de test sin persistencia. El arranque de ejecución demo y la integración PostgreSQL/JPA/Flyway siguen pendientes. Esta decisión no autoriza código, BD, React ni llamadas externas.
+**Diseño AIR-010, contratos AIR-012 y primer componente demo implementado en AIR-013.** AIR-011 verificó Java 21, Spring Boot 4.1.2, dependencias, compilación y contexto de test sin persistencia. El arranque de ejecución demo y la integración PostgreSQL/JPA/Flyway siguen pendientes. Esta decisión no autoriza código, BD, React ni llamadas externas.
 
 ## MVP acordado
 
@@ -62,4 +62,4 @@ Teclado, foco visible y retorno previsible al cerrar detalles/comparador; etique
 
 Se aceptan ADR-0002 y ADR-0003, con contratos ratificados en AIR-012 e historial conservado. [ADR-0004](../decisions/0004-demo-mvp-and-persistence.md) registra alcance demo y ausencia de BD/cuentas. ADR-0001 conserva el historial de la base generada. Permisos y coste permanecen en AIR-019, según la [evidencia histórica](PROVIDER_EVIDENCE.md).
 
-AIR-011 comprobó base Java/Wrapper y contexto demo de prueba. AIR-012 ratifica enums, payloads, cotas de entrada, reglas y ejemplos. Permanecen pendientes materializar fixtures, verificar metadata/licencia del catálogo, preparar ejecución demo/seguridad y cualquier esquema de persistencia futuro. Cada tarea posterior necesita autorización propia.
+AIR-011 comprobó base Java/Wrapper y contexto demo de prueba. AIR-012 ratifica enums, payloads, cotas de entrada, reglas y ejemplos. AIR-013 materializa fixtures sintéticas y el proveedor demo, con referencias mínimas manuales. Permanecen pendientes un catálogo externo verificado/licenciado si se incorpora, preparar ejecución demo/seguridad, endpoints y cualquier esquema de persistencia futuro. Cada tarea posterior necesita autorización propia.

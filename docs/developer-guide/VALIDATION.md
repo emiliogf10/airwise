@@ -1,6 +1,92 @@
 # Registro de validación de Airwise
 
-Evidencia organizativa y de diseño del **2026-11-11**, actualizada con AIR-011 y los contratos documentales AIR-012 del **2026-11-12**. Cada apartado conserva su alcance, resultados y límites.
+Evidencia organizativa y de diseño desde el **2026-11-11**, actualizada con AIR-011/012 y la implementación demo AIR-013 validada el **2026-11-13**. Cada apartado conserva su alcance, resultados y límites.
+
+## AIR-013 — proveedor demo implementado y probado
+
+Trabajo autorizado iniciado el 12/11/2026 y validado el **13/11/2026**, sobre HEAD da8a046bac4987396cdb022f438edb8655ebfe63 y checkout inicialmente limpio. AIR-012 estaba Hecha. Se implementó el primer componente de negocio del backend: modelos puros, puerto de proveedor y adaptador demo con recursos sintéticos.
+
+### Implementación y alcance de archivos
+
+- airport.domain: Airport.
+- flightsearch.domain: FlightSearchRequest, Travellers, Money, FlightTime, FlightSegment, Connection, FlightJourney, FlightItinerary, Airline, PriceInformation, PriceScope, AdditionalCost, BaggageAllowance, BaggageInformation, FlightOffer, PriceObservation, Seller, DataIssue, FlightTypes y DomainChecks.
+- flightsearch.application: FlightProvider, ProviderSearchRequest, ProviderExecutionContext, DatasetDescriptor, CurrencyDefinition, ProviderCapabilities, ProviderResult, ProviderIssue y StableIdentity.
+- flightprovider.demo: [DemoFlightProvider](../../backend/src/main/java/com/airwise/backend/flightprovider/demo/DemoFlightProvider.java) y DemoCorpus.
+- Recurso cerrado [demo-v1.properties](../../backend/src/main/resources/demo/demo-v1.properties): cuatro referencias de aeropuerto, 11 escenarios por origen y 16 registros, 15 ofertas y una observación.
+- Cinco clases nuevas de tests: DemoFlightProviderTests, DemoCorpusValidationTests, DemoIsolationTests, ProviderContractTests y DomainContractTests.
+
+Son 32 archivos Java principales nuevos, un recurso y cinco archivos Java de pruebas. No se modificó ningún archivo backend preexistente, incluidos test de contexto, clase de arranque, POM, propiedades y Wrapper. No hay anotaciones Spring/JPA en dominio, entidades, repositorios, migraciones, controladores ni motor de comparación. Las listas y resultados publicados son inmutables; los horarios y cantidades desconocidos conservan null/motivo.
+
+[PROVIDERS.md](../architecture/PROVIDERS.md) publica el mapa completo de fechas/escenarios, admisión y límites. Los ejemplos base conservan precios, horarios y vectores de identidad de AIR-012. Los nombres de presentación del catálogo son referencias mínimas redactadas manualmente; no se importó un dataset externo ni se verificó un catálogo comercial/licencia completa. Códigos/zonas del corpus se contrastaron con los ejemplos y Java IANA. Todos los vuelos, precios y aerolíneas D1/D2 son sintéticos.
+
+El proveedor usa un origen por solicitud, manteniendo la consulta canónica de hasta tres orígenes. La agregación entre orígenes queda para AIR-014. No modifica la semántica de COMPLETE, EMPTY, PARTIAL, FAILED o UNSUPPORTED. Una consulta admitida sin escenario tiene EMPTY completo; un fallo conserva su causa. Una oferta ida/vuelta con precio OUTBOUND_ONLY mantiene ambos trayectos y ámbito parcial, y la observación de ruta permanece separada.
+
+El reloj simulado es 2027-01-01T00:00:00Z y el calendario es 2027, independientes del sistema. El descriptor de solicitud debe coincidir íntegramente con el del servidor. supports devuelve false para descriptor inexacto/null; search rechaza ese dato con IllegalArgumentException antes de ejecutar. Un deadline operativo agotado devuelve FAILED/TIMEOUT, sin rejuvenecer datos ni alterar identidad. El componente se construye directamente en Java; no está registrado como bean Spring ni existe perfil de ejecución demo nuevo.
+
+### Agentes realmente invocados
+
+Se utilizaron collaboration.spawn_agent con agent_type backend y security_qa, sin sustituciones de rol ni cambios de permisos.
+
+- /root/air013_backend implementó exclusivamente los archivos nuevos de producción y el recurso. Su turno sufrió una interrupción por límite de uso; se reanudó tras la petición del usuario y entregó el componente. No ejecutó Maven ni escribió tests/documentación.
+- /root/air013_security_review realizó revisión de solo lectura de contratos, código y pruebas. Señaló la coherencia bidireccional DEMO/proveedor; se corrigió y se añadieron negativos de ofertas y observaciones. Revisión final conforme, incluida cobertura de variedad/escala/monedas/empates, chunk_id=539229 con código 0.
+
+El Orchestrator escribió las cinco clases de pruebas, revisó e integró, ejecutó compilación/tests/validador y actualizó la documentación. Se aplicaron testing-and-review y documentation-sync. No hubo escritores simultáneos sobre un mismo archivo.
+
+### Compilación y ejecución real
+
+Las ejecuciones usaron el Wrapper existente, Temurin 21.0.12+8 y Maven 3.10.0. Solo se reutilizaron distribución y artefactos ya presentes en .local/air011; ningún artefacto fue instalado o descargado. MAVEN_USER_HOME y repositorio local apuntaron a esa caché del workspace, TEMP/TMP a .local/air013/tmp. Las variables de proveedores y opciones externas Java/Maven/Spring se retiraron únicamente del proceso hijo; no se cambió configuración global.
+
+Desde backend, con -Dmaven.repo.local apuntando a la ruta absoluta de .local/air011/repository:
+
+| Comando | Resultado ejecutado |
+|---|---|
+| mvnw.cmd --version | Código 0; distribución existente Maven 3.10.0 / Java 21.0.12 |
+| mvnw.cmd -o -B -ntp clean compile | Código 0, BUILD SUCCESS, 33 fuentes principales compiladas con release 21 |
+| mvnw.cmd -o -B -ntp test | Código 0, BUILD SUCCESS, 62 tests, cero fallos, errores u omitidos |
+| py -3.14 scripts/validate_repository.py | Código 0, RESULTADO CORRECTO; 137 destinos locales, seis especialistas TOML, cinco skills y 17 tareas; fuentes nuevas incluidas y target excluido |
+| git diff --check y revisión de archivos nuevos | Código 0; sin errores de espacios ni marcadores de conflicto |
+
+El primer ciclo ejecutó 59 tests; tras incorporar las tres comprobaciones del escenario de variedad/vacío sin coincidencias y el negativo de hueco DST, la ejecución final comprende 62. No se omitieron ni desactivaron pruebas para obtener éxito.
+
+| Clase Surefire | Tests / fallos / errores / omitidos |
+|---|---|
+| BackendApplicationTests, conservado | 1 / 0 / 0 / 0 |
+| DemoFlightProviderTests | 18 / 0 / 0 / 0 |
+| DemoCorpusValidationTests | 6 / 0 / 0 / 0 |
+| DemoIsolationTests | 2 / 0 / 0 / 0 |
+| ProviderContractTests | 6 / 0 / 0 / 0 |
+| DomainContractTests | 29 / 0 / 0 / 0 |
+
+Evidencia local ignorada: .local/air013/version.log, clean-compile.log, test.log, before.json y scope-and-tests.json. Los reportes Surefire están en backend/target/surefire-reports. Los logs compartibles sanitizan el password generado por Spring Security. Continúa el aviso de autoenganche de Mockito/Byte Buddy en Java 21; no bloquea tests ni se cambió infraestructura para ocultarlo. El modo -o evita consultas de resolución; las referencias a índices de repositorios del log corresponden a metadatos ya cacheados.
+
+Trazas de esta sesión: Wrapper/version 40a8f6, compilación ffd9a5/5e7c6e, ejecución final de tests 6bfb26/bd8ea9, lectura Surefire bddc2c, validador 67e968, diff 1d8805 y alcance SHA-256 d4d774, todos con código final 0. El informe de alcance se actualiza al cierre con los 38 archivos nuevos y 11 documentos existentes modificados. AIR-013 ha satisfecho la DoD tras pasar por En curso y En revisión.
+
+### Cobertura de los criterios solicitados
+
+| Criterios | Evidencia ejecutada |
+|---|---|
+| Ida, ida/vuelta, varios orígenes | Resultados OPO/SCQ, vuelta vinculada y duración sin estancia |
+| Segmentos/conexiones | OPO–BCN–MAD ordenado, conexión 3600 s y total 15000 s; cronología inválida rechazada |
+| Moneda, ámbito y equipaje | EUR/USD separados, tarifa parcial, cero frente a null, estados de equipaje conocidos/desconocidos |
+| Observación separada | Registro ob_ sin itinerario ficticio, fuera de offers |
+| Determinismo/identidad | Vectores q_/of_/g_ ratificados, consultas normalizadas equivalentes, correlationId/deadline/Clock operativo sin efecto funcional |
+| Caducidad y reloj | EXPIRED y UNKNOWN en escenario fijo, descriptor forjado rechazado, deadline real agotado |
+| Vacío/fallo/parcial | EMPTY 1/1, FAILED 0/1, PARTIAL 1/2 con causa; orígenes con éxito/fallo independientes |
+| Admisión/negativos | Calendario/catálogo, consulta inválida, versión/capacidades/reloj alterados, estados y unidades incoherentes |
+| Corpus íntegro | Falta/malformación, UTF-8, tamaño, propiedades/records duplicados, rutas/fechas/moneda y límite20 de ofertas/observaciones rechazados |
+| Ausencia de llamadas externas | Código sin transporte/credenciales/procesos, inspección automatizada del bytecode nuevo y ejecución offline sin variables de proveedor |
+
+Los 37 casos CT de AIR-012 son una matriz para varios incrementos. AIR-013 ejecuta los casos de su componente y negativos relevantes; no acredita los de HTTP, filtros/páginas ni rankings de comparación todavía inexistentes. La revisión de bytecode y el diseño cerrado del componente no constituyen una auditoría general de todas las dependencias o una captura exhaustiva de red.
+
+### Preservación, documentación y límites
+
+El contraste SHA-256 al inicio confirma intactos todos los archivos backend preexistentes versionados y scripts/validate_repository.py; índice y HEAD sin cambios. El validador conserva el snapshot histórico Initializr: nueve originales idénticos, test autorizado de AIR-011 modificado, 38 archivos nuevos y ninguno ausente. Los artefactos target y evidencias locales siguen ignorados. Se enumeraron 93 candidatos Git, sin incluir build ni evidencia privada.
+
+Se sincronizaron README, DOMAIN_MODEL, MODULES, OVERVIEW, PROVIDERS, guía/inventario técnico, roadmap, backlog, changelog y este registro. Las precisiones reflejan implementación; no cambian los contratos de AIR-012 ni los ADR aceptados.
+
+No se iniciaron PostgreSQL, otros servicios, proveedores reales ni APIs; no se instalaron dependencias ni se hicieron commits/push. PostgreSQL, JPA y Flyway siguen pendientes de integración. Tampoco se comprobaron arranque de ejecución demo, seguridad HTTP, controladores, frontend o comparación. Viajes/precios no acreditan disponibilidad o reserva real.
+
+AIR-013 pasa por En curso y En revisión, y se marca Hecha únicamente tras los resultados satisfactorios y la revisión independiente. AIR-014, AIR-015 y AIR-016 permanecen Pendientes. El siguiente paso recomendado es preparar AIR-016 antes de exponer las operaciones de AIR-014; no se ha iniciado.
 
 ## AIR-012 — contratos normalizados ratificados
 

@@ -1,6 +1,6 @@
 # Guía de desarrollo inicial
 
-La raíz del repositorio contiene instrucciones, planificación, configuración de agentes y documentación. El único proyecto de aplicación presente es `backend/`, generado y con un ajuste de prueba acotado en AIR-011. Consulte el [inventario](TECHNOLOGY_INVENTORY.md) antes de elegir versiones o comandos.
+La raíz del repositorio contiene instrucciones, planificación, configuración de agentes y documentación. El único proyecto de aplicación presente es `backend/`, con el ajuste de contexto AIR-011 y el componente Java de proveedor demo AIR-013. Consulte el [inventario](TECHNOLOGY_INVENTORY.md) antes de elegir versiones o comandos.
 
 ## Empezar una tarea
 
@@ -50,6 +50,22 @@ try {
 Revisar el código de salida de cada comando mediante `$LASTEXITCODE`. Los resultados de las operaciones diagnósticas posteriores se evalúan individualmente. Los logs y reportes permanecen en rutas ignoradas y se sanitizan antes de compartirlos. Cargar el contexto de test y arrancar la aplicación con su configuración principal son comprobaciones de alcance diferente.
 
 No hay un comando raíz `mvn verify`, scripts npm, servidor de frontend, Compose ni pipeline que ejecutar. No se debe inventar una URL local, un usuario por defecto o un flujo de login para Airwise.
+
+## Proveedor demo comprobado en AIR-013
+
+Los paquetes airport.domain, flightsearch.domain/application y flightprovider.demo contienen el primer componente de negocio. [PROVIDERS.md](../architecture/PROVIDERS.md) documenta escenarios, admisión, recurso versionado y límites. Se instancia DemoFlightProvider directamente y se invoca el puerto Java; todavía no hay wiring Spring ni controladores de negocio.
+
+El 13/11/2026 se ejecutaron Wrapper clean compile y test con -o -B -ntp y las cachés existentes de AIR-011: 33 fuentes principales compiladas y 62 tests satisfactorios, incluido el contexto conservado. Offline evita descargar/instalar dependencias. Ese modo requiere que distribución y artefactos ya existan en caché; no prueba la reproducibilidad de un clon sin ella.
+
+En una sesión dedicada, con el mismo aislamiento de entorno descrito arriba, los goals usados fueron:
+
+```powershell
+# Desde backend, con $airwiseCache apuntando a la caché existente de AIR-011
+.\mvnw.cmd -o -B -ntp "-Dmaven.repo.local=$airwiseCache/repository" clean compile
+.\mvnw.cmd -o -B -ntp "-Dmaven.repo.local=$airwiseCache/repository" test
+```
+
+No se sustituyó la configuración de producción ni se omitieron tests. La prueba de contexto conserva su exclusión local a DataSource; las pruebas nuevas del componente son puras y sin servicios externos.
 
 ## Configuración y secretos
 

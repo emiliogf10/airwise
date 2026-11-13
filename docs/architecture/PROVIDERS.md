@@ -1,6 +1,34 @@
 # Adaptadores y capacidades de proveedores
 
-**Principios AIR-010 y puerto ratificado en AIR-012.** Campos y estados normalizados en [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md). La implementación corresponde a tareas posteriores. Los hechos externos se limitan a [PROVIDER_EVIDENCE.md](PROVIDER_EVIDENCE.md), aportados por el usuario. La [política](../api/PROVIDER_POLICY.md) sigue siendo obligatoria.
+**Principios AIR-010, contrato AIR-012 y proveedor demo implementado en AIR-013.** Campos y estados normalizados en [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md). Las fuentes reales corresponden a tareas posteriores. Los hechos externos se limitan a [PROVIDER_EVIDENCE.md](PROVIDER_EVIDENCE.md), aportados por el usuario. La [política](../api/PROVIDER_POLICY.md) sigue siendo obligatoria.
+
+## Implementación local de AIR-013
+
+El 13/11/2026 se comprobaron DemoFlightProvider y su corpus cerrado [demo-v1.properties](../../backend/src/main/resources/demo/demo-v1.properties). Se construye directamente como componente Java; no se registra todavía un bean Spring ni se exponen endpoints. FlightProvider publica capabilities(), supports(request) y search(request), con un origen por ejecución. Search coordinará el fan-out en AIR-014.
+
+El descriptor servidor publica demo-v1, evaluación simulada 2027-01-01T00:00:00Z, calendario inclusivo de 2027, EUR/USD, D1/D2 y cuatro aeropuertos. Las referencias OPO/MAD/SCQ/BCN se redactaron manualmente a partir de los ejemplos; el cargador comprueba sintaxis y zonas IANA mediante Java 21. No se importó un catálogo externo ni payloads de PoC. Esto no valida una fuente comercial, una licencia de catálogo completo ni disponibilidad real.
+
+| Consulta hacia MAD | Resultado sintético disponible |
+|---|---|
+| ONE_WAY OPO, 2027-02-10 | Directo 100 EUR y vectores de identidad AIR-012 |
+| ROUND_TRIP OPO/SCQ, 2027-02-10 a 17 | Una oferta por origen, 100/110 EUR; observación OPO 45 EUR solo ida separada |
+| ROUND_TRIP OPO/SCQ, 2027-02-11 a 18 | OPO completo; SCQ FAILED/OFFLINE, sin agregación HTTP todavía |
+| ONE_WAY OPO, 2027-02-12 | Ocho alternativas: vía BCN, directo más rápido, empate 100/100 EUR, USD, precio desconocido, cero explícito y vigencia desconocida |
+| ONE_WAY OPO, 2027-02-13 | FAILED/TIMEOUT simulado |
+| ONE_WAY OPO, 2027-02-14 | EMPTY completo explícito |
+| ONE_WAY OPO, 2027-02-15 | Precio OBSERVED_CACHE caducado en el reloj simulado |
+| ROUND_TRIP OPO, 2027-02-16 a 23 | Itinerario completo con tarifa OUTBOUND_ONLY |
+| ONE_WAY OPO, 2027-02-19 | ProviderResult PARTIAL, 2 unidades requeridas/1 completada, oferta y causa |
+
+Son 11 escenarios por origen y 16 registros: 15 ofertas y una observación. No se crean opciones para cualquier fecha: una consulta válida dentro de calendario/catálogo sin escenario devuelve EMPTY completo. Consulta fuera de calendario o catálogo devuelve UNSUPPORTED. La admisión exige todos los orígenes válidos, aunque cada ejecución resuelva solo uno.
+
+El descriptor de ProviderSearchRequest debe ser exactamente igual al descriptor servidor: misma versión con reloj, calendario o capacidades alterados no es admisible. supports devuelve false ante descriptor inexacto/null; search lo rechaza con IllegalArgumentException antes de ejecutar. No equivale a fallo del proveedor ni se transforma en vacío. La futura API deberá mapear errores de versión y validación conforme a su contrato.
+
+Clock del constructor es exclusivamente operativo. El deadline real se comprueba antes y después de materializar; un plazo vencido produce FAILED/PROVIDER_TIMEOUT. Los precios/horarios y sus IDs usan exclusivamente el reloj/versionado del corpus. Cambiar correlationId, deadline o reloj operativo manteniendo plazo vigente no altera el resultado funcional.
+
+El cargador lee solo el recurso de classpath, UTF-8 estricto y máximo 64 KiB. Rechaza claves duplicadas/ajenas, recordKey reutilizadas, consultas duplicadas, referencias inválidas, contradicciones de precio/ruta/fechas/tiempo, unidades incoherentes y más de 20 ofertas o 20 observaciones por escenario/origen. Valida todo antes de publicar colecciones inmutables. Recurso ausente o inválido produce un fallo explícito de construcción, sin otro dataset de reserva. La entrada InputStream para negativos es de ámbito de paquete y no acepta rutas/URLs de un cliente.
+
+Las capacidades DEMO descritas abajo están implementadas; las reales permanecen UNVERIFIED y sin adaptador. Compilación y 62 tests offline satisfactorios, incluida independencia de transporte y contexto existente; evidencia y límites en [VALIDATION.md](../developer-guide/VALIDATION.md). No se ha implementado normalización de DTO externos, filtrado/paginación HTTP ni comparación.
 
 ## Puerto y normalización
 
@@ -10,10 +38,11 @@ Cada capacidad distingue SUPPORTED, UNSUPPORTED y UNVERIFIED; “parcial” desc
 
 ### Puerto y solicitudes internas ratificadas
 
-Firma conceptual del puerto de aplicación, documentada sin crear una interfaz Java:
+Firma del puerto de aplicación implementado para AIR-013; la admisión es explícita:
 
 ```text
 FlightProvider.capabilities() -> ProviderCapabilities
+FlightProvider.supports(ProviderSearchRequest) -> boolean
 FlightProvider.search(ProviderSearchRequest) -> ProviderResult
 ```
 
@@ -21,7 +50,7 @@ ProviderSearchRequest tiene los campos exactos query, origin, dataset y context,
 
 El puerto trabaja con un origen por llamada lógica. Search coordina 1–3 orígenes. El registro interno exige providerId único y resultado con el mismo providerId/origin de su solicitud. Datos de otro contexto se rechazan como INVALID_PROVIDER_DATA. DTO externos, credenciales y excepciones permanecen dentro del adaptador.
 
-El contrato previsto de DEMO declara SUPPORTED para itineraries, priceObservations, oneWay, roundTrip y baggageDetails, y UNSUPPORTED para sellerDetails. Requiere cero red y credenciales, outputKinds=[OFFER,OBSERVATION] y maxOriginsPerCall=1. Se comprobará al implementar AIR-013. Travelpayouts y SerpApi permanecen deshabilitados y sus capacidades operativas son UNVERIFIED hasta una verificación autorizada. Las observaciones históricas no equivalen a capacidades actuales habilitadas.
+El contrato implementado de DEMO declara SUPPORTED para itineraries, priceObservations, oneWay, roundTrip y baggageDetails, y UNSUPPORTED para sellerDetails. Requiere cero red y credenciales, outputKinds=[OFFER,OBSERVATION] y maxOriginsPerCall=1. Comprobado con los tests de AIR-013. Travelpayouts y SerpApi permanecen deshabilitados y sus capacidades operativas son UNVERIFIED hasta una verificación autorizada. Las observaciones históricas no equivalen a capacidades actuales habilitadas.
 
 ### Normalización y fallos
 
@@ -80,4 +109,4 @@ La cuota gratuita vigente, coste real por operación y control de sobreconsumo s
 
 El MVP conserva solo recursos sintéticos y referencia mínima lícita. Ninguna autorización de retención de payloads reales está implícita, ni siquiera “solo en memoria”. Resolver licencia del catálogo, datos personales, duración de conservación y derechos de reutilización/publicación antes de integrar. No guardar tokens como identidad permanente o valores de negocio.
 
-La matriz ratificada en AIR-012 cubre capacidades, campos ausentes, ámbito/moneda/tiempo, fases incompletas, duplicados, fallo total/parcial y presupuesto agotado. Se ejecutará contra fixtures y dobles al implementar componentes. AIR-013 materializará el proveedor demo y sus escenarios.
+La matriz ratificada en AIR-012 cubre capacidades, campos ausentes, ámbito/moneda/tiempo, fases incompletas, duplicados, fallo total/parcial y presupuesto agotado. Se ejecutará contra fixtures y dobles al implementar componentes. AIR-013 materializa el proveedor demo y sus escenarios; los niveles HTTP/comparación y adaptadores reales conservan sus tareas posteriores.

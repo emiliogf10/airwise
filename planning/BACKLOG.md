@@ -119,11 +119,11 @@ AIR-010 autoriza únicamente análisis y documentación de diseño. Las tareas d
 
 - Descripción: crear datos sintéticos y adaptador demo explícito como primera fuente de desarrollo.
 - Prioridad: P1.
-- Estado: Pendiente.
+- Estado: Hecha.
 - Responsable: Backend Agent.
 - Dependencias: AIR-012.
 - Aceptación: origen demo visible, fixtures/catálogo/calendario/reloj por versión, resultados e IDs deterministas; ida/ida-vuelta, varios orígenes, vacío, desconocidos, monedas y fallos parciales/totales probados; ningún fallback silencioso; sin red ni BD de negocio.
-- Evidencia: no implementado.
+- Evidencia: 13/11/2026, proveedor demo puro con 32 fuentes Java nuevas, recurso demo-v1 (11 escenarios/16 registros) y cinco clases nuevas de tests. Delegación real backend y revisión security_qa conforme (539229); Orchestrator integra/ejecuta. Wrapper offline clean compile y test con código 0: 33 fuentes compiladas, 62 tests, cero fallos/errores/omitidos, incluido contexto existente. Validador y diff código 0; 38 archivos backend nuevos, preexistentes/POM/Wrapper/configuración/testcontexto intactos, HEAD/índice sin cambios. Escala, ida/vuelta/múltiples orígenes, empates, monedas, desconocidos/cero, parcialidad, caducidad, vacío/fallo, corpus inválido y aislamiento probados. Evidencia y límites en [VALIDATION](../docs/developer-guide/VALIDATION.md), escenarios en [PROVIDERS](../docs/architecture/PROVIDERS.md). Sin REST, comparación, BD ni APIs; AIR-014/015/016 no iniciadas.
 
 ### AIR-014 — Implementar búsqueda y normalización con demo
 

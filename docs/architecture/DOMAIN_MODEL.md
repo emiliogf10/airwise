@@ -1,6 +1,6 @@
 # Modelo de dominio y contratos normalizados
 
-**Diseño aceptado en AIR-010 y contratos ratificados en AIR-012.** Campos, tipos, nulabilidad, enums, identidad y relaciones están fijados en [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md). Este documento conserva el vocabulario y sus fundamentos. La implementación se desarrollará en tareas posteriores.
+**Diseño aceptado en AIR-010 y contratos ratificados en AIR-012.** Campos, tipos, nulabilidad, enums, identidad y relaciones están fijados en [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md). Este documento conserva el vocabulario y sus fundamentos. AIR-013 implementa los valores requeridos por el proveedor demo y sus contratos de aplicación; el agregado de búsqueda HTTP y Comparison siguen pendientes.
 
 ## Conceptos y propiedad
 

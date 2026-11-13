@@ -1,6 +1,6 @@
 # Inventario tecnológico observado
 
-Inventario inicial del **11/11/2026**, actualizado con el cierre autorizado de AIR-011 el **12/11/2026**. Fuentes del estado actual son el [POM](../../backend/pom.xml), POM efectivo, árbol resuelto, ejecución del Wrapper y reporte Surefire. El histórico conserva diez originales, nueve idénticos y el test modificado por autorización expresa. Maven regeneró artefactos ignorados en `backend/target/`.
+Inventario inicial del **11/11/2026**, actualizado con el cierre autorizado de AIR-011 el **12/11/2026**. AIR-013 añade modelos, contratos y proveedor demo con compilación y 62 tests offline satisfactorios el **13/11/2026**; las versiones/dependencias permanecen iguales. Fuentes del estado actual son el [POM](../../backend/pom.xml), POM efectivo, árbol resuelto, ejecución del Wrapper y reporte Surefire. El histórico conserva diez originales, nueve idénticos y el test modificado por autorización expresa. Maven regeneró artefactos ignorados en `backend/target/`.
 
 ## Base existente
 
@@ -25,7 +25,7 @@ Las quince dependencias se comprobaron en el POM efectivo y el árbol resuelto d
 | `org.springframework.boot:spring-boot-starter-data-jpa` | compile implícito | Declarada; no hay entidades ni repositorios de negocio |
 | `org.springframework.boot:spring-boot-starter-flyway` | compile implícito | Declarada; no hay migraciones |
 | `org.springframework.boot:spring-boot-starter-security` | compile implícito | Declarada; no hay configuración de usuarios/permisos de negocio |
-| `org.springframework.boot:spring-boot-starter-validation` | compile implícito | Declarada; no hay DTOs o reglas de negocio |
+| `org.springframework.boot:spring-boot-starter-validation` | compile implícito | Declarada; existen invariantes puras de dominio, sin DTO HTTP ni controladores |
 | `org.springframework.boot:spring-boot-starter-webmvc` | compile implícito | Servlet/Web MVC; no se presupone WebFlux ni un starter llamado web |
 | `org.flywaydb:flyway-database-postgresql` | compile implícito | Soporte declarado, sin BD creada ni scripts |
 | `org.springframework.boot:spring-boot-devtools` | runtime; optional=true | Herramienta declarada, sin uso de ejecución verificado |
@@ -68,7 +68,7 @@ El generado incluye directorios vacíos `src/main/resources/static`, `templates`
 - H2 y Testcontainers están ausentes del árbol resuelto. Una herramienta OpenAPI no aparece como dependencia directa. No hay especificación OpenAPI ejecutable ni Javadoc del dominio.
 - React, TypeScript, Vite, Tailwind CSS, TanStack Query, Vitest y Playwright: sin proyecto frontend ni `package.json`.
 - PostgreSQL como servidor, Docker Compose y GitHub Actions: previstos; no se han configurado ni comprobado servicios.
-- Monolito modular y adaptadores de proveedores: diseño aceptado en AIR-010, todavía sin paquetes de negocio ni adaptadores implementados.
+- Monolito modular: Airport/domain, Flight Search/domain y application, y adaptador Flight Provider/demo implementados en AIR-013; sin Comparison, API de negocio ni adaptadores reales.
 
 ## Entorno de agentes observado
 

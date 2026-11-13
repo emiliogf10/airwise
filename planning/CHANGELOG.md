@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### 2026-11-13 — proveedor demo AIR-013
+
+- Implementados modelos inmutables, puerto independiente y proveedor demo sin red, con identidad SHA-256 y corpus sintético versionado: 11 escenarios/16 registros, incluidas escalas, empates, monedas, desconocidos, caducidad y estados vacíos/fallidos/parciales.
+- Añadidos 61 casos nuevos automatizados; el total con el contexto conservado es 62, todos satisfactorios. Compilación y tests mediante Wrapper offline; validador documental satisfactorio. Revisión real de backend/security_qa integrada.
+- Preservados todos los archivos backend anteriores, POM, Wrapper, configuración y script validador. HTTP, frontend, comparación, wiring demo y persistencia siguen pendientes.
+
 ### 2026-11-12 — contratos AIR-012
 
 - Ratificados contratos airwise-v1 de búsqueda, vuelos/precios, proveedores y tres operaciones HTTP, con 18 ejemplos sintéticos y 37 casos de contrato previstos. Separados itinerario completo, observación parcial y desconocidos; definidos identidad estable, estados/errores, cotas, grupos y desempates explicables.
