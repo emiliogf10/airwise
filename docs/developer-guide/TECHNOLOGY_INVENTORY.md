@@ -1,6 +1,6 @@
 # Inventario tecnológico observado
 
-Inventario inicial del **11/11/2026**, actualizado con el cierre autorizado de AIR-011 el **12/11/2026**. AIR-013 añade modelos, contratos y proveedor demo con compilación y 62 tests offline satisfactorios el **13/11/2026**; las versiones/dependencias permanecen iguales. Fuentes del estado actual son el [POM](../../backend/pom.xml), POM efectivo, árbol resuelto, ejecución del Wrapper y reporte Surefire. El histórico conserva diez originales, nueve idénticos y el test modificado por autorización expresa. Maven regeneró artefactos ignorados en `backend/target/`.
+Inventario inicial del **11/11/2026**, con histórico AIR-011/013 preservado y actualización AIR-014 del **16/11/2026**: perfil demo, catálogo/búsqueda REST, DTO explícitos, Security/JSON/admisión y 181 pruebas satisfactorias. No se han modificado POM, Wrapper, aplicación principal, configuración común ni test original en AIR-014. Se conservan las 15 dependencias y las versiones siguientes. Empaquetado offline no disponible por ausencia de maven-jar-plugin 3.5.1; no hay JAR generado. Plazo absoluto de lectura verificado en HTTP/1.1 NIO demo; tarea Hecha. TLS/HTTP2 se rechazan hasta validación posterior.
 
 ## Base existente
 
@@ -21,11 +21,11 @@ Las quince dependencias se comprobaron en el POM efectivo y el árbol resuelto d
 
 | Dependencia | Scope / atributo | Presencia frente a implementación |
 |---|---|---|
-| `org.springframework.boot:spring-boot-starter-actuator` | compile implícito | Declarada; endpoints/seguridad operativa no verificados |
+| `org.springframework.boot:spring-boot-starter-actuator` | compile implícito | Declarada; exposición demo web/JMX cerrada y rutas denegadas en tests |
 | `org.springframework.boot:spring-boot-starter-data-jpa` | compile implícito | Declarada; no hay entidades ni repositorios de negocio |
 | `org.springframework.boot:spring-boot-starter-flyway` | compile implícito | Declarada; no hay migraciones |
-| `org.springframework.boot:spring-boot-starter-security` | compile implícito | Declarada; no hay configuración de usuarios/permisos de negocio |
-| `org.springframework.boot:spring-boot-starter-validation` | compile implícito | Declarada; existen invariantes puras de dominio, sin DTO HTTP ni controladores |
+| `org.springframework.boot:spring-boot-starter-security` | compile implícito | Cadena demo restrictiva implementada; sin usuarios ni autenticación de cuentas |
+| `org.springframework.boot:spring-boot-starter-validation` | compile implícito | Invariantes puras y DTO/parser HTTP; Bean Validation en paginación |
 | `org.springframework.boot:spring-boot-starter-webmvc` | compile implícito | Servlet/Web MVC; no se presupone WebFlux ni un starter llamado web |
 | `org.flywaydb:flyway-database-postgresql` | compile implícito | Soporte declarado, sin BD creada ni scripts |
 | `org.springframework.boot:spring-boot-devtools` | runtime; optional=true | Herramienta declarada, sin uso de ejecución verificado |
@@ -68,7 +68,15 @@ El generado incluye directorios vacíos `src/main/resources/static`, `templates`
 - H2 y Testcontainers están ausentes del árbol resuelto. Una herramienta OpenAPI no aparece como dependencia directa. No hay especificación OpenAPI ejecutable ni Javadoc del dominio.
 - React, TypeScript, Vite, Tailwind CSS, TanStack Query, Vitest y Playwright: sin proyecto frontend ni `package.json`.
 - PostgreSQL como servidor, Docker Compose y GitHub Actions: previstos; no se han configurado ni comprobado servicios.
-- Monolito modular: Airport/domain, Flight Search/domain y application, y adaptador Flight Provider/demo implementados en AIR-013; sin Comparison, API de negocio ni adaptadores reales.
+- Monolito modular: dominio, aplicación y proveedor AIR-013; Airport/api, Flight Search/api, proyecciones HTTP compartidas y configuración/seguridad demo añadidos en AIR-014. Sin Comparison ni adaptadores reales.
+
+## Compatibilidad estática revisada en AIR-016
+
+El 13/11/2026 se inspeccionaron JAR/metadata/bytecode locales, sin Maven ni ejecución del backend. Security 7.1.2 ofrece PathPatternRequestMatcher, matchers compuestos, handlers y addFilterBefore; Boot 4 sitúa WebMvcTest/AutoConfigureMockMvc en org.springframework.boot.webmvc.test.autoconfigure. Jackson 3 ofrece restricciones/coerciones y EnumFeature para enum numérico.
+
+Las propiedades de error actuales son spring.web.error.*; server.error.include-* figura como alias deprecado con nivel error. La metadata de Security incluye los cinco dispatchers servlet. La exclusión demo de DataSource no cubre por sí sola Flyway con URL/connection details, JNDI o XA. Una cadena propia tampoco impide usuario generado: se ha diseñado la exclusión UserDetailsServiceAutoConfiguration solo en demo.
+
+Diseño/criterios en [DEMO_RUNTIME](DEMO_RUNTIME.md) y [TESTING_STRATEGY](TESTING_STRATEGY.md). No han cambiado versiones, dependencias, configuración ni la evidencia histórica de 62 tests.
 
 ## Entorno de agentes observado
 
@@ -78,6 +86,6 @@ Extensión instalada `openai.chatgpt` **26.51106.51428**, con requisito VS Code 
 
 AIR-011 valida el contexto demo sin persistencia tras aplicar el cambio autorizado al único archivo de test. El test conserva SpringBootTest y comprueba contexto activo, configuración principal presente como bean y ausencia de DataSources. La configuración de producción conserva su contenido.
 
-PostgreSQL, JPA y Flyway siguen pendientes de pruebas de integración. Una prueba de ese alcance requerirá PostgreSQL aislado y configuración externa cuando se autorice persistencia real. La prueba actual utiliza propiedades locales a la anotación y el perfil Spring predeterminado; no crea un perfil de producción denominado demo.
+PostgreSQL, JPA y Flyway siguen pendientes de integración. El test original usa su exclusión local y perfil predeterminado; los tests AIR-014 activan demo explícitamente y acreditan ausencia de recursos persistentes y usuario generado, no funcionamiento de persistencia.
 
-Actuator, reglas de acceso HTTP, conexiones PostgreSQL, transacciones y migraciones permanecen sin validar en runtime. Maven emitió advertencias HTTP 401 al pedir metadatos de prefijos a dos repositorios adicionales heredados de Flyway. Compilación, árbol y POM efectivo completaron sus operaciones. La propiedad `distributionSha256Sum` del Wrapper está ausente y su incorporación requiere una propuesta autorizada con checksum oficial verificado.
+Actuator cerrado y reglas HTTP demo se verificaron en AIR-014. Conexiones PostgreSQL, transacciones, migraciones y controles de publicación siguen pendientes. El plazo absoluto de lectura lenta se verificó en HTTP/1.1 NIO local; TLS/HTTP2 requieren validación independiente. Las advertencias HTTP401 de metadatos pertenecen al diagnóstico histórico AIR-011; AIR-014 usó modo offline. `distributionSha256Sum` sigue ausente y no se ha modificado el Wrapper para incorporarla.

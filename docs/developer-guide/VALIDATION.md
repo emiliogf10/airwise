@@ -1,6 +1,132 @@
 # Registro de validación de Airwise
 
-Evidencia organizativa y de diseño desde el **2026-11-11**, actualizada con AIR-011/012 y la implementación demo AIR-013 validada el **2026-11-13**. Cada apartado conserva su alcance, resultados y límites.
+Evidencia desde el **2026-11-11**, actualizada con la implementación AIR-014 del **16/11/2026**. Cada apartado conserva su alcance, resultados y límites.
+
+## AIR-014 — catálogo y búsqueda REST demo completados
+
+Autorización específica para código/configuración/test del buscador demo sobre la base existente; no POM, Wrapper, base de datos, comparación, frontend ni proveedores reales. Se preservaron los cambios documentales AIR-016 anteriores. No hubo commits, push, instalación ni configuración global.
+
+### Entrega implementada
+
+- O-01: outputKinds no vacío exige alguna capacidad SUPPORTED. Tres regresiones; no se amplía a una correspondencia bidireccional no ratificada.
+- Incremento A: `config.demo` y `application-demo.properties`, Clock operativo/proveedor únicos; guardas anteriores a singletons, perfil explícito y sin persistencia/usuario generado.
+- Incremento B: `airport.api.AirportController` y `flightsearch.application.DemoCatalog`, catálogo normalizado, versión y página estables.
+- Incrementos C/D: `flightsearch.application.SearchView/DemoSearchService`, `flightsearch.api.SearchRequestReader/FlightSearchController/DemoSearchConfiguration`; DTO explícitos compartidos en `api.NormalizedViews/RequestValues`. Sin serializar directamente dominio/proveedor.
+- `http`: Security exacta para GET catálogo/POST búsqueda, gate anterior a CSRF, contexto servidor, CORS, admisión, bytes/JSON estricto, cabeceras y escritor compartido. ERROR interno GET/POST reutiliza contexto y escribe directamente sin CSRF/sesión ni negocio nuevo.
+- Monedas y grupos incompatibles separados, observaciones aparte, null/cero conservados, filtros AND/OR, órdenes estables antes de página y fallos/vacíos/parcialidad diferenciados. No comparación implementada.
+
+Se usaron agentes ejecutables `backend` y `security_qa`, con propiedad de archivos separada. Backend entregó incremento A y su ejecución; Security implementó la frontera y pruebas. El coordinador integró DTO/casos de uso/controladores, ejecutó validaciones y revisó las correcciones de borde. Las pruebas actuales no se atribuyen a una revisión independiente completa si no existe su entrega.
+
+### Comandos y resultados ejecutados
+
+Windows PowerShell, Temurin21.0.12+8, Maven Wrapper existente3.3.4/Maven3.10.0; Boot4.1.2, Security7.1.2, Jackson3.1.7 y Tomcat11.0.27. Mismo POM de15 dependencias. Caché y distribución en `.local/air011`; runners locales ignorados en `.local/air014` retiran únicamente del proceso hijo las variables de proveedores, opciones Java/Maven/Spring y DEBUG/TRACE/LOGGING_LEVEL_*. No se muestran sus valores. TEMP/TMP dentro del workspace.
+
+Todos los goals Maven siguientes usan `mvnw.cmd -o -B -ntp -Dmaven.repo.local=<workspace>/.local/air011/repository` desde backend:
+
+| Verificación | Resultado / evidencia local ignorada |
+|---|---|
+| A: `-Dtest=ProviderCapabilitiesTests,ProviderContractTests,DemoStartupGuardTests,DemoRuntimeStartupTests test` | 15 pruebas correctas; `increment-a/selected-tests.log` |
+| B: `-Dtest=AirportHttpTests test` | 4 pruebas correctas; `increment-b.log` |
+| C: `-Dtest=FlightSearchHttpTests,DemoSearchServiceTests test` | 15 pruebas correctas en ese punto; `increment-c.log` |
+| D: validación, Security, admisión y transporte | 75 pruebas correctas tras correcciones; `increment-d-fixed.log` |
+| Primera integral `clean test` | BUILD SUCCESS, código0, 61 fuentes principales/16 fuentes de tests, 169 pruebas, cero fallos/errores/omitidas; `full-tests.log` y Surefire XML |
+| `package` offline | Código1: maven-jar-plugin3.5.1 no está en caché. No se descargó nada; no hay JAR generado; `package.log` |
+| `java @.local/air014/demo-java.args` | Aplicación principal independiente, perfil demo, loopback/puerto63317 observado. Classpath ya resuelto sin test-classes; receta en [DEMO_RUNTIME](DEMO_RUNTIME.md) |
+| curl.exe contra ese proceso | Catálogo200/OPO, búsqueda200/COMPLETE/100.00EUR, fallo503/PROVIDERS_FAILED y comparación403; `runtime-results.json`, proceso detenido al terminar |
+
+Los errores intermedios no se ocultaron: import Boot4 y orden de argumentos de fingerprint detectados por compilación; test TTL retenía permisos y test de tokens contaba comas. Se corrigieron causas, sin desactivar tests. Se añadieron regresiones para ausencia de CSRF globalmente deshabilitado, ERROR real de POST y cabeceras CORS en rechazo temprano por concurrencia.
+
+La suite final cubre 62 casos anteriores y119 nuevos: contexto/guardas, O-01, catálogo, búsqueda/contrato, validación léxica/semántica, Security y cuotas/concurrencia. HTTP real prueba chunked con65536/65537bytes, cabeceras del conector, casos200/403/500, permisos liberados y fallbackERROR GET/POST. Cuarenta observaciones conservan conteo y se truncan explícitamente a20. Las pruebas no contactan APIs; los clientes de integración solo apuntan a127.0.0.1.
+
+### Incidencia de lectura y cierre verificado
+
+**Fallo corregido y AIR-014 Hecha:** el diagnóstico anterior6,06s se conserva en `.local/air014/runtime-results-before-deadline.json`. La corrección del transporte mantiene lectura en el mismo hilo, Selector local por tiempo restante y retirada del scope/entrada incompleta en finally. Selección corregida10/10 de plazo/CORS y otras35 pruebas de frontera satisfactorias; la desconexión necesitó una barrera de entrada real de test, sin sustituir el limiter productivo por un spy temprano. Backend revisó estáticamente aplicación y transporte y contrastó APIs/bytecode locales Tomcat11.0.27; sin defectos identificados.
+
+Cierre ejecutado: `mvnw.cmd -o -B -ntp -Dmaven.repo.local=<cache> clean test`, log `.local/air014/full-tests-final.log`, BUILD SUCCESS, 64 fuentes principales/18 de tests, 181 pruebas sin fallos/errores/omitidas. Java independiente y curl repetidos tras la corrección: cuatro estados HTTP correctos y rechazo del goteo continuo en5.01s. Recursos/2permisos liberados, framing/trailers/bloqueo/desconexión probados. Solo HTTP/1.1 NIO demo; TLS/HTTP2 rechazados explícitamente hasta validación propia. Decisión en [ADR-0005](../decisions/0005-demo-body-read-deadline.md).
+
+Empaquetado offline, arranque mediante spring-boot:run y distribución de producción no están acreditados. La falta de plugin JAR no invalida compilación/tests ni el arranque Java directo comprobado. Tampoco se acredita TLS/proxy/egress bloqueado por sistema operativo, DDoS distribuido, adaptación real o persistencia. La ausencia de transporte en negocio se comprueba estáticamente y con proveedor DEMO único; no equivale a captura exhaustiva de red.
+
+POM, Wrapper, aplicación principal, configuración común y test original no presentan diff en AIR-014. Solo se modifica ProviderCapabilities entre fuentes anteriores; el resto productivo es nuevo. No se regeneró Initializr ni snapshot histórico. `py -3.14 scripts/validate_repository.py` y `git diff --check` satisfactorios tras sincronización; comprobación adicional de18 ejemplos JSON sin duplicadas, espacios finales y7 archivos protegidos sin diff. No es un escáner general de secretos. El backlog registra el cierre con evidencia y mantiene AIR-015 Pendiente.
+
+## AIR-016 — seguridad y estrategia de pruebas diseñadas
+
+Revisión documental y estática del **13/11/2026**, iniciada sobre HEAD 4d738f5582b8d17638d0ac00247b13558d2664a1 y checkout limpio. AIR-010/011/013 estaban Hechas. La autorización comprende diseño, pruebas acotadas si aportan evidencia y documentación; no autoriza cambiar producción ni configuración Spring, ni iniciar AIR-014/015.
+
+### Entrega y criterios
+
+| Criterio | Decisión y fuente revisable |
+|---|---|
+| Política HTTP compatible | [BASELINE](../security/BASELINE.md): solo tres método/ruta públicos, gate previo a CSRF, autorización final denyAll y dispatchers acotados |
+| Demo sin PostgreSQL | [DEMO_RUNTIME](DEMO_RUNTIME.md): perfil explícito, exclusión DataSource/UserDetailsService solo en demo, guardas anteriores a conexiones |
+| Superficies públicas/privadas | CORS/preflight exactos, resto 403, ERROR interno restringido, Actuator web/JMX cerrado |
+| Pruebas verificables | [TESTING_STRATEGY](TESTING_STRATEGY.md): 49 casos, niveles unitario/contrato/web slice/integración y estados E13/P |
+| Revisión del código | 32 fuentes AIR-013, recurso y seis clases de tests inspeccionados; O-01 y límites de sanitización/frescura documentados |
+| Controles pendientes | Todo HTTP/perfil/limitador es diseño; no se declara runtime implementado ni ruta segura |
+| Validaciones | Inspección JAR/metadata, verificador estático independiente, enlaces/metadatos/planificación/hash/diff satisfactorios |
+| Planificación | AIR-016 revisada y cerrada por su DoD documental; AIR-014/015 permanecen Pendientes |
+
+El diseño conserva los contratos de negocio AIR-012. API_DESIGN añade los estados de borde 403 ACCESS_DENIED, 404 RESOURCE_NOT_FOUND y 406 NOT_ACCEPTABLE sin cambiar ErrorResponseDTO. El preflight válido no devuelve body de negocio. Accept incompatible produce 406 JSON; un rechazo anterior mantiene su estado. No se promete JSON/UUID para errores de conector/TLS/proxy anteriores al proceso.
+
+CSRF requiere atención al stack real: STATELESS no impide por sí solo creación de sesión por el repositorio de token. El gate de admisión comparte matchers REQUEST/método/ruta y rechaza antes de CsrfFilter; no abre todo ERROR ni desactiva Security/CSRF globalmente. La excepción ERROR exige destino /error, atributo del contenedor y marca interna de petición pública original. No recarga cuota/permisos/deadline y solo escribe error sanitizado.
+
+Se fijan cotas de body 65536 bytes efectivos, profundidad12, 10000 tokens y límites de parser/dominio/admisión. Los valores de buckets/concurrencia/timeouts son diseño inicial, sin benchmark ni SLO. El perfil local se liga a loopback y CORS externo comienza vacío. Publicación y futuros proveedores requieren controles/configuración verificados y autorización propios.
+
+### Agentes y compatibilidad real
+
+Se invocaron realmente por collaboration.spawn_agent:
+
+- /root/air016_security, agent_type security_qa: análisis principal HTTP/riesgos y revisión de AIR-013; solo lectura.
+- /root/air016_backend, agent_type backend: contraste técnico con Boot 4.1.2, Security 7.1.2, Framework 7.0.10 y Jackson 3.1.7 locales; solo lectura.
+
+No se invocó database: no había cambio de persistencia y backend comprobó las condiciones de JPA/Flyway/JDBC directamente. El Orchestrator integró y escribió exclusivamente Markdown y evidencia local ignorada. Se aplicaron testing-and-review, documentation-sync y security-audit en modo de revisión acotada, sin auditoría integral, pentest o investigación de CVE actuales.
+
+Ambos especialistas releyeron los borradores. Se cerraron las precisiones de Accept/406, límite concreto de tokens y cobro único de admisión en ERROR; confirmaron que no quedaban contradicciones materiales en el diseño. Esto es revisión de un diseño, no test HTTP.
+
+Inspecciones de firmas/bytecode con jar tf y javap -classpath <jar local> -p/-c/-v, sin ejecutar clases del backend:
+
+- PathPatternRequestMatcher, RequestMatchers y HttpSecurity/addFilterBefore existen. Orden estándar HeaderWriterFilter → CorsFilter → CsrfFilter; OncePerRequestFilter omite ERROR condicionado al atributo servlet real.
+- WebMvcTest/AutoConfigureMockMvc de Boot 4 pertenecen a org.springframework.boot.webmvc.test.autoconfigure; filtros activos por defecto. No usar imports Boot 3.
+- Jackson 3 ofrece constraints/coerciones/duplicadas/trailing tokens. FAIL_ON_NUMBERS_FOR_ENUMS pertenece a EnumFeature; annotations sigue com.fasterxml.jackson.annotation.
+- JPA requiere DataSource en las condiciones revisadas. Flyway admite DataSource, JdbcConnectionDetails o URL; JNDI/XA son independientes. La exclusión del test AIR-011 no es garantía universal ante configuración externa.
+- Una cadena propia no hace retroceder UserDetailsServiceAutoConfiguration; el diseño demo evita usuario/password generados mediante su exclusión acotada.
+- Metadata Boot 4 usa spring.web.error.*; server.error.include-* está deprecado con nivel error. Security incluye cinco dispatchers.
+
+Evidencia estática de backend: cdf900 (Security), 01fc56 (Boot/MockMvc), d5a2ad y verificaciones posteriores (JPA/Flyway), ce0688/7c6b50/9b221f (Jackson), 6ac920 (CORS/handlers), 70e155 (filtros/ERROR) y 76d041 (usuario generado), todos con comprobaciones pertinentes de código 0. Clases exploratorias inexistentes se descartaron; no forman parte de la propuesta. Root leyó metadata local mediante zipfile/json, códigos 0 en fc833f y 8a0756, sin cargar esas clases.
+
+### Hallazgos y límites de la revisión
+
+No se confirmó vulnerabilidad explotable en la superficie existente. No hay controladores de negocio, adaptadores externos o configuración HTTP propia. No se ha auditado toda dependencia ni una instalación/despliegue.
+
+O-01: desviación contractual interna de prioridad baja en [ProviderCapabilities](../../backend/src/main/java/com/airwise/backend/flightsearch/application/ProviderCapabilities.java), constructor líneas 13–17. Todos los estados UNVERIFIED con outputKinds=[OFFER] superan sus condiciones según fuente; el contrato exige vacío si nada está verificado. No se ejecutó ese constructor durante AIR-016, no existe entrada remota a ese camino y el descriptor DEMO actual es correcto. Propuesta mínima y test de regresión en BASELINE/T-07; corrección solo en tarea posterior autorizada. No se refactorizó producción para resolverla.
+
+ProviderIssue/DataIssue permiten texto sintácticamente válido: el demo usa catálogo, pero un adaptador futuro no puede copiar mensajes remotos. DemoCorpus deriva correctamente frescura en su reloj fijo; el nuevo borde debe conservarlo. La prueba de bytecode es una regresión de transportes conocidos, no captura exhaustiva de tráfico.
+
+### Comprobaciones ejecutadas
+
+Se eligieron comprobaciones estáticas porque solo cambia documentación. No se ejecutó Maven, Spring ni código objetivo, ni se repitieron los 62 tests. La ejecución anterior se mantiene como evidencia histórica; los XML se leyeron sin mostrar stdout sensible.
+
+| Comando / inspección | Resultado |
+|---|---|
+| py -3.14 .local/air016/check_repository.py | Código 0; 167 destinos locales, seis TOML, cinco skills, 17 tareas y 18 JSON; verificación independiente sin importar/ejecutar código del repositorio |
+| Lectura estática de metadata/JAR | Firmas/claves/condiciones anteriores verificadas; sin instalación/red |
+| Revisión de los 18 JSON de EXAMPLES | Sintaxis y ausencia de claves duplicadas comprobadas |
+| git diff --check | Código 0; avisos LF/CRLF existentes, sin errores de espacios |
+| git status --short y candidatos | Solo documentación; dos documentos nuevos, sin build/evidencia privada |
+| SHA-256 | Los 130 archivos backend actuales —fuentes/configuración/target— idénticos al inicio; validador versionado, HEAD e índice intactos |
+
+El verificador local revisa destinos de enlaces contra candidatos Git, sintaxis TOML de seis especialistas, metadatos de cinco skills, 17 tareas/dependencias sin ciclos, 49 filas de casos y 12 riesgos, estados AIR, POM Java21/Boot4.1.2/15 dependencias, formato/espacios/marcadores sensibles y preservación completa. Lee datos fuente/reportes; no importa ni ejecuta scripts/validate_repository.py ni los tests del backend. No es un escáner general de secretos o auditoría de dependencias.
+
+El primer intento del verificador se lanzó antes de mover AIR-016 a En revisión y se detuvo por esa precondición del arnés. Tras registrar el estado correspondiente terminó con código 0 (027e0d); no fue un fallo del producto. El resultado final y la lista de documentos quedan en .local/air016/static-checks.json, y los hashes iniciales en before.json, ambos ignorados.
+
+Contraste completo del cierre: 95 candidatos Git, 11 documentos creados/actualizados (dos nuevos), 49 casos diseñados y 12 riesgos; verificador 642d3f y diff 2d9f7e con código 0. El archivo Java/configuración/artefacto backend no ha cambiado y los 62 casos de Surefire siguen siendo históricos de AIR-013.
+
+### Cierre y trabajo pendiente
+
+Los controles descritos permanecen por implementar y ejecutar en una tarea autorizada. El entorno actual no acredita HTTP, perfil demo, límites de transporte, seguridad efectiva, Actuator cerrado o ausencia universal de conexiones ante configuración arbitraria. Las futuras pruebas runtime requieren aislamiento y recursos/red acotados; su validación no se sustituye por inspección estática. PostgreSQL/JPA/Flyway siguen pendientes de integración.
+
+Se conservan todas las evidencias históricas siguientes, incluidos resultados y estados propios de cada fase. No se modificaron Java, tests, recursos demo, POM, Wrapper, propiedades, configuración global, .codex ni .agents. Sin dependencias instaladas, APIs de vuelos, commits o push.
+
+AIR-016 satisface sus ocho criterios como tarea de diseño/revisión tras En curso → En revisión → Hecha. O-01 queda documentada para corrección autorizada y no bloquea este alcance. La próxima tarea recomendada es AIR-014 con autorización para el perfil/cadena/borde HTTP y sus pruebas; AIR-015 mantiene su dependencia de esa implementación. Ninguna de ellas se ha iniciado.
 
 ## AIR-013 — proveedor demo implementado y probado
 
@@ -471,3 +597,9 @@ airwise/
 ```
 
 `.git/` y `.local/` no se incluyen en el árbol de archivos de entrega. No se crearon directorios vacíos ni un proyecto de aplicación nuevo. Se conservaron los tres directorios vacíos del backend generado (`static`, `templates` y `db/migration`) por la instrucción de mantener esa base intacta.
+
+## AIR-014 — comprobación adicional de classloaders
+
+Tras la primera suite de180 pruebas, el proceso Java independiente encontró un fallo que SpringBootTest no reproducía: goteo400 tras8,09s. DevTools había cargado BodyReadDeadline en AppClassLoader y RestartClassLoader; Protocol y filtro no compartían el ThreadLocal. La traza `.local/air014/deadline-classloaders.log` confirma la causa. Se añadió una guarda previa al bind por identidad real del handler/loader y una regresión con URLClassLoader aislado, sin puentes globales, reflexión propia, cambio del main o retirada de la dependencia.
+
+Receta corregida: `-Dspring.devtools.restart.enabled=false` en la JVM, antes del main; application-demo.properties desactiva además defaults de desarrollo. Java independiente/curl repetido con DevTools presente: cuatro estados esperados y goteo400 en5,01s. Arranque negativo con restart habilitado: mensaje fijo de guarda y Spring abortado sin puerto abierto, `.local/air014/restart-guard-results.json`. DevTools RestartLauncher devolvió código0 a pesar del fallo; no se confunde con un contexto arrancado. Todos los procesos de verificación se detuvieron. La suite final se repitió desde limpio después de esta guarda, con el total indicado en el cierre AIR-014.

@@ -12,4 +12,5 @@
 - Añade pruebas proporcionales al comportamiento cambiado y ejecuta las pertinentes. No llames a proveedores en tests. No afirmes que algo compila, pasa o está disponible sin evidencia ejecutada; separa estático, ejecutado y pendiente.
 - Mantén cambios pequeños y convenciones de `CONTRIBUTING.md`. Respeta el Javadoc existente; añade Javadoc cuando explique contratos, invariantes o decisiones no evidentes.
 - Actualiza documentación y ADR afectados de forma proporcional. Tras completar una tarea, registra comando/resultado o evidencia revisable en el backlog y aplica su Definition of Done.
+- Al finalizar cada tarea, entrega un mensaje de commit completo listo para copiar, siguiendo `CONTRIBUTING.md`: título `tipo(ámbito): descripción`, identificador AIR cuando corresponda y cuerpo con cambios, verificaciones ejecutadas y limitaciones relevantes.
 - No cambies configuración global, instales herramientas globales, hagas commits, push, despliegues o publicaciones sin autorización expresa. No reduzcas controles del sandbox ni de aprobación.

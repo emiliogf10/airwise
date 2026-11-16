@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### 2026-11-16 — buscador REST demo AIR-014 completado
+
+- Perfil demo explícito, guardas antes de conexiones, catálogo GET y búsqueda POST sobre DEMO; corregida O-01. DTO HTTP separados, validación estricta, filtros, orden, páginas y causas parciales conservadas.
+- Security restrictiva para dos rutas, sin sesión/login, CORS por allowlist, CSRF específico, Actuator cerrado, errores/cabeceras uniformes y admisión acotada. Comparación sigue denegada y AIR-015 sin iniciar.
+- Wrapper offline `clean test`: 181 pruebas satisfactorias; HTTP real, chunked, bytes/concurrencia/ERROR GET y POST, proceso Java independiente y curl comprobados. POM/Wrapper/base generada intactos en esta tarea; sin APIs ni nuevas dependencias.
+- Corregido el plazo total de lectura lenta mediante NIO demo; goteo, framing incompleto y desconexión probados. HTTP/1.1 local únicamente, TLS/HTTP2 pendientes; ADR-0005 registra decisión y consecuencias. `package` offline no generó JAR por plugin ausente en caché; no se descargó ni alteró configuración para eludirlo.
+
+### 2026-11-13 — diseño de seguridad y pruebas AIR-016
+
+- Definidos permisos exactos, denegación por defecto, gate anterior a CSRF, CORS, errores/cabeceras, cierre Actuator y cotas operativas. Perfil demo y guardas de persistencia diseñados con APIs reales Boot 4.1.2/Security 7/Jackson 3.
+- Revisiones reales de security_qa y backend; documentada O-01 de capacidades como desviación funcional interna de prioridad baja. Matriz de 49 casos distingue pruebas históricas de controles HTTP/runtime pendientes.
+- Solo documentación y comprobaciones estáticas, sin modificar backend/configuración ni repetir los tests de AIR-013. AIR-014/015 no iniciadas.
+
 ### 2026-11-13 — proveedor demo AIR-013
 
 - Implementados modelos inmutables, puerto independiente y proveedor demo sin red, con identidad SHA-256 y corpus sintético versionado: 11 escenarios/16 registros, incluidas escalas, empates, monedas, desconocidos, caducidad y estados vacíos/fallidos/parciales.

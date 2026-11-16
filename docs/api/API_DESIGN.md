@@ -1,6 +1,6 @@
 # API REST del MVP demo — contrato v1
 
-**Ratificado en AIR-012.** Las rutas y DTO siguientes especifican la implementación posterior. Los tipos compartidos, enums e invariantes están definidos en [NORMALIZED_CONTRACTS.md](../architecture/NORMALIZED_CONTRACTS.md). Los ejemplos completos se encuentran en [EXAMPLES.md](EXAMPLES.md).
+**Ratificado en AIR-012; catálogo y búsqueda implementados y verificados en AIR-014 (16/11/2026).** Comparación sigue siendo contrato futuro de AIR-015 y devuelve403. Tipos e invariantes en [NORMALIZED_CONTRACTS](../architecture/NORMALIZED_CONTRACTS.md), ejemplos contractuales en [EXAMPLES](EXAMPLES.md) y uso ejecutado en [DEMO_USAGE](DEMO_USAGE.md). Arranque y límites de HTTP/1.1 demo en [DEMO_RUNTIME](../developer-guide/DEMO_RUNTIME.md).
 
 ## Convenciones HTTP
 
@@ -10,11 +10,11 @@ Cuerpo máximo 65536 bytes y profundidad JSON máxima 12. Claves duplicadas, cam
 
 | Método y ruta | Entrada | Respuesta | Acceso |
 |---|---|---|---|
-| GET `/api/v1/demo/airports` | q, datasetVersion, page, pageSize | 200 AirportCatalogResponseDTO | Público previsto |
-| POST `/api/v1/demo/flight-searches` | FlightSearchRequestDTO | 200 FlightSearchResult, COMPLETE/PARTIAL | Público previsto |
-| POST `/api/v1/demo/comparisons` | ComparisonRequestDTO | 200 ComparisonResponseDTO | Público previsto |
+| GET `/api/v1/demo/airports` | q, datasetVersion, page, pageSize | 200 AirportCatalogResponseDTO | Público implementado en demo |
+| POST `/api/v1/demo/flight-searches` | FlightSearchRequestDTO | 200 FlightSearchResult, COMPLETE/PARTIAL | Público implementado en demo |
+| POST `/api/v1/demo/comparisons` | Contrato futuro ComparisonRequestDTO | Actualmente 403 ACCESS_DENIED | No implementado; AIR-015 |
 
-POST ejecuta operaciones de consulta y devuelve 200. Se mantiene estado transitorio. Fuentes reales, autenticación de cuentas y creación de reservas quedan fuera del contrato público MVP. El registro de proveedores y sus secretos pertenecen al servidor. Política efectiva de acceso, CORS/CSRF y límites operativos se concretan en AIR-016.
+POST búsqueda es una consulta y devuelve 200 cuando se completa total o parcialmente. Estado transitorio, sin cuentas ni reservas. Registro exclusivamente DEMO. La [política HTTP](../security/BASELINE.md) se aplica a las dos operaciones implementadas y su preflight válido; comparación permanece cerrada. Accept incompatible produce 406 JSON; los rechazos anteriores conservan su estado. Preflight válido devuelve 200 sin body. Los errores del conector anteriores al proceso pueden tener formato de transporte. Plazo absoluto de lectura5s verificado en HTTP/1.1 NIO demo; resultados en VALIDATION. POST no admite query string y GET rechaza cuerpo explícito sin leerlo.
 
 ## Catálogo
 
@@ -126,6 +126,9 @@ FieldErrorCode permite REQUIRED, INVALID_FORMAT, OUT_OF_RANGE, UNKNOWN_AIRPORT, 
 | HTTP | code | Casos |
 |---|---|---|
 | 400 | INVALID_REQUEST | JSON/estructura/tipo/campo ajeno/duplicado |
+| 403 | ACCESS_DENIED | Ruta/método/dispatcher no público o CORS rechazado; sin desafío Basic |
+| 404 | RESOURCE_NOT_FOUND | Ruta pública admitida sin controlador implementado |
+| 406 | NOT_ACCEPTABLE | Accept no admite la representación JSON |
 | 413 | PAYLOAD_TOO_LARGE | Más de 65536 bytes |
 | 415 | UNSUPPORTED_MEDIA_TYPE | Contenido que no sea JSON UTF-8 |
 | 422 | VALIDATION_FAILED | Valores, fechas, catálogo, selección, dinero o cotas semánticas |

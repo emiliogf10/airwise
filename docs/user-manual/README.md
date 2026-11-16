@@ -1,6 +1,6 @@
 # Manual de usuario — alcance inicial
 
-Airwise aún no tiene funcionalidades de negocio ni interfaz de usuario. No existe un procedimiento de registro, búsqueda, compra o navegación que pueda documentarse como disponible. No hay pantallas, capturas ni usuarios de prueba inventados.
+Airwise dispone de una API de catálogo y búsqueda con datos sintéticos, pero todavía no tiene interfaz de usuario. Su uso técnico se documenta en [DEMO_USAGE](../api/DEMO_USAGE.md). No hay registro, compra, pantallas, capturas ni usuarios de prueba. AIR-014 consta Hecha; sus límites constan en la guía de ejecución.
 
 Cuando se implementen y verifiquen los flujos autorizados, este manual explicará búsqueda por ruta/fechas, interpretación de itinerarios y escalas, comparación de alternativas, procedencia/actualidad de los precios y estados vacíos o parciales.
 

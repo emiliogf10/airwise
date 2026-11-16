@@ -15,5 +15,8 @@ public record ProviderCapabilities(ProviderId providerId, CapabilityState itiner
         require(maxOriginsPerCall == 1, "Provider port operates on one origin");
         require(itineraries != CapabilityState.SUPPORTED || outputKinds.contains(OutputKind.OFFER), "Missing offer output");
         require(priceObservations != CapabilityState.SUPPORTED || outputKinds.contains(OutputKind.OBSERVATION), "Missing observation output");
+        require(outputKinds.isEmpty() || List.of(itineraries, priceObservations, oneWay, roundTrip,
+                sellerDetails, baggageDetails).contains(CapabilityState.SUPPORTED),
+                "Output kinds require a verified supported capability");
     }
 }

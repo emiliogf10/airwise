@@ -129,11 +129,11 @@ AIR-010 autoriza únicamente análisis y documentación de diseño. Las tareas d
 
 - Descripción: exponer catálogo y búsqueda demo por aeropuertos/fechas bajo contrato aprobado, con validación, filtros, orden, paginación y errores explícitos.
 - Prioridad: P1.
-- Estado: Pendiente.
+- Estado: Hecha.
 - Responsable: Backend Agent.
 - Dependencias: AIR-013, AIR-016.
 - Aceptación: ida/ida-vuelta y 1–3 orígenes, búsqueda reproducible, paginación estable, observaciones separadas, validación/vacío/fallo total/parcial diferenciados y tests; API documentada según implementación, sin fuente real oculta.
-- Evidencia: no implementada; no hay endpoints de negocio actuales.
+- Evidencia: 16/11/2026, incrementos A–D completos; O-01, perfil demo/guardas, catálogo/búsqueda REST con DTO, validación, filtros/orden/páginas y causas parciales. Wrapper offline `clean test`: BUILD SUCCESS, 181 pruebas, cero fallos/errores/omitidas; Java independiente/curl y Tomcat real verifican catálogo200, búsqueda200, fallo503 y comparación403. Plazo absoluto5s corregido y probado en HTTP/1.1 NIO, incluidos chunked/trailers/bloqueo/desconexión y permisos liberados. Revisiones estáticas reales Backend sobre aplicación/transporte y entrega Security integradas; coordinador ejecuta y cierra tras En curso → En revisión → corrección → En revisión → Hecha. Validador documental y diff sin errores, ejemplos/enlaces/secretos revisados. POM/Wrapper/base protegida intactos, sin nuevas dependencias, APIs de vuelos, commits o push. `package` offline sigue sin plugin JAR en caché; no es un artefacto publicado. Evidencia y limitaciones en [VALIDATION](../docs/developer-guide/VALIDATION.md), arranque en [DEMO_RUNTIME](../docs/developer-guide/DEMO_RUNTIME.md). AIR-015 no iniciada.
 
 ### AIR-015 — Comparar alternativas de viaje con criterios transparentes
 
@@ -149,11 +149,11 @@ AIR-010 autoriza únicamente análisis y documentación de diseño. Las tareas d
 
 - Descripción: concretar superficies públicas/operativas, configuración de seguridad y estrategia de pruebas del MVP a partir de la baseline conceptual de AIR-010 y el entorno validado en AIR-011.
 - Prioridad: P0.
-- Estado: Pendiente.
+- Estado: Hecha.
 - Responsable: Security & QA Agent.
 - Dependencias: AIR-010, AIR-011.
-- Aceptación: criterios de seguridad verificables, aislamiento de proveedores y herramientas/versiones justificadas; no obliga a introducir cuentas de usuario en el MVP.
-- Evidencia: pendiente de ejecución; [baseline](../docs/security/BASELINE.md) contiene requisitos y matriz conceptual aceptados en AIR-010, no configuración o pruebas de runtime verificadas.
+- Aceptación: política HTTP exacta y compatible, perfil demo sin PostgreSQL diseñado, superficies y riesgos revisados, matriz por niveles y controles pendientes explícitos; documentación/validaciones pertinentes satisfactorias, sin modificar producción ni iniciar AIR-014/015.
+- Evidencia: 13/11/2026, diseño integrado en [BASELINE](../docs/security/BASELINE.md), [DEMO_RUNTIME](../docs/developer-guide/DEMO_RUNTIME.md) y [TESTING_STRATEGY](../docs/developer-guide/TESTING_STRATEGY.md): 49 casos y 12 riesgos. Revisión real de security_qa y backend conforme tras precisar CSRF/sesión, Accept406, 10000tokens y admisión única/ERROR. APIs/metadata verificadas estáticamente en JAR locales Boot4.1.2/Security7.1.2/Jackson3.1.7. O-01 capacidades all-UNVERIFIED con outputKinds no vacío documentada como desviación contractual interna de prioridad baja, corrección autorizada posterior; no vulnerabilidad remota confirmada. Verificador estático independiente código 0 (167 destinos locales, seis TOML, cinco skills, 17 tareas, 18 ejemplos); git diff --check código 0. Los 130 archivos backend, validador versionado, HEAD e índice intactos. Evidencia en [VALIDATION](../docs/developer-guide/VALIDATION.md); DoD documental satisfecha tras En curso → En revisión → Hecha. No Maven nuevo ni cambios backend/configuración. Los 62 tests se conservan como evidencia histórica AIR-013; AIR-014/015 no iniciadas.
 
 ### AIR-017 — Acordar persistencia y entorno de pruebas, si lo exige el MVP
 

@@ -2,15 +2,15 @@
 
 Proyecto de portfolio full stack para explorar y comparar alternativas de viaje: precio del vuelo, aeropuerto de origen, fechas, escalas, duración y estimaciones de transporte terrestre. Su propuesta es explicar los compromisos entre coste y comodidad con información trazable.
 
-**Estado actual: proveedor demo determinista implementado y probado en AIR-013.** El backend incorpora modelos de dominio puros, puerto de proveedor y fixtures sintéticas versionadas. Los endpoints REST, frontend y motor de comparación siguen pendientes.
+**Estado actual: AIR-014 completada, catálogo y buscador REST demo ejecutables.** El perfil `demo` arranca sin PostgreSQL. La suite completa pasa 181 pruebas, incluida la lectura con plazo absoluto de cinco segundos en HTTP/1.1 NIO local. Consulte el [arranque y sus límites](docs/developer-guide/DEMO_RUNTIME.md), la [política HTTP](docs/security/BASELINE.md) y los [ejemplos HTTP verificados](docs/api/DEMO_USAGE.md). Frontend y comparación siguen pendientes.
 
 ## Qué está presente y qué está previsto
 
 | Área | Presente en este checkout | Previsto, aún sin implementar o validar |
 |---|---|---|
-| Backend | Java 21, Spring Boot 4.1.2, modelos, puerto y proveedor demo; compilación offline correcta | Búsqueda REST, wiring de ejecución demo y comparación |
+| Backend | Java 21, Spring Boot 4.1.2, dominio/proveedor demo, catálogo/búsqueda REST y perfil aislado | Comparación y controles de publicación |
 | Dependencias backend | Web MVC, Security, Data JPA, Validation, Flyway, PostgreSQL, Actuator y DevTools resueltos | Configuración de persistencia/seguridad de negocio e integración completa |
-| Pruebas | Jupiter 6.0.3; 62 casos satisfactorios de contexto, dominio, proveedor, corpus y aislamiento | Pruebas HTTP y de integración PostgreSQL/JPA/Flyway |
+| Pruebas | Jupiter 6.0.3; 181 pruebas satisfactorias, incluidas Security y Tomcat real | Persistencia, TLS/HTTP2 y controles de publicación |
 | Frontend | No existe | React, TypeScript, Vite, Tailwind CSS, TanStack Query; Vitest y Playwright |
 | Infraestructura | Git inicializado y plantillas GitHub | Docker Compose, GitHub Actions, observabilidad y despliegue |
 | Documentación | Instrucciones, roles, skills, planificación, ADR y [contratos normalizados](docs/architecture/NORMALIZED_CONTRACTS.md) con [ejemplos JSON](docs/api/EXAMPLES.md) | OpenAPI, Javadoc del dominio y manual de funciones cuando existan |
@@ -44,12 +44,12 @@ airwise/
 │   └── agents/                       # Seis especialistas TOML
 ├── .agents/skills/                   # Cinco procedimientos reutilizables
 ├── .github/                         # Plantillas de issues y PR, sin pipelines
-├── backend/                         # Proyecto Initializr existente, intacto
+├── backend/                         # Base Initializr conservada; dominio y API demo añadidos
 ├── planning/                        # Roadmap, backlog, mejoras y changelog
 ├── docs/
 │   ├── user-manual/                  # Alcance del manual, sin pantallas ficticias
 │   ├── developer-guide/              # Entorno real, flujo Codex y validación
-│   ├── architecture/                 # Diseño acordado, todavía sin implementar
+│   ├── architecture/                 # Diseño y contratos; implementación parcial con demo
 │   ├── api/                          # Límites del contrato y política de proveedores
 │   ├── security/                     # Criterios iniciales y gestión de secretos
 │   └── decisions/                    # ADR y estado de cada decisión
@@ -71,7 +71,7 @@ mvn -version
 py -3.14 scripts/validate_repository.py
 ```
 
-Python 3.11+ se usa únicamente para esta validación documental y TOML, no forma parte del stack de Airwise. El backend tiene `mvnw.cmd`, pero su distribución y su construcción aún no se ejecutaron. No se presenta un comando de arranque, tests o frontend como validado. La [guía de desarrollo](docs/developer-guide/README.md) distingue comandos de inspección y pasos futuros.
+Python 3.11+ se usa para validación documental, no forma parte del runtime de Airwise. El Wrapper ejecutó `clean test` offline con éxito. Arranque Java independiente y curl verificados en loopback; `package` offline encontró un plugin ausente y no generó un JAR. La [guía de desarrollo](docs/developer-guide/README.md) distingue comandos comprobados y limitaciones.
 
 ## Uso de Codex
 
@@ -89,4 +89,4 @@ Skills locales: `$task-planning`, `$api-integration`, `$database-migrations`, `$
 - [Changelog](planning/CHANGELOG.md): cambios sin versión publicada.
 - [Contribución y revisión](CONTRIBUTING.md), [seguridad](SECURITY.md) y [manual de usuario](docs/user-manual/README.md).
 
-AIR-011 valida el contexto demo mediante exclusión de DataSourceAutoConfiguration limitada al test y aserciones de inicialización real. El diagnóstico inicial y el resultado corregido constan en el registro de validación. PostgreSQL, JPA y Flyway mantienen sus pruebas de integración pendientes. AIR-012 conserva su estado Pendiente. Ya existe un primer commit local.
+AIR-011 conserva su test de contexto. AIR-012 y AIR-013 constan Hechas; AIR-014 consta Hecha y AIR-015 no se ha iniciado. PostgreSQL, JPA y Flyway mantienen pruebas de integración pendientes. El [registro de validación](docs/developer-guide/VALIDATION.md) conserva histórico y resultados actuales. No se han creado commits durante esta tarea.

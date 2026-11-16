@@ -1,6 +1,6 @@
 # Guía de desarrollo inicial
 
-La raíz del repositorio contiene instrucciones, planificación, configuración de agentes y documentación. El único proyecto de aplicación presente es `backend/`, con el ajuste de contexto AIR-011 y el componente Java de proveedor demo AIR-013. Consulte el [inventario](TECHNOLOGY_INVENTORY.md) antes de elegir versiones o comandos.
+La raíz contiene instrucciones, planificación, agentes y documentación. El único proyecto de aplicación es `backend/`: proveedor Java AIR-013 y catálogo/búsqueda REST AIR-014 completada. Perfil demo y [arranque](DEMO_RUNTIME.md) comprobados; consulte el [inventario](TECHNOLOGY_INVENTORY.md) y los [ejemplos HTTP](../api/DEMO_USAGE.md).
 
 ## Empezar una tarea
 
@@ -51,9 +51,9 @@ Revisar el código de salida de cada comando mediante `$LASTEXITCODE`. Los resul
 
 No hay un comando raíz `mvn verify`, scripts npm, servidor de frontend, Compose ni pipeline que ejecutar. No se debe inventar una URL local, un usuario por defecto o un flujo de login para Airwise.
 
-## Proveedor demo comprobado en AIR-013
+## Histórico: proveedor demo comprobado en AIR-013
 
-Los paquetes airport.domain, flightsearch.domain/application y flightprovider.demo contienen el primer componente de negocio. [PROVIDERS.md](../architecture/PROVIDERS.md) documenta escenarios, admisión, recurso versionado y límites. Se instancia DemoFlightProvider directamente y se invoca el puerto Java; todavía no hay wiring Spring ni controladores de negocio.
+Los paquetes airport.domain, flightsearch.domain/application y flightprovider.demo contienen el primer componente de negocio. [PROVIDERS.md](../architecture/PROVIDERS.md) documenta escenarios, admisión, recurso versionado y límites. Se instancia DemoFlightProvider directamente y se invoca el puerto Java; en aquel incremento aún no había wiring Spring ni controladores de negocio. AIR-014 los añade bajo perfil explícito demo.
 
 El 13/11/2026 se ejecutaron Wrapper clean compile y test con -o -B -ntp y las cachés existentes de AIR-011: 33 fuentes principales compiladas y 62 tests satisfactorios, incluido el contexto conservado. Offline evita descargar/instalar dependencias. Ese modo requiere que distribución y artefactos ya existan en caché; no prueba la reproducibilidad de un clon sin ella.
 
@@ -77,16 +77,13 @@ El validador conserva las comprobaciones de POM y la existencia de sus puntos de
 
 El snapshot inicial de diez archivos se conserva sin regenerarlo. Las diferencias de contenido y de conjunto se informan como histórico, con rutas y cantidades. La revisión del diff, el alcance autorizado y los tests pertinentes acreditan las modificaciones posteriores. El histórico deja de exigir hashes iniciales inmutables para cada versión del proyecto. Un clon sin snapshot declara el contraste histórico no disponible y sigue comprobando fuentes, metadatos y archivos esenciales.
 
-## Opciones de arranque del demo acordadas en AIR-012
+## Diseño de seguridad y ejecución AIR-016
 
-| Contexto | Opción técnica y cobertura |
-|---|---|
-| Test existente | La propiedad de SpringBootTest excluye DataSourceAutoConfiguration solo en su contexto. AIR-011 verificó inicialización real, bean principal y ausencia de DataSources |
-| Ejecución demo futura | Preferencia por perfil explícito demo, con exclusión DataSourceAutoConfiguration limitada a ese perfil y proveedores demo. Requerirá autorizar su archivo de configuración y validar el contexto/HTTP completo |
-| Sesión demo de diagnóstico | Argumento de arranque limitado al proceso que excluya esa autoconfiguración, con contexto de fuentes demo. Debe declararse su alcance y comprobarse, sin convertirlo en configuración predeterminada |
-| Persistencia futura | Perfil con PostgreSQL/configuración externa y pruebas de JPA/Flyway cuando haya caso durable aprobado |
+AIR-014 implementa el perfil demo explícito y guardas anteriores a conexiones diseñados en AIR-016: [DEMO_RUNTIME](DEMO_RUNTIME.md). La configuración común y la propiedad local del test original se conservan. `clean test` offline pasa 181 pruebas; `package` offline no pudo resolver maven-jar-plugin 3.5.1 ya ausente de la caché. No se descargó ni instaló nada.
 
-AIR-012 documenta estas opciones. El test actual conserva su perfil Spring predeterminado y una propiedad local de prueba. El perfil de ejecución demo y sus archivos se crearán solo en una tarea autorizada. La política pública de endpoints necesita la preparación de AIR-016; el arranque actual por sí solo no acredita esa política.
+[BASELINE](../security/BASELINE.md) fija permisos, gate anterior a CSRF, CORS, Actuator, errores y límites. AIR-014 verifica las dos rutas implementadas, cuerpos, filtros y errores, incluido ERROR real GET/POST y concurrencia; [TESTING_STRATEGY](TESTING_STRATEGY.md) y [VALIDATION](VALIDATION.md) distinguen evidencias y controles pendientes. No hay comparación implementada.
+
+O-01 y el plazo total de lectura están corregidos y probados. AIR-014 consta Hecha tras revisión estática de Backend y ejecución final del coordinador. El transporte demo está limitado a HTTP/1.1 NIO/Tomcat11, sin TLS/HTTP2; deberá revalidarse al cambiar el servidor o publicar. AIR-015 no se inicia. Decisión y consecuencias en [ADR-0005](../decisions/0005-demo-body-read-deadline.md).
 
 ## Agentes y verificación
 

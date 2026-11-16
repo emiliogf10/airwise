@@ -1,8 +1,8 @@
 # Ejemplos sintéticos del contrato airwise-v1
 
-Ejemplos documentales de AIR-012, sujetos a los contratos normativos de [API_DESIGN.md](API_DESIGN.md) y [NORMALIZED_CONTRACTS.md](../architecture/NORMALIZED_CONTRACTS.md). Los vuelos, aerolíneas D1/D2, importes, vendedores y estados son sintéticos. Los códigos de aeropuerto son referencias reales y su metadata se verificará antes de incorporar fixtures en AIR-013. Ninguna respuesta corresponde a un endpoint ya ejecutado.
+Ejemplos documentales de AIR-012, sujetos a [API_DESIGN](API_DESIGN.md) y [NORMALIZED_CONTRACTS](../architecture/NORMALIZED_CONTRACTS.md). Vuelos, aerolíneas D1/D2, importes, vendedores y estados son sintéticos. AIR-013 incorporó las referencias de aeropuerto al corpus versionado. Estos cuerpos ilustran el contrato y no son capturas HTTP; los endpoints ejecutados en AIR-014 se documentan en [DEMO_USAGE](DEMO_USAGE.md). Comparación sigue sin implementar.
 
-Los calendarios y escenarios muestran contenido ilustrativo de demo-v1. Su forma y reglas son normativas. AIR-013 materializará el registro de fixtures de manera coherente y versionada.
+Los calendarios y escenarios muestran contenido ilustrativo de demo-v1. Su forma y reglas son normativas. AIR-013 materializó el registro de fixtures; los escenarios realmente disponibles se describen en PROVIDERS y DEMO_USAGE.
 
 ## Catálogo
 

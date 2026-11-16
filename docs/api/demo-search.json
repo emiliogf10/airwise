@@ -1,0 +1,10 @@
+{
+  "query": {
+    "tripType": "ONE_WAY",
+    "origins": ["OPO"],
+    "destination": "MAD",
+    "outboundDate": "2027-02-10",
+    "travellers": {"adults": 1},
+    "cabin": "ECONOMY"
+  }
+}
