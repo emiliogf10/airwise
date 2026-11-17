@@ -19,7 +19,7 @@ class DemoIsolationTests {
                 "java/lang/ProcessBuilder", "org/apache/http/", "org/apache/hc/",
                 "okhttp3/", "org/springframework/web/client/", "org/springframework/web/reactive/");
         int checked = 0;
-        for (String module : List.of("airport", "flightsearch", "flightprovider")) {
+        for (String module : List.of("airport", "flightsearch", "flightprovider", "flightcomparison")) {
             Path folder = classes.resolve("com/airwise/backend/" + module);
             try (var files = Files.walk(folder)) {
                 for (var file : files.filter(p -> p.toString().endsWith(".class")).toList()) {
@@ -38,7 +38,7 @@ class DemoIsolationTests {
     void domainValuesDoNotDependOnSpringOrPersistence() throws Exception {
         Path classes = Path.of(DemoFlightProvider.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         int checked = 0;
-        for (String module : List.of("airport", "flightsearch")) {
+        for (String module : List.of("airport", "flightsearch", "flightcomparison")) {
             try (var files = Files.walk(classes.resolve("com/airwise/backend/" + module + "/domain"))) {
                 for (var file : files.filter(p -> p.toString().endsWith(".class")).toList()) {
                     String pool = new String(Files.readAllBytes(file), StandardCharsets.ISO_8859_1);

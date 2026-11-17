@@ -14,13 +14,13 @@ import static com.airwise.backend.api.RequestValues.*;
 import static com.airwise.backend.flightsearch.domain.FlightTypes.*;
 
 /** HTTP-only parsing preserves omitted/default/null distinctions before creating domain values. */
-final class SearchRequestReader {
+public final class SearchRequestReader {
     private static final Set<String> ROOT = Set.of("query", "datasetVersion", "filters", "sort", "page", "pageSize");
     private static final Set<String> QUERY = Set.of("tripType", "origins", "destination", "outboundDate", "returnDate", "travellers", "cabin");
     private static final Set<String> FILTERS = Set.of("origins", "airlineCodes", "maxConnections", "maxDurationMinutes", "currency", "maxPrice");
     private final DemoCatalog catalog;
     private final Validator validator;
-    SearchRequestReader(DemoCatalog catalog, Validator validator) { this.catalog = catalog; this.validator = validator; }
+    public SearchRequestReader(DemoCatalog catalog, Validator validator) { this.catalog = catalog; this.validator = validator; }
 
     SearchView read(JsonNode root) {
         object(root, ROOT, Set.of("query"), "");
@@ -37,7 +37,8 @@ final class SearchRequestReader {
         return new SearchView(query, dataset.datasetVersion(), filters, sort, page, size);
     }
 
-    private FlightSearchRequest query(JsonNode node, DatasetDescriptor dataset) {
+    /** Shared canonical query reader; comparison cannot accept a weaker query contract than search. */
+    public FlightSearchRequest query(JsonNode node, DatasetDescriptor dataset) {
         object(node, QUERY, Set.of("tripType", "origins", "destination", "outboundDate", "travellers", "cabin"), "/query");
         var trip = enumeration(node.get("tripType"), "/query/tripType", TripType.class);
         var origins = codes(node.get("origins"), "/query/origins", 1, 3, true);

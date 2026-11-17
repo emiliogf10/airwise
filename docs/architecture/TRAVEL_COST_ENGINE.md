@@ -1,6 +1,6 @@
 # Travel Cost Engine: comparación explicable
 
-**Reglas conceptuales aceptadas en AIR-010; implementación pendiente de AIR-015.** Sin motor ejecutable, conversiones FX, ML ni puntuación estadística. Entrada y vocabulario en [DOMAIN_MODEL.md](DOMAIN_MODEL.md).
+**Reglas aceptadas en AIR-010/012 e implementadas/verificadas en AIR-015 el17/11/2026.** Motor determinista sobre datos demo, sin conversiones FX, ML ni puntuación estadística. Las reglas siguientes conservan el contrato aceptado; evidencia de238 pruebas y HTTP real en [VALIDATION](../developer-guide/VALIDATION.md). Entrada y vocabulario en [DOMAIN_MODEL.md](DOMAIN_MODEL.md).
 
 AIR-012 ratifica los tipos, grupos, motivos y DTO de [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md) y [API_DESIGN.md](../api/API_DESIGN.md). Las duraciones del contrato se expresan en segundos y el filtro de minutos convierte su umbral a segundos. El subtotal es de componentes seleccionados con estimaciones.
 
@@ -20,6 +20,8 @@ Comparison nunca confía en importe, vendedor, evidencia, horarios, caducidad o 
 
 Resultados conservan `reasons`, `missingFields`, `warnings` y posibilidad de clasificación parcial por métricas conocidas. No ocultar una alternativa solo por no poder determinar “más barata”.
 
+La reconstrucción incompleta conserva las causas de ejecución en un warning global de conjunto, sin atribuir invalidez a cada oferta ni ampliar el schema de respuesta. La traducción ratificada para AIR-015 está en [API_DESIGN](../api/API_DESIGN.md); la recomendación solo expresa EVALUABLE_GROUP, nunca cobertura total de los orígenes.
+
 ## Reglas iniciales
 
 Preferencia primaria cerrada: FLIGHT_PRICE, FLIGHT_DURATION, CONNECTIONS o KNOWN_SUBTOTAL. Esta última es opcional y exige declarar los componentes terrestres requeridos. Las alternativas comparables usan orden lexicográfico ascendente:
@@ -32,6 +34,8 @@ Preferencia primaria cerrada: FLIGHT_PRICE, FLIGHT_DURATION, CONNECTIONS o KNOWN
 | KNOWN_SUBTOTAL | duración conocida, conexiones conocidas, offerId; solo con todos los componentes requeridos compatibles |
 
 Los IDs dan estabilidad de presentación, sin ventaja comercial. Un valor desconocido no se sustituye por cero: queda después de valores conocidos en presentación y se declara no evaluable en esa métrica secundaria. Solo quien tenga la primaria conocida y ámbito válido participa en el ranking de esa métrica. La recomendación se limita explícitamente al subconjunto evaluable; si algún seleccionado no es evaluable o hay grupos incompatibles, no se afirma “mejor de todos”.
+
+La elegibilidad se aplica a la métrica elegida: FLIGHT_PRICE y KNOWN_SUBTOTAL requieren comparabilidad monetaria; FLIGHT_DURATION y CONNECTIONS permiten evaluar su métrica conocida con vigencia FRESH aunque el importe o ámbito monetario sea desconocido. Si ese importe comparable es un desempate requerido y falta dentro de un bloque empatado, se aplica TIE_UNRESOLVED al bloque completo. primaryKnown solo indica conocimiento de la métrica, no vigencia ni elegibilidad final; por eso un importe conocido caducado puede llevar primaryKnown=true y rank=null. La vigencia se explica por fila, sin alterar priceGroup.monetarilyComparable.
 
 AIR-012 concreta el empate por bloques de primaria: si dos o más filas comparten primaria y alguna carece de cualquier desempate comercial requerido, todo ese bloque recibe el mismo rango y TIE_UNRESOLVED. Ningún otro desempate ni ID produce ventaja comercial dentro de él. En presentación se mantienen secundarias conocidas primero e ID. Si el bloque líder es irresoluble no hay recommendationIds. Si todos sus desempates son conocidos, se resuelve lexicográficamente y un empate completo conserva ganadores empatados. Se usa ranking de competición (1,1,3); un bloque inferior irresoluble no borra un líder inequívoco, pero rankingComplete=false. Con menos de dos candidatos evaluables no hay recomendación.
 
@@ -72,4 +76,10 @@ Ejemplo sintético: A tiene vuelo 100 EUR y traslado estimado 20 EUR; B, vuelo 1
 | Estimaciones duplicadas/solapadas | Error semántico, sin doble suma |
 | Todos caducados/no evaluables | Mostrar motivos; ninguna recomendación vigente |
 
-Cada recomendación devuelve la clave primaria, valores usados, desempates efectivos, grupo, alcance del ranking y advertencias. AIR-012 fija las estructuras serializadas y el ranking de competición en empates. AIR-015 exigirá las pruebas deterministas previstas con fixtures sintéticas.
+Cada recomendación devuelve la clave primaria, valores usados, desempates efectivos, grupo, alcance del ranking y advertencias. AIR-012 fija las estructuras serializadas y el ranking de competición en empates. AIR-015 verifica estas reglas con pruebas de dominio, aplicación, DTO/HTTP y peticiones locales sobre las fixtures.
+
+## Implementación presente en AIR-015
+
+`flightcomparison.domain` contiene ComparisonTypes, ComparisonRequest, GroundTransportEstimate y ComparisonResult como valores inmutables. ComparisonEngine aplica elegibilidad, subtotales y ranking; DemoComparisonService reconstruye y verifica la selección mediante `DemoSearchService.reconstruct`, sin filtros, página, persistencia o llamada a fuentes reales. La reconstrucción reutiliza un único fan-out y su límite existente de hasta60 ofertas.
+
+`flightcomparison.api` contiene ComparisonRequestReader, ComparisonViews, ComparisonController y DemoComparisonConfiguration. El lector reutiliza la validación canónica de Search y los límites HTTP existentes; la proyección conserva campos exactos y cadenas monetarias. Compilación, pruebas y HTTP constan en [VALIDATION](../developer-guide/VALIDATION.md); el uso reproducible está en [DEMO_USAGE](../api/DEMO_USAGE.md).

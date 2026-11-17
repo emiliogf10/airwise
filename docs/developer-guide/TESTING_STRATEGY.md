@@ -1,6 +1,6 @@
 # Estrategia de pruebas del MVP — AIR-016
 
-**Diseño AIR-016 del13/11/2026; actualización AIR-014 del16/11/2026.** La matriz siguiente conserva estados históricos P salvo actualización explícita. Evidencia por componente en [VALIDATION](VALIDATION.md): 181 pruebas satisfactorias, incluidas DTO/JSON, catálogo/búsqueda, filtros, Security/CORS/admisión, Tomcat real y plazo absoluto de lectura5s en HTTP/1.1 NIO. AIR-015, TLS/HTTP2, publicación y persistencia no se dan por acreditados; un caso de matriz puede contener más condiciones que las cubiertas por un test.
+**Diseño AIR-016 actualizado con AIR-015 el17/11/2026.** La matriz conserva estados históricos P salvo actualización explícita. Evidencia en [VALIDATION](VALIDATION.md):238 pruebas satisfactorias, incluidas comparación, DTO/JSON, regresiones catálogo/búsqueda, Security/CORS/admisión, Tomcat y plazo absoluto5s en HTTP/1.1 NIO. Persistencia, TLS/HTTP2 y publicación no se acreditan; un caso de matriz puede contener más condiciones que las cubiertas por un test.
 
 ## Base y herramientas reales
 
@@ -32,7 +32,7 @@ E13: ejecución histórica AIR-013. P: diseñado y pendiente. Los casos deben ob
 | T-06 | Unitario proveedor | Vacío/fallo/parcial/descriptor forjado | Unidades/causas y reloj correctos / E13 |
 | T-07 | Contrato aplicación | All-UNVERIFIED con outputKinds no vacío | Regresión O-01 negativa y positivo vacío / ejecutado AIR-014 |
 | T-08 | Web slice AIR-014 | GET catálogo y POST búsqueda sin token/cookie | Caso de uso público accesible sin principal / P |
-| T-09 | Web slice AIR-015 | POST comparación | Tras existir controlador/caso; en AIR-014 403 por exclusión expresa de alcance / P |
+| T-09 | Web slice AIR-015 | POST comparación | Público exacto, respuestas y errores normalizados / ejecutado AIR-015 |
 | T-10 | Web slice permiso | HEAD, método distinto, barra final, sufijo, subruta, /login,/actuator,/error | 403 y cero negocio / P |
 | T-11 | Web slice firewall | URI ambigua/separador codificado rechazado | 400 sanitizado sin eco, cero negocio / P |
 | T-12 | Web slice sesión | POST no público, Cookie/JSESSIONID y Basic sintéticos | Gate antes de CSRF; 403 sin sesión/Set-Cookie/redirect/WWW-Authenticate / P |
@@ -68,9 +68,9 @@ E13: ejecución histórica AIR-013. P: diseñado y pendiente. Los casos deben ob
 | T-42 | Integración perfiles | Sin demo y test con exclusión local actual | No filtración de beans/exclusiones a otro modo / P |
 | T-43 | Integración Actuator | Web/JMX incluidos health/env/mappings | Ninguna exposición demo; ruta HTTP denegada / P |
 | T-44 | Contrato salida | Money/null/listas/instantes/enums/metadata DEMO | Cadenas monetarias/escala/campos exactos, sin beans/excepciones / P |
-| T-45 | Contrato AIR-015 | Null/cero, parcial, EUR/USD, evidencia/caducidad | Sin total/gratuidad/ganador monetario inventados / P |
-| T-46 | Contrato AIR-015 | ID entre páginas/ajeno, componentes duplicados/ausentes | Reconstrucción, rechazo o ranking parcial explicado / P |
-| T-47 | Contrato AIR-015 | Empate completo/secundarias desconocidas | Competición y TIE_UNRESOLVED, no ganador por ID / P |
+| T-45 | Contrato AIR-015 | Null/cero, parcial, EUR/USD, evidencia/caducidad | Sin total/gratuidad/ganador monetario inventados / ejecutado AIR-015; parcialidad mediante dobles |
+| T-46 | Contrato AIR-015 | ID entre páginas/ajeno, componentes duplicados/ausentes | Reconstrucción, rechazo o ranking parcial explicado / ejecutado AIR-015 |
+| T-47 | Contrato AIR-015 | Empate completo/secundarias desconocidas | Competición y TIE_UNRESOLVED, no ganador por ID / ejecutado AIR-015 |
 | T-48 | Estático/integración | provider/host/token/asOf y bean real accidental | Registro DEMO y rechazo, sin transporte/credenciales / E13 parcial, P HTTP |
 | T-49 | Publicación futura | Artefacto, debug/DevTools, TLS/proxy/CORS | Sin defaults de desarrollo, borde probado; no acreditado por unitarias / P |
 
@@ -92,8 +92,8 @@ Observar errores por estado/código/forma/headers y ausencia de marcadores sint�
 
 ## Gates posteriores
 
-AIR-014 necesitará autorización para perfil/cadena/mapper/admisión y catálogo/búsqueda. Deberá ejecutar casos aplicables con filtros reales y servidor. Comparación aún inexistente puede tener 404 seguro; AIR-015 implementará su controlador/motor con autorización propia.
+AIR-014 completó perfil/cadena/mapper/admisión y catálogo/búsqueda con filtros reales y Tomcat. AIR-015 está autorizada para comparación y conserva esos controles; su habilitación pública exacta, motor y regresiones se verifican por separado. La denegación403 anterior de /comparisons pertenece al histórico AIR-014, no al contrato final de AIR-015.
 
-Resolver O-01 en corrección posterior autorizada; no exige alterar el descriptor demo correcto para cerrar este diseño. Antes de publicar deben pasar los casos HTTP/runtime pertinentes, resolver riesgos P0/P1 y contrastar valores operativos. Un documento no acredita una ruta segura.
+O-01 y el plazo absoluto de lectura fueron corregidos y probados en AIR-014; se conserva su regresión. Antes de publicar deben pasar casos HTTP/runtime pertinentes, resolver riesgos P0/P1 y contrastar valores operativos. Una validación demo no acredita por sí sola persistencia, TLS/HTTP2 o despliegue.
 
 Cuando exista cambio ejecutable: Wrapper compile/test sin omitir pruebas, caché/offline si disponible, validación documental y diff. No repetir Maven indiscriminadamente por edición documental. Evidencia actual/histórica en [VALIDATION](VALIDATION.md).

@@ -1,6 +1,41 @@
 # Registro de validación de Airwise
 
-Evidencia desde el **2026-11-11**, actualizada con la implementación AIR-014 del **16/11/2026**. Cada apartado conserva su alcance, resultados y límites.
+Evidencia desde el **2026-11-11**, actualizada con AIR-015 del **17/11/2026**. Cada apartado conserva su alcance, resultados y límites; los238 tests actuales no sustituyen el histórico181 de AIR-014.
+
+## AIR-015 — comparación demo implementada y verificada
+
+Autorización específica para modelos, motor, endpoint de comparación y su integración con la búsqueda demo existente. Sin POM, dependencias nuevas, persistencia, frontend, autenticación o APIs externas. La evidencia AIR-014 de 181 pruebas se conserva como histórico; no acredita por sí sola las modificaciones actuales.
+
+La implementación reconstruye de dos a cuatro IDs contra el conjunto completo de la consulta/versión, forma grupos compatibles y aplica primarias/desempates sin ganador global entre grupos. Las estimaciones terrestres son entradas explícitas de grupo y no modifican la tarifa de vuelo. Fuente contractual: [TRAVEL_COST_ENGINE](../architecture/TRAVEL_COST_ENGINE.md), [NORMALIZED_CONTRACTS](../architecture/NORMALIZED_CONTRACTS.md) y [API_DESIGN](../api/API_DESIGN.md).
+
+Baseline AIR-014 ejecutada de nuevo por el coordinador: `AirportHttpTests,FlightSearchHttpTests,DemoSearchServiceTests`, 23 pruebas satisfactorias, log local ignorado `.local/air015/baseline.log`. Esto acreditó el punto de partida. El cierre usa la nueva suite integral y HTTP independiente, sin atribuir ejecuciones Maven a la revisión documental.
+
+### Implementación presente y verificaciones incrementales
+
+Valores en flightcomparison.domain: ComparisonTypes, ComparisonRequest, GroundTransportEstimate y ComparisonResult. ComparisonEngine realiza elegibilidad/ranking/subtotal; DemoComparisonService reconstituye el conjunto mediante `DemoSearchService.reconstruct`, comprueba IDs y moneda por oferta. ComparisonRequestReader reutiliza el lector canónico de Search; ComparisonViews/Controller/Configuration componen y proyectan el endpoint. Sin nuevas dependencias ni persistencia. Security añade únicamente el POST exacto y preflight de comparación, conserva CSRF específico, errores, CORS y límites existentes.
+
+| Evidencia comunicada y contrastada en logs | Resultado |
+|---|---|
+| A–D: ComparisonEngineTests, `.local/air015/increment-abcd.log` | BUILD SUCCESS, 16 pruebas, cero fallos/errores/omitidas |
+| E: seguridad/HTTP, `.local/air015/increment-e-security.log` | BUILD SUCCESS, 47 pruebas, cero fallos/errores/omitidas |
+| Servicio/DTO, `.local/air015/backend-service-dto.log` | BUILD SUCCESS, 21 pruebas, cero fallos/errores/omitidas |
+| Límites de evidencia/duración, `.local/air015/backend-evidence-boundaries.log` | Cuatro casos adicionales correctos; el motor contiene20 casos en la suite final |
+| Java independiente y curl, `.local/air015/runtime-results.json` | 24 comprobaciones correctas; puerto temporal63505; proceso detenido |
+| Suite integral limpia, `.local/air015/full-tests.log` | Wrapper offline `clean test`, BUILD SUCCESS/código0, 238 pruebas en24 clases JUnit; cero fallos/errores/omitidas;74 fuentes principales y25 de tests |
+
+El arranque reutilizó la receta AIR-014 con perfil demo y `-Dspring.devtools.restart.enabled=false` antes del main. Se ejecutaron ambos JSON publicados en docs/api: FLIGHT_PRICE mantiene OPO100EUR antes de SCQ110EUR; KNOWN_SUBTOTAL con estimaciones explícitas de30+30EUR y10+10EUR da SCQ130EUR antes de OPO160EUR. Las respuestas se capturaron como verified-comparison-response.json y verified-subtotal-response.json en la carpeta local ignorada. [EXAMPLES](../api/EXAMPLES.md) incorpora la segunda, con UUID identificado como variable; no son tarifas de mercado.
+
+La sesión HTTP final verificó las cuatro primarias, cuatro seleccionados con rangos1,2,3,3 y la invariancia al invertir IDs; selección entre páginas/filtros, monedas/grupos incompatibles, desconocidos/vigencia, estimaciones incompletas, CORS y errores400/409/422. También se verificó503 PROVIDERS_FAILED en Comparison con causa PROVIDER_TIMEOUT al reconstruir un escenario de fallo total. No se creó almacenamiento de búsquedas ni se consultaron fuentes reales.
+
+La parcialidad operativa se representa sin ampliar el schema: warning global INVALID_PROVIDER_DATA/pathnull, mensaje propio con ProviderIssueCode distintos ordenados y deduplicación por causa antes del límite de warnings. Es incompletitud del conjunto, no invalidez de cada oferta. El corpus parcial solo aporta una oferta por consulta; la comparación válida de dos ofertas con ese warning se prueba con dobles de aplicación/contrato, incluidos60 resultados reconstituidos y colisión de warnings. No se inventa un ejemplo curl con las fixtures actuales.
+
+### Alcance de las pruebas y conservación
+
+Los57 casos nuevos se suman a los181 anteriores, sin eliminar tests. Las pruebas de dominio/aplicación cubren métricas monetarias/no monetarias, precio desconocido/cero, ámbito/evidencia/vigencia, bloques de empate, líder inequívoco con bloque inferior irresoluble, estimaciones/subtotal completo e incompleto y límite monetario derivado. Los tests de contrato/DTO verifican campos exactos, tipos, defaults/null y representaciones; MockMvc ejerce filtros reales y rutas/errores negativos. El arranque Java y curl acreditan servidor HTTP independiente, no solo contexto simulado. Las regresiones AIR-014 de catálogo/búsqueda, cuotas, lectura lenta y classloaders permanecen en la suite completa.
+
+Backend implementó y revisó modelos/motor/servicio/DTO; Security & QA revisó contratos, entradas, desconocidos y frontera HTTP; Documentation sincronizó fuentes y ejemplos, sin ejecutar Maven. El coordinador integró y ejecutó la validación final. Ocho archivos protegidos, incluido el corpus demo-v1, contrastados sin diff; POM y sus15 dependencias, Wrapper, aplicación principal y configuración común conservados. Sin tablas, frontend, autenticación, APIs externas, instalación global, commits o push.
+
+Empaquetado/producción, TLS/HTTP2, persistencia y bloqueo/captura de egress a nivelSO no quedan acreditados por esta tarea. Se conserva el fallo de package offline AIR-014 como histórico, sin presentarlo como empaquetado probado en AIR-015. Documentation ejecutó `py -3.14 scripts/validate_repository.py`: código0,203 enlaces locales y17 tareas correctos. `git diff --check` documental pasó; los18 bloques JSON y las dos solicitudes se analizaron, y la respuesta de subtotal publicada coincide exactamente con la captura final. El coordinador registra el cierre en BACKLOG y no inicia AIR-018.
 
 ## AIR-014 — catálogo y búsqueda REST demo completados
 

@@ -44,7 +44,7 @@ class DemoHttpSecurityTests {
 
     @Test void headWrongMethodOptionsAndUnsafeRequestsNeverCreateSessions() throws Exception {
         for (var request : new MockHttpServletRequestBuilder[] { head(AIRPORTS), post(AIRPORTS), get(SEARCH),
-                options(AIRPORTS), post("/logout"), post("/api/v1/demo/comparisons") }) {
+                options(AIRPORTS), post("/logout"), post("/api/v1/demo/comparisons/") }) {
             var result = mvc.perform(external(request).cookie(new jakarta.servlet.http.Cookie("JSESSIONID", "synthetic")))
                     .andExpect(status().isForbidden()).andExpect(header().doesNotExist("Set-Cookie")).andReturn();
             assertThat(result.getRequest().getSession(false)).isNull();

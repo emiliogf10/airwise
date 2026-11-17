@@ -1,6 +1,6 @@
 # Seguridad HTTP y riesgos del MVP
 
-**Diseño ratificado en AIR-016; implementación demo verificada y AIR-014 Hecha el 16/11/2026.** Perfil, dos controladores, Security restrictiva, JSON y admisión implementados; 181 pruebas satisfactorias. El fallo inicial de lectura lenta se corrigió con plazo absoluto en HTTP/1.1 NIO local, verificado con goteo y framing incompleto. [ADR-0005](../decisions/0005-demo-body-read-deadline.md) delimita el acoplamiento a Tomcat y la exclusión de TLS/HTTP2. Evidencia y controles de publicación pendientes en [VALIDATION](../developer-guide/VALIDATION.md).
+**Diseño ratificado en AIR-016 e implementación demo AIR-014/015 verificada el17/11/2026.** Tres rutas públicas exactas, Security restrictiva, JSON, errores y admisión;238 pruebas satisfactorias. La comparación conserva el plazo absoluto de lectura HTTP/1.1 NIO, guardas de classloaders, ausencia de sesiones y cierre Actuator. [ADR-0005](../decisions/0005-demo-body-read-deadline.md) delimita Tomcat y exclusión de TLS/HTTP2. Evidencia y controles de publicación pendientes en [VALIDATION](../developer-guide/VALIDATION.md).
 
 Campos y semántica siguen en [API_DESIGN](../api/API_DESIGN.md) y [NORMALIZED_CONTRACTS](../architecture/NORMALIZED_CONTRACTS.md). El [arranque demo](../developer-guide/DEMO_RUNTIME.md) y la [matriz de pruebas](../developer-guide/TESTING_STRATEGY.md) concretan la implementación posterior. AIR-016 no modifica producción.
 
@@ -12,7 +12,7 @@ Una SecurityFilterChain del perfil demo cubre todas las solicitudes; no limitarl
 |---|---|
 | REQUEST GET /api/v1/demo/airports | Público |
 | REQUEST POST /api/v1/demo/flight-searches | Público |
-| REQUEST POST /api/v1/demo/comparisons | 403 en AIR-014; previsto tras AIR-015 |
+| REQUEST POST /api/v1/demo/comparisons | Público exacto en AIR-015; verificado por HTTP local17/11/2026 |
 | Preflight CORS válido a esas rutas | Procesado por CORS, sin ejecutar negocio |
 | ERROR interno y /error | Solo fallback sanitizado, bajo las condiciones descritas abajo |
 | Cualquier otra combinación | 403 ACCESS_DENIED y cero invocaciones de negocio |
@@ -25,7 +25,7 @@ Desactivar formLogin, httpBasic, logout y caché de solicitudes; SessionCreation
 
 ## CSRF y ausencia de sesión
 
-El único POST implementado, búsqueda, es una consulta pública sintética sin autoridad ambiental ni mutación privada. CSRF se exime solo en REQUEST POST exacto a flight-searches, sin deshabilitarlo globalmente. Comparación no tiene exención habilitada. Una futura sesión, cookie de autenticación u operación privada obliga a revisar esta excepción.
+Los POST implementados, búsqueda y comparación, son consultas públicas sintéticas sin autoridad ambiental ni mutación privada. CSRF se exime solo en los REQUEST POST exactos a flight-searches y comparisons, sin deshabilitarlo globalmente. Las demás combinaciones se rechazan antes de acceder al token. Una futura sesión, cookie de autenticación u operación privada obliga a revisar estas excepciones.
 
 STATELESS por sí solo no garantiza ausencia de JSESSIONID: el repositorio CSRF predeterminado puede crear HttpSession al comprobar un POST no exento. Introducir un filtro de admisión antes de CsrfFilter, después de CorsFilter y del firewall. Rechaza ruta/método/dispatcher no público con 403 antes de acceder al token. Comparte matchers con authorizeHttpRequests y no sustituye anyRequest().denyAll(). No registrarlo simultáneamente como filtro servlet y dentro de Security.
 

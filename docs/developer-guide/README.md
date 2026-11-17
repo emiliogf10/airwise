@@ -2,6 +2,8 @@
 
 La raíz contiene instrucciones, planificación, agentes y documentación. El único proyecto de aplicación es `backend/`: proveedor Java AIR-013 y catálogo/búsqueda REST AIR-014 completada. Perfil demo y [arranque](DEMO_RUNTIME.md) comprobados; consulte el [inventario](TECHNOLOGY_INVENTORY.md) y los [ejemplos HTTP](../api/DEMO_USAGE.md).
 
+AIR-015 añade el módulo flightcomparison, reconstrucción completa mediante Search y POST /api/v1/demo/comparisons, verificados el17/11/2026. Wrapper clean test pasa238 pruebas; Java independiente/curl confirma24 comprobaciones, incluidos ambos JSON publicados, sin APIs externas. Entradas y resultados en [DEMO_USAGE](../api/DEMO_USAGE.md) y [VALIDATION](VALIDATION.md); los181 tests de AIR-014 se conservan como histórico.
+
 ## Empezar una tarea
 
 Use [CONTRIBUTING.md](../../CONTRIBUTING.md), seleccione una tarea del [backlog](../../planning/BACKLOG.md) y lea el ADR afectado. AIR-011 autoriza ejecutar Maven, diagnosticar y documentar. Las correcciones de código o configuración requieren autorización específica.
@@ -79,11 +81,11 @@ El snapshot inicial de diez archivos se conserva sin regenerarlo. Las diferencia
 
 ## Diseño de seguridad y ejecución AIR-016
 
-AIR-014 implementa el perfil demo explícito y guardas anteriores a conexiones diseñados en AIR-016: [DEMO_RUNTIME](DEMO_RUNTIME.md). La configuración común y la propiedad local del test original se conservan. `clean test` offline pasa 181 pruebas; `package` offline no pudo resolver maven-jar-plugin 3.5.1 ya ausente de la caché. No se descargó ni instaló nada.
+AIR-014 implementó el perfil demo y guardas diseñados en AIR-016: [DEMO_RUNTIME](DEMO_RUNTIME.md). AIR-015 conserva arranque, configuración común y test original; amplía solo las rutas/mapeos necesarios y el módulo de comparación. `clean test` offline actual pasa238 pruebas. El fallo de `package` offline por maven-jar-plugin3.5.1 pertenece a AIR-014; AIR-015 no acredita empaquetado ni descarga dependencias.
 
-[BASELINE](../security/BASELINE.md) fija permisos, gate anterior a CSRF, CORS, Actuator, errores y límites. AIR-014 verifica las dos rutas implementadas, cuerpos, filtros y errores, incluido ERROR real GET/POST y concurrencia; [TESTING_STRATEGY](TESTING_STRATEGY.md) y [VALIDATION](VALIDATION.md) distinguen evidencias y controles pendientes. No hay comparación implementada.
+[BASELINE](../security/BASELINE.md) fija permisos, gate anterior a CSRF, CORS, Actuator, errores y límites. Catálogo/búsqueda y comparación se verifican con esos controles, incluidos tipos/campos/selección inválidos y regresiones del transporte. [TESTING_STRATEGY](TESTING_STRATEGY.md) y [VALIDATION](VALIDATION.md) distinguen pruebas ejecutadas de persistencia, TLS/HTTP2 y publicación futuras.
 
-O-01 y el plazo total de lectura están corregidos y probados. AIR-014 consta Hecha tras revisión estática de Backend y ejecución final del coordinador. El transporte demo está limitado a HTTP/1.1 NIO/Tomcat11, sin TLS/HTTP2; deberá revalidarse al cambiar el servidor o publicar. AIR-015 no se inicia. Decisión y consecuencias en [ADR-0005](../decisions/0005-demo-body-read-deadline.md).
+O-01 y el plazo total de lectura están corregidos y probados en AIR-014. El transporte demo está limitado a HTTP/1.1 NIO/Tomcat11, sin TLS/HTTP2; deberá revalidarse al cambiar el servidor o publicar. AIR-015 conserva estos controles, sin cambiar el arranque ni activar otra fase. Decisión y consecuencias en [ADR-0005](../decisions/0005-demo-body-read-deadline.md).
 
 ## Agentes y verificación
 

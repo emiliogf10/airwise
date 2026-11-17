@@ -2,15 +2,15 @@
 
 Proyecto de portfolio full stack para explorar y comparar alternativas de viaje: precio del vuelo, aeropuerto de origen, fechas, escalas, duración y estimaciones de transporte terrestre. Su propuesta es explicar los compromisos entre coste y comodidad con información trazable.
 
-**Estado actual: AIR-014 completada, catálogo y buscador REST demo ejecutables.** El perfil `demo` arranca sin PostgreSQL. La suite completa pasa 181 pruebas, incluida la lectura con plazo absoluto de cinco segundos en HTTP/1.1 NIO local. Consulte el [arranque y sus límites](docs/developer-guide/DEMO_RUNTIME.md), la [política HTTP](docs/security/BASELINE.md) y los [ejemplos HTTP verificados](docs/api/DEMO_USAGE.md). Frontend y comparación siguen pendientes.
+**Estado actual: catálogo, buscador y comparador REST demo implementados y verificados en AIR-014/015.** El perfil `demo` arranca sin PostgreSQL. La suite completa pasa238 pruebas, incluidas comparación, seguridad y Tomcat real. Consulte el [arranque y sus límites](docs/developer-guide/DEMO_RUNTIME.md), la [política HTTP](docs/security/BASELINE.md) y los [ejemplos HTTP verificados](docs/api/DEMO_USAGE.md). El frontend sigue pendiente.
 
 ## Qué está presente y qué está previsto
 
 | Área | Presente en este checkout | Previsto, aún sin implementar o validar |
 |---|---|---|
-| Backend | Java 21, Spring Boot 4.1.2, dominio/proveedor demo, catálogo/búsqueda REST y perfil aislado | Comparación y controles de publicación |
+| Backend | Java21, Spring Boot4.1.2, dominio/proveedor demo, catálogo/búsqueda/comparación REST y perfil aislado | Controles de publicación y evolución autorizada |
 | Dependencias backend | Web MVC, Security, Data JPA, Validation, Flyway, PostgreSQL, Actuator y DevTools resueltos | Configuración de persistencia/seguridad de negocio e integración completa |
-| Pruebas | Jupiter 6.0.3; 181 pruebas satisfactorias, incluidas Security y Tomcat real | Persistencia, TLS/HTTP2 y controles de publicación |
+| Pruebas | Jupiter6.0.3;238 pruebas satisfactorias, incluidas regresiones AIR-014 | Persistencia, TLS/HTTP2 y publicación pendientes |
 | Frontend | No existe | React, TypeScript, Vite, Tailwind CSS, TanStack Query; Vitest y Playwright |
 | Infraestructura | Git inicializado y plantillas GitHub | Docker Compose, GitHub Actions, observabilidad y despliegue |
 | Documentación | Instrucciones, roles, skills, planificación, ADR y [contratos normalizados](docs/architecture/NORMALIZED_CONTRACTS.md) con [ejemplos JSON](docs/api/EXAMPLES.md) | OpenAPI, Javadoc del dominio y manual de funciones cuando existan |
@@ -89,4 +89,4 @@ Skills locales: `$task-planning`, `$api-integration`, `$database-migrations`, `$
 - [Changelog](planning/CHANGELOG.md): cambios sin versión publicada.
 - [Contribución y revisión](CONTRIBUTING.md), [seguridad](SECURITY.md) y [manual de usuario](docs/user-manual/README.md).
 
-AIR-011 conserva su test de contexto. AIR-012 y AIR-013 constan Hechas; AIR-014 consta Hecha y AIR-015 no se ha iniciado. PostgreSQL, JPA y Flyway mantienen pruebas de integración pendientes. El [registro de validación](docs/developer-guide/VALIDATION.md) conserva histórico y resultados actuales. No se han creado commits durante esta tarea.
+AIR-011 conserva su test de contexto. AIR-012/013/014 constan Hechas y AIR-015 incorpora comparación verificada el17/11/2026. PostgreSQL, JPA y Flyway mantienen integración pendiente; AIR-018 no se ha iniciado. El [registro de validación](docs/developer-guide/VALIDATION.md) conserva histórico y resultados actuales. No se han creado commits durante esta tarea.

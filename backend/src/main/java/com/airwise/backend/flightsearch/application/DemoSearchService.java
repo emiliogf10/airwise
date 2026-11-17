@@ -32,6 +32,15 @@ public final class DemoSearchService {
     }
 
     public Result search(SearchView view, ProviderExecutionContext execution) {
+        return execute(view, execution, false);
+    }
+
+    /** Reconstructs the complete bounded demo set once, independently of any browser view or page. */
+    public Result reconstruct(FlightSearchRequest query, String datasetVersion, ProviderExecutionContext execution) {
+        return execute(new SearchView(query, datasetVersion, SearchView.Filters.none(), SearchView.Sort.DEFAULT, 0, 50), execution, true);
+    }
+
+    private Result execute(SearchView view, ProviderExecutionContext execution, boolean completeBase) {
         DatasetDescriptor dataset = catalog.resolve(view.datasetVersion());
         Instant deadline = clock.instant().plusSeconds(2);
         if (execution.deadlineAt().isBefore(deadline)) deadline = execution.deadlineAt();
@@ -77,7 +86,7 @@ public final class DemoSearchService {
         }
         filtered.sort(order(view.sort()));
         long offset = (long) view.page() * view.pageSize();
-        var page = filtered.stream().skip(offset).limit(view.pageSize()).toList();
+        var page = completeBase ? List.copyOf(filtered) : filtered.stream().skip(offset).limit(view.pageSize()).toList();
         var warningMap = new TreeMap<String, DataIssue>();
         byId.values().forEach(o -> o.warnings().forEach(w -> warningMap.putIfAbsent(warningKey(w), w)));
         observations.values().forEach(o -> o.warnings().forEach(w -> warningMap.putIfAbsent(warningKey(w), w)));
@@ -86,7 +95,7 @@ public final class DemoSearchService {
         boolean partial = results.stream().anyMatch(r -> r.status() != ProviderStatus.COMPLETE && r.status() != ProviderStatus.EMPTY);
         return new Result(StableIdentity.fingerprint(dataset.datasetVersion(), view.query()), page,
                 observations.values().stream().limit(20).toList(), observations.size(), observations.size() > 20,
-                byId.size(), filtered.size(), unknown, offset + page.size() < filtered.size(), partial,
+                byId.size(), filtered.size(), unknown, !completeBase && offset + page.size() < filtered.size(), partial,
                 List.copyOf(results), warningMap.values().stream().limit(20).toList(), errorMap.values().stream().limit(20).toList());
     }
 

@@ -1,0 +1,17 @@
+{
+  "query": {
+    "tripType": "ROUND_TRIP",
+    "origins": ["OPO", "SCQ"],
+    "destination": "MAD",
+    "outboundDate": "2027-02-10",
+    "returnDate": "2027-02-17",
+    "travellers": {"adults": 1},
+    "cabin": "ECONOMY"
+  },
+  "datasetVersion": "demo-v1",
+  "offerIds": [
+    "of_d76f2960d8421d80e8407e0484e0aae160d30b4fb644a688b3f204da577b08df",
+    "of_6243f8bd1c7b49e805e68b4bfb78b1e9407a6e1331d24c52c21163c0b7b45378"
+  ],
+  "primary": "FLIGHT_PRICE"
+}

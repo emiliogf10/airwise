@@ -1,6 +1,6 @@
 # Módulos y persistencia
 
-**Límites aceptados en AIR-010 y contratos ratificados en AIR-012.** [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md) fija los tipos compartidos y [API_DESIGN.md](../api/API_DESIGN.md) los DTO HTTP. Se conserva un solo backend Java 21/Spring Boot. AIR-013 materializa Airport/domain, Flight Search/domain y application, y Flight Provider/demo; las fronteras HTTP y Comparison siguen pendientes.
+**Límites aceptados en AIR-010 y contratos ratificados en AIR-012.** [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md) fija los tipos compartidos y [API_DESIGN.md](../api/API_DESIGN.md) los DTO HTTP. Un solo backend Java21/Spring Boot: dominio/puerto/proveedor demo AIR-013, catálogo/búsqueda y seguridad HTTP AIR-014, y Comparison implementada/verificada en AIR-015 el17/11/2026.
 
 ## Dependencias permitidas
 
@@ -63,9 +63,9 @@ Dominio contiene reglas/valores; aplicación coordina; infraestructura adapta; A
 
 ## Persistencia aprobada: ninguna BD de negocio inicial
 
-Fixtures demo, catálogo y metadatos se versionarán como recursos mínimos en tareas posteriores; no copias de PoC privadas. Solicitudes, resultados, precios, segmentos, preferencias, errores y estimaciones no son entidades JPA por defecto. No guardar direcciones privadas ni texto libre innecesario.
+Fixtures demo, catálogo y metadatos están versionados como recursos mínimos desde AIR-013; no son copias de PoC privadas. Solicitudes, resultados, precios, segmentos, preferencias, errores y estimaciones no son entidades JPA por defecto. No guardar direcciones privadas ni texto libre innecesario.
 
-JPA, Flyway y PostgreSQL están declarados, pero no justifican tablas. AIR-011 verificó el contexto de test sin DataSource mediante exclusión local a esa prueba; no verificó integración con persistencia ni el arranque de ejecución demo. Cambiar configuración de ejecución requiere tarea autorizada. **Migraciones iniciales necesarias: cero**; no crear V1 vacía ni configurar PostgreSQL por portfolio.
+JPA, Flyway y PostgreSQL están declarados, pero no justifican tablas. AIR-011 verificó el contexto de test sin DataSource mediante exclusión local; AIR-014 comprobó además perfil demo, guardas y servidor real sin persistencia. Ninguna de esas pruebas acredita integración PostgreSQL/JPA/Flyway. Cambiar configuración de ejecución requiere tarea autorizada. **Migraciones iniciales necesarias: cero**; no crear V1 vacía ni configurar PostgreSQL por portfolio.
 
 | Necesidad posterior posible | Modelo/consulta que podría justificarla | Condición previa |
 |---|---|---|
@@ -105,7 +105,7 @@ Los objetos de dominio carecen de anotaciones de Spring/JPA. Los DTO mantienen e
 1. AIR-013 implementa valores Airport/Money/consulta y catálogo mínimo, con invariantes y tests puros.
 2. AIR-013 incorpora puerto y adaptador demo con resultado normalizado, reloj y versión.
 3. AIR-013 completa ida/vuelta, varios orígenes, segmentos/conexiones, identidad y estados difíciles; fixtures en recursos demo.
-4. Exponer catálogo y búsqueda con filtros/orden/página en AIR-014, tras la preparación de seguridad prevista.
-5. Implementar comparación en AIR-015 y preparación de UI en AIR-018.
+4. AIR-014 expone catálogo/búsqueda con filtros/orden/página y seguridad demo, con evidencia ejecutada.
+5. AIR-015 implementa y verifica comparación; preparación de UI AIR-018 permanece sin iniciar.
 
-Los contratos de comparación se fijan ahora para evitar decisiones de DTO incompatibles. Su código puede esperar. Las clases, directorios y adaptadores reales no se crean por adelantado. Los incrementos técnicos no permiten cerrar AIR-013 con solo el primer caso simple.
+El módulo de comparación presente en AIR-015 contiene valores en domain, motor/reconstrucción en application y lector/controlador/DTO/composición en api. Los nombres concretos y responsabilidades están en [TRAVEL_COST_ENGINE](TRAVEL_COST_ENGINE.md). No se han creado adaptadores reales, tablas o frontend por adelantado; la presencia de clases no sustituye la evidencia de cierre.

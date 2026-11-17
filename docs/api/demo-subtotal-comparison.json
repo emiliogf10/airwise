@@ -1,0 +1,56 @@
+{
+  "query": {
+    "tripType": "ROUND_TRIP",
+    "origins": ["OPO", "SCQ"],
+    "destination": "MAD",
+    "outboundDate": "2027-02-10",
+    "returnDate": "2027-02-17",
+    "travellers": {"adults": 1},
+    "cabin": "ECONOMY"
+  },
+  "datasetVersion": "demo-v1",
+  "offerIds": [
+    "of_d76f2960d8421d80e8407e0484e0aae160d30b4fb644a688b3f204da577b08df",
+    "of_6243f8bd1c7b49e805e68b4bfb78b1e9407a6e1331d24c52c21163c0b7b45378"
+  ],
+  "primary": "KNOWN_SUBTOTAL",
+  "requiredComponents": ["ORIGIN_GROUND_OUTBOUND", "ORIGIN_GROUND_RETURN"],
+  "groundEstimates": [
+    {
+      "offerId": "of_d76f2960d8421d80e8407e0484e0aae160d30b4fb644a688b3f204da577b08df",
+      "component": "ORIGIN_GROUND_OUTBOUND",
+      "money": {"amount": "30.00", "currency": "EUR"},
+      "basis": "GROUP",
+      "travellerCount": 1,
+      "source": "USER_ESTIMATE",
+      "assumption": "USER_PROVIDED"
+    },
+    {
+      "offerId": "of_d76f2960d8421d80e8407e0484e0aae160d30b4fb644a688b3f204da577b08df",
+      "component": "ORIGIN_GROUND_RETURN",
+      "money": {"amount": "30.00", "currency": "EUR"},
+      "basis": "GROUP",
+      "travellerCount": 1,
+      "source": "USER_ESTIMATE",
+      "assumption": "USER_PROVIDED"
+    },
+    {
+      "offerId": "of_6243f8bd1c7b49e805e68b4bfb78b1e9407a6e1331d24c52c21163c0b7b45378",
+      "component": "ORIGIN_GROUND_OUTBOUND",
+      "money": {"amount": "10.00", "currency": "EUR"},
+      "basis": "GROUP",
+      "travellerCount": 1,
+      "source": "USER_ESTIMATE",
+      "assumption": "USER_PROVIDED"
+    },
+    {
+      "offerId": "of_6243f8bd1c7b49e805e68b4bfb78b1e9407a6e1331d24c52c21163c0b7b45378",
+      "component": "ORIGIN_GROUND_RETURN",
+      "money": {"amount": "10.00", "currency": "EUR"},
+      "basis": "GROUP",
+      "travellerCount": 1,
+      "source": "USER_ESTIMATE",
+      "assumption": "USER_PROVIDED"
+    }
+  ]
+}

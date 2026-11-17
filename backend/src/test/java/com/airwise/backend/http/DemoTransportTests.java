@@ -47,8 +47,10 @@ class DemoTransportTests {
         assertThat(response.headers().firstValue("X-Correlation-ID")).contains(json.get("correlationId").asString());
         assertThat(response.headers().firstValue("Set-Cookie")).isEmpty();
         assertThat(response.headers().firstValue("Server")).isEmpty();
-        var denied = client.send(HttpRequest.newBuilder(uri("/api/v1/demo/comparisons")).POST(HttpRequest.BodyPublishers.noBody()).build(), HttpResponse.BodyHandlers.ofString());
-        assertThat(denied.statusCode()).isEqualTo(403);
+        var invalidComparison = client.send(HttpRequest.newBuilder(uri("/api/v1/demo/comparisons"))
+                .header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString("{}")).build(), HttpResponse.BodyHandlers.ofString());
+        assertThat(invalidComparison.statusCode()).isEqualTo(422);
+        assertThat(invalidComparison.body()).contains("VALIDATION_FAILED");
     }
 
     @Test void effectiveByteLimitIncludesChunkedRequestsWithoutContentLength() throws Exception {

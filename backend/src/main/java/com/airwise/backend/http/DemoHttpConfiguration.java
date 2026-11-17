@@ -57,7 +57,7 @@ public class DemoHttpConfiguration {
                 .exceptionHandling(c -> c
                         .authenticationEntryPoint((req, res, ex) -> errors.write(req, res, 403, "ACCESS_DENIED"))
                         .accessDeniedHandler((req, res, ex) -> errors.write(req, res, 403, "ACCESS_DENIED")))
-                .csrf(c -> c.ignoringRequestMatchers(request -> RoutePolicy.PUBLIC.matches(request) && RoutePolicy.SEARCH.matches(request)))
+                .csrf(c -> c.ignoringRequestMatchers(RoutePolicy.PUBLIC_POSTS))
                 .authorizeHttpRequests(c -> c.requestMatchers(RoutePolicy.PUBLIC, RoutePolicy.ERROR).permitAll().anyRequest().denyAll())
                 // Headers are supplied at the outer boundary, including failures before this chain.
                 .headers(c -> c.disable());

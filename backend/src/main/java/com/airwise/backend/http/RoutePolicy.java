@@ -14,8 +14,12 @@ final class RoutePolicy {
             .matcher(HttpMethod.GET, "/api/v1/demo/airports");
     static final RequestMatcher SEARCH = PathPatternRequestMatcher.withDefaults()
             .matcher(HttpMethod.POST, "/api/v1/demo/flight-searches");
+    static final RequestMatcher COMPARISONS = PathPatternRequestMatcher.withDefaults()
+            .matcher(HttpMethod.POST, "/api/v1/demo/comparisons");
+    static final RequestMatcher PUBLIC_POSTS = request -> request.getDispatcherType() == DispatcherType.REQUEST
+            && (SEARCH.matches(request) || COMPARISONS.matches(request));
     static final RequestMatcher PUBLIC = request -> request.getDispatcherType() == DispatcherType.REQUEST
-            && (AIRPORTS.matches(request) || SEARCH.matches(request));
+            && (AIRPORTS.matches(request) || PUBLIC_POSTS.matches(request));
     static final RequestMatcher ERROR = RoutePolicy::internalError;
     private RoutePolicy() { }
     static boolean internalError(HttpServletRequest request) {
@@ -32,6 +36,7 @@ final class RoutePolicy {
         return switch (path) {
             case "/api/v1/demo/airports" -> "GET";
             case "/api/v1/demo/flight-searches" -> "POST";
+            case "/api/v1/demo/comparisons" -> "POST";
             default -> null;
         };
     }

@@ -4,7 +4,7 @@
 
 ## Implementación local de AIR-013
 
-El 13/11/2026 se comprobaron DemoFlightProvider y su corpus cerrado [demo-v1.properties](../../backend/src/main/resources/demo/demo-v1.properties). Se construye directamente como componente Java; no se registra todavía un bean Spring ni se exponen endpoints. FlightProvider publica capabilities(), supports(request) y search(request), con un origen por ejecución. Search coordinará el fan-out en AIR-014.
+El 13/11/2026 se comprobaron DemoFlightProvider y su corpus cerrado [demo-v1.properties](../../backend/src/main/resources/demo/demo-v1.properties). El adaptador se conserva como componente Java puro; AIR-014 lo registra como bean bajo perfil demo y expone catálogo/búsqueda HTTP. FlightProvider publica capabilities(), supports(request) y search(request), con un origen por ejecución. Search coordina el fan-out secuencial y conserva los resultados por origen. AIR-015 reconstruye selecciones mediante Search sin introducir otro adaptador.
 
 El descriptor servidor publica demo-v1, evaluación simulada 2027-01-01T00:00:00Z, calendario inclusivo de 2027, EUR/USD, D1/D2 y cuatro aeropuertos. Las referencias OPO/MAD/SCQ/BCN se redactaron manualmente a partir de los ejemplos; el cargador comprueba sintaxis y zonas IANA mediante Java 21. No se importó un catálogo externo ni payloads de PoC. Esto no valida una fuente comercial, una licencia de catálogo completo ni disponibilidad real.
 
@@ -12,7 +12,7 @@ El descriptor servidor publica demo-v1, evaluación simulada 2027-01-01T00:00:00
 |---|---|
 | ONE_WAY OPO, 2027-02-10 | Directo 100 EUR y vectores de identidad AIR-012 |
 | ROUND_TRIP OPO/SCQ, 2027-02-10 a 17 | Una oferta por origen, 100/110 EUR; observación OPO 45 EUR solo ida separada |
-| ROUND_TRIP OPO/SCQ, 2027-02-11 a 18 | OPO completo; SCQ FAILED/OFFLINE, sin agregación HTTP todavía |
+| ROUND_TRIP OPO/SCQ, 2027-02-11 a 18 | OPO completo; SCQ FAILED/OFFLINE, agregado HTTP PARTIAL en AIR-014 |
 | ONE_WAY OPO, 2027-02-12 | Ocho alternativas: vía BCN, directo más rápido, empate 100/100 EUR, USD, precio desconocido, cero explícito y vigencia desconocida |
 | ONE_WAY OPO, 2027-02-13 | FAILED/TIMEOUT simulado |
 | ONE_WAY OPO, 2027-02-14 | EMPTY completo explícito |

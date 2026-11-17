@@ -1,6 +1,6 @@
 # API REST del MVP demo — contrato v1
 
-**Ratificado en AIR-012; catálogo y búsqueda implementados y verificados en AIR-014 (16/11/2026).** Comparación sigue siendo contrato futuro de AIR-015 y devuelve403. Tipos e invariantes en [NORMALIZED_CONTRACTS](../architecture/NORMALIZED_CONTRACTS.md), ejemplos contractuales en [EXAMPLES](EXAMPLES.md) y uso ejecutado en [DEMO_USAGE](DEMO_USAGE.md). Arranque y límites de HTTP/1.1 demo en [DEMO_RUNTIME](../developer-guide/DEMO_RUNTIME.md).
+**Ratificado en AIR-012; catálogo/búsqueda verificados en AIR-014 y comparación AIR-015 implementada y verificada el17/11/2026.** El contrato conserva sus campos y reglas aceptadas; la suite integral pasa238 pruebas. Tipos e invariantes en [NORMALIZED_CONTRACTS](../architecture/NORMALIZED_CONTRACTS.md), ejemplos/captura en [EXAMPLES](EXAMPLES.md) y uso ejecutado en [DEMO_USAGE](DEMO_USAGE.md). Arranque y límites de HTTP/1.1 demo en [DEMO_RUNTIME](../developer-guide/DEMO_RUNTIME.md).
 
 ## Convenciones HTTP
 
@@ -12,9 +12,9 @@ Cuerpo máximo 65536 bytes y profundidad JSON máxima 12. Claves duplicadas, cam
 |---|---|---|---|
 | GET `/api/v1/demo/airports` | q, datasetVersion, page, pageSize | 200 AirportCatalogResponseDTO | Público implementado en demo |
 | POST `/api/v1/demo/flight-searches` | FlightSearchRequestDTO | 200 FlightSearchResult, COMPLETE/PARTIAL | Público implementado en demo |
-| POST `/api/v1/demo/comparisons` | Contrato futuro ComparisonRequestDTO | Actualmente 403 ACCESS_DENIED | No implementado; AIR-015 |
+| POST `/api/v1/demo/comparisons` | ComparisonRequestDTO | 200 ComparisonResponseDTO | Público exacto en demo; verificado17/11 |
 
-POST búsqueda es una consulta y devuelve 200 cuando se completa total o parcialmente. Estado transitorio, sin cuentas ni reservas. Registro exclusivamente DEMO. La [política HTTP](../security/BASELINE.md) se aplica a las dos operaciones implementadas y su preflight válido; comparación permanece cerrada. Accept incompatible produce 406 JSON; los rechazos anteriores conservan su estado. Preflight válido devuelve 200 sin body. Los errores del conector anteriores al proceso pueden tener formato de transporte. Plazo absoluto de lectura5s verificado en HTTP/1.1 NIO demo; resultados en VALIDATION. POST no admite query string y GET rechaza cuerpo explícito sin leerlo.
+POST búsqueda es una consulta y devuelve 200 cuando se completa total o parcialmente. Estado transitorio, sin cuentas ni reservas. Registro exclusivamente DEMO. AIR-015 integra comparación en la [política HTTP](../security/BASELINE.md) mediante su matcher POST exacto y preflight, sin abrir otras rutas; las pruebas de seguridad y HTTP incremental constan en VALIDATION. Accept incompatible produce 406 JSON; los rechazos anteriores conservan su estado. Preflight válido devuelve 200 sin body. Los errores del conector anteriores al proceso pueden tener formato de transporte. Plazo absoluto de lectura5s verificado en AIR-014 sobre HTTP/1.1 NIO demo. POST no admite query string y GET rechaza cuerpo explícito sin leerlo.
 
 ## Catálogo
 
@@ -98,6 +98,8 @@ query y versión son requeridas. IDs se escriben exactamente como of_ seguido de
 
 primary es FLIGHT_PRICE, FLIGHT_DURATION, CONNECTIONS o KNOWN_SUBTOTAL. requiredComponents es un conjunto ordenado lexicográficamente sin duplicados, con ORIGIN_GROUND_OUTBOUND y/o ORIGIN_GROUND_RETURN. El regreso exige ROUND_TRIP. Para KNOWN_SUBTOTAL se requiere conjunto no vacío; para las otras primarias debe estar vacío. groundEstimates solo se admite con KNOWN_SUBTOTAL, con IDs seleccionados y sin duplicar oferta/componente. La estimación tiene máximo de 1000000 unidades y moneda compatible con su oferta.
 
+Una moneda no admitida por el dataset produce422 INVALID_CURRENCY. Una moneda admitida pero diferente de la tarifa seleccionada produce422 INVALID_COMBINATION, conforme a CT-26; no se convierte ni se suma. Si la tarifa no tiene Money conocido, la estimación se conserva explícita, pero no basta para construir un subtotal o precio de vuelo inventado.
+
 ComparisonResponseDTO contiene `contractVersion, correlationId, context:SearchContext, primary, requiredComponents, groups:ComparisonGroup[], warnings:DataIssue[]`.
 
 | Tipo | Campos exactos |
@@ -114,6 +116,8 @@ missingFields permite PRICE, PRICE_SCOPE, DURATION, FRESHNESS, ORIGIN_GROUND_OUT
 rankingComplete exige todas las filas evaluables y ningún bloque TIE_UNRESOLVED. recommendationIds contiene los IDs de rango 1, ordenados por ID, solo si hay al menos dos evaluables y el bloque líder está resuelto. Si el bloque líder es TIE_UNRESOLVED, recommendationIds=[]; un empate completo conocido sí admite ganadores empatados. Un bloque inferior irresoluble impide rankingComplete, aunque puede conservarse una recomendación líder inequívoca. Con menos de dos evaluables se devuelve recommendationIds vacío y SINGLE_EVALUABLE_OPTION para la fila evaluable. No existe ganador global entre grupos. primaryKnown refleja solo si se conoce la métrica primaria; un precio conocido caducado puede tener primaryKnown=true y rank=null con motivo EXPIRED_DATA. Una primaria desconocida produce rank=null y primaryKnown=false. KNOWN_SUBTOTAL incompleto no cambia automáticamente de primaria.
 
 El subtotal suma exclusivamente el importe cotizado de vuelo y los componentes terrestres requeridos, en la misma moneda. Equipaje y otros servicios se muestran con sus condiciones conocidas/desconocidas. El rótulo público es “subtotal de componentes seleccionados con estimaciones”. El coste total exacto no forma parte del contrato.
+
+La reconstrucción parcial no amplía ComparisonResponseDTO con status o providerResults. AIR-015 conserva sus causas mediante un warning global `INVALID_PROVIDER_DATA`, `path:null`: indica un **conjunto reconstruido incompleto**, no que las ofertas seleccionadas sean inválidas. El mensaje propio enumera los ProviderIssueCode distintos en orden, sin copiar texto del proveedor ni perder causas al deduplicar. Las recomendaciones siguen limitadas a EVALUABLE_GROUP y no acreditan cobertura de todos los orígenes. Los warnings de las ofertas seleccionadas se mantienen por separado con sus mensajes públicos de catálogo.
 
 ## Errores y límites de confianza
 

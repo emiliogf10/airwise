@@ -1,6 +1,6 @@
 # Ejemplos sintéticos del contrato airwise-v1
 
-Ejemplos documentales de AIR-012, sujetos a [API_DESIGN](API_DESIGN.md) y [NORMALIZED_CONTRACTS](../architecture/NORMALIZED_CONTRACTS.md). Vuelos, aerolíneas D1/D2, importes, vendedores y estados son sintéticos. AIR-013 incorporó las referencias de aeropuerto al corpus versionado. Estos cuerpos ilustran el contrato y no son capturas HTTP; los endpoints ejecutados en AIR-014 se documentan en [DEMO_USAGE](DEMO_USAGE.md). Comparación sigue sin implementar.
+Ejemplos AIR-012 sujetos a [API_DESIGN](API_DESIGN.md) y [NORMALIZED_CONTRACTS](../architecture/NORMALIZED_CONTRACTS.md), más una respuesta de comparación capturada en AIR-015 el17/11/2026. Vuelos, aerolíneas D1/D2, importes, vendedores y estados son sintéticos. AIR-013 incorporó las referencias de aeropuerto al corpus versionado. Los bloques AIR-012 ilustran el contrato; la sección «Respuesta de comparación» se identifica expresamente como captura HTTP y conserva su UUID variable. Solicitudes y resultados ejecutados en [DEMO_USAGE](DEMO_USAGE.md).
 
 Los calendarios y escenarios muestran contenido ilustrativo de demo-v1. Su forma y reglas son normativas. AIR-013 materializó el registro de fixtures; los escenarios realmente disponibles se describen en PROVIDERS y DEMO_USAGE.
 
@@ -788,12 +788,12 @@ POST `/api/v1/demo/comparisons`. Se seleccionan las dos ofertas de la respuesta 
 
 ## Respuesta de comparación
 
-HTTP 200. Los subtotales seleccionados son 160 EUR para OPO y 130 EUR para SCQ. Las estimaciones cambian el orden respecto al importe base de vuelo.
+Captura HTTP200 del17/11/2026 sobre el proceso demo independiente. La solicitud [demo-subtotal-comparison.json](demo-subtotal-comparison.json) produce160EUR para OPO y130EUR para SCQ; estas estimaciones explícitas cambian el orden respecto al importe de vuelo. El correlationId mostrado pertenece a esa ejecución y varía; versión, fingerprint e IDs se reconstruyen determinísticamente. Todos los vuelos y precios son sintéticos y no acreditan disponibilidad ni coste total del viaje.
 
 ```json
 {
   "contractVersion": "airwise-v1",
-  "correlationId": "00000000-0000-4000-8000-000000000004",
+  "correlationId": "cb20e774-0ba5-4f66-914e-cfee64d7a924",
   "context": {
     "datasetVersion": "demo-v1",
     "fingerprint": "q_cdc1ab42a04b16b44746bf57d857b8db43675268614315a589876689f6fb5888",
@@ -822,6 +822,35 @@ HTTP 200. Los subtotales seleccionados son 160 EUR para OPO y 130 EUR para SCQ. 
   "groups": [
     {
       "groupId": "g_b289cc4fb8608d0a975df98d17df28d11ddd66727ff492846c5ac475ea8cc57c",
+      "priceGroup": {
+        "groupId": "g_b289cc4fb8608d0a975df98d17df28d11ddd66727ff492846c5ac475ea8cc57c",
+        "dataOrigin": "DEMO",
+        "evidenceKind": "RECENT_SEARCH",
+        "currency": "EUR",
+        "scope": {
+          "basis": "GROUP",
+          "travellerCount": 1,
+          "cabin": "ECONOMY",
+          "coverage": "FULL_ITINERARY",
+          "coveredSegmentIds": []
+        },
+        "taxes": "INCLUDED",
+        "baggage": {
+          "cabin": {
+            "status": "UNKNOWN",
+            "pieces": null,
+            "weightKg": null
+          },
+          "checked": {
+            "status": "UNKNOWN",
+            "pieces": null,
+            "weightKg": null
+          }
+        },
+        "additionalCostKinds": [],
+        "monetarilyComparable": true,
+        "reasons": []
+      },
       "rows": [
         {
           "offerId": "of_6243f8bd1c7b49e805e68b4bfb78b1e9407a6e1331d24c52c21163c0b7b45378",
@@ -914,39 +943,16 @@ HTTP 200. Los subtotales seleccionados son 160 EUR para OPO y 130 EUR para SCQ. 
       "recommendationIds": [
         "of_6243f8bd1c7b49e805e68b4bfb78b1e9407a6e1331d24c52c21163c0b7b45378"
       ],
-      "recommendationScope": "EVALUABLE_GROUP",
-      "priceGroup": {
-        "groupId": "g_b289cc4fb8608d0a975df98d17df28d11ddd66727ff492846c5ac475ea8cc57c",
-        "dataOrigin": "DEMO",
-        "evidenceKind": "RECENT_SEARCH",
-        "currency": "EUR",
-        "scope": {
-          "basis": "GROUP",
-          "travellerCount": 1,
-          "cabin": "ECONOMY",
-          "coverage": "FULL_ITINERARY",
-          "coveredSegmentIds": []
-        },
-        "taxes": "INCLUDED",
-        "baggage": {
-          "cabin": {
-            "status": "UNKNOWN",
-            "pieces": null,
-            "weightKg": null
-          },
-          "checked": {
-            "status": "UNKNOWN",
-            "pieces": null,
-            "weightKg": null
-          }
-        },
-        "additionalCostKinds": [],
-        "monetarilyComparable": true,
-        "reasons": []
-      }
+      "recommendationScope": "EVALUABLE_GROUP"
     }
   ],
-  "warnings": []
+  "warnings": [
+    {
+      "code": "BAGGAGE_UNKNOWN",
+      "path": "/baggage/checked",
+      "message": "Información de equipaje desconocida."
+    }
+  ]
 }
 ```
 

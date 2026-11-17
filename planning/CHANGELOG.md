@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### 2026-11-17 — motor de comparación demo AIR-015
+
+- Implementado POST /api/v1/demo/comparisons: selección servidor de2–4 ofertas sin depender de filtros/páginas, cuatro primarias, grupos compatibles, rankings de competición y recomendaciones limitadas a EVALUABLE_GROUP.
+- Estimaciones terrestres explícitas, subtotales de componentes seleccionados, null/cero diferenciados y vigencia/desempates explicados; sin FX, puntuaciones opacas o ganador global entre grupos. Parcialidad operativa conserva causas mediante warning seguro sin ampliar schema.
+- Security habilita solo la nueva combinación POST exacta y preflight, conservando CSRF específico, CORS, cuotas, JSON, errores y plazo de lectura. Moneda admitida pero incompatible produce INVALID_COMBINATION conforme a CT-26.
+- Wrapper offline clean test:238 pruebas, cero fallos/errores/omitidas;24 comprobaciones con Java independiente/curl y ejemplos capturados. Sin dependencias nuevas, cambios del POM/Wrapper/base protegida o corpus, persistencia, APIs externas, commits o push. No se publica versión ni se inicia AIR-018.
+
 ### 2026-11-16 — buscador REST demo AIR-014 completado
 
 - Perfil demo explícito, guardas antes de conexiones, catálogo GET y búsqueda POST sobre DEMO; corregida O-01. DTO HTTP separados, validación estricta, filtros, orden, páginas y causas parciales conservadas.

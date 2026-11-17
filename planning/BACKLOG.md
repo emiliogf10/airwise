@@ -139,11 +139,11 @@ AIR-010 autoriza únicamente análisis y documentación de diseño. Las tareas d
 
 - Descripción: comparar precio, escalas y duración con preferencias acotadas; introducir costes terrestres solo con fuente o supuestos aprobados.
 - Prioridad: P1.
-- Estado: Pendiente.
+- Estado: Hecha.
 - Responsable: Backend Agent.
 - Dependencias: AIR-014.
 - Aceptación: selección de 2–4 ofertas reconstituida en servidor; grupos de moneda/evidencia/ámbito, prioridades/desempates explicables y desconocidos probados. Estimaciones opcionales separadas, sin duplicación ni total exacto; sin inventar equipaje o viaje completo desde un trayecto.
-- Evidencia: no implementado.
+- Evidencia: alcance autorizado el16/11/2026 e implementado/revisado el17/11. Baseline AIR-014:23 pruebas correctas; motor20, aplicación/DTO21 y nuevas pruebas HTTP/errores16. Wrapper offline `clean test`: BUILD SUCCESS,238 pruebas, cero fallos/errores/omitidas,74 fuentes principales y25 de test. Java independiente/curl:24 comprobaciones correctas, incluidos cuatro criterios, selección entre páginas, grupos/unknown/vigencia, estimaciones/subtotal incompleto, CORS y errores422/409/400/503; proceso detenido. Delegación real Backend, Security & QA y Documentation; revisión estática de Security y revisión documental conformes. Validador documental código0,203 destinos locales y17 tareas;18 bloques JSON válidos, captura de subtotal idéntica al ejemplo y diff sin errores. Ocho archivos protegidos, incluido corpus demo-v1, sin cambios; POM/Wrapper/base conservados, sin dependencias nuevas, persistencia, APIs externas, commits o push. DoD satisfecha tras En curso → En revisión → Hecha. Evidencias y límites de empaquetado/TLS/HTTP2 en [VALIDATION](../docs/developer-guide/VALIDATION.md). AIR-018 no iniciada.
 
 ### AIR-016 — Definir seguridad y estrategia de pruebas del MVP
 

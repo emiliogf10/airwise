@@ -1,6 +1,6 @@
-# Ejecución demo sin persistencia — AIR-014
+# Ejecución demo sin persistencia — AIR-014/015
 
-**16/11/2026. Implementada y comprobada; AIR-014 Hecha.** Perfil explícito, dos endpoints, proveedor DEMO único y plazo absoluto de lectura verificados. Resultados en [VALIDATION](VALIDATION.md), política en [BASELINE](../security/BASELINE.md), uso en [DEMO_USAGE](../api/DEMO_USAGE.md) y decisión de transporte en [ADR-0005](../decisions/0005-demo-body-read-deadline.md).
+**Actualizada el17/11/2026 con AIR-015.** Perfil explícito, catálogo/búsqueda/comparación, proveedor DEMO único y controles HTTP verificados. La suite integral pasa238 pruebas; resultados en [VALIDATION](VALIDATION.md), política en [BASELINE](../security/BASELINE.md), uso en [DEMO_USAGE](../api/DEMO_USAGE.md) y decisión de transporte en [ADR-0005](../decisions/0005-demo-body-read-deadline.md).
 
 ## Perfil y componentes reales
 
@@ -9,6 +9,7 @@
 - Se excluyen únicamente `org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration` y `org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration`. No hay exclusiones preventivas JPA/Flyway.
 - `DemoStartupGuard`, BeanFactoryPostProcessor estático, rechaza todas las propiedades spring.datasource.*, spring.flyway.url/user/password y definiciones DataSource, XADataSource, JdbcConnectionDetails, EntityManagerFactory o Flyway antes de instanciar singletons. No imprime valores ni inicia conexiones. No es un sandbox contra código arbitrario.
 - `flightsearch.api.DemoSearchConfiguration` compone catálogo y caso de uso con el adaptador demo existente. No se registra ninguna fuente REAL.
+- `flightcomparison.api.DemoComparisonConfiguration` añade motor y servicio de comparación sobre `DemoSearchService.reconstruct`, sin almacenamiento o llamadas nuevas de proveedor.
 - `http.DemoHttpConfiguration` registra Security, límite de bytes/JSON, admisión, errores y cabeceras. Cobertura de los cinco dispatchers; FORWARD/INCLUDE/ASYNC no ejecutan negocio. ERROR interno solo escribe un error sanitizado, sin CSRF, nueva cuota o nuevo UUID.
 
 Bind predeterminado127.0.0.1, sin confiar en Forwarded/X-Forwarded-*. Actuator web/JMX cerrado, sin usuario/password generado ni sesión. CORS externo vacío. Perfil desactiva LiveReload/defaults de desarrollo, pero la propiedad de perfil restart.enabled=false llega tarde para impedir el primer RestartClassLoader: se exige también `-Dspring.devtools.restart.enabled=false` en la JVM antes del main. Una guarda compara la identidad real del protocolo y los loaders de filtro/deadline y aborta antes de bind ante separación. DevTools permanece como dependencia; no se modifica el main ni se presenta este classpath como distribución de producción.
@@ -27,9 +28,9 @@ try {
 } finally { Pop-Location }
 ```
 
-Resultado ejecutado: 64 fuentes principales, 18 fuentes de tests, 181 pruebas, cero fallos/errores/omitidas. Las asignaciones son de la sesión dedicada; no se modifica configuración global. Offline necesita caché previa y no acredita un clon sin ella.
+Resultado actual ejecutado:74 fuentes principales,25 fuentes de tests,238 pruebas en24 clases JUnit; cero fallos/errores/omitidas. Las asignaciones son de la sesión dedicada; no se modifica configuración global. Offline necesita caché previa y no acredita un clon sin ella. Los resultados181 de AIR-014 se conservan en el histórico de VALIDATION.
 
-`mvnw.cmd -o ... package` falló antes de ejecutar tests: maven-jar-plugin 3.5.1 ausente en caché. No se descargó nada ni se alteró el POM para eludirlo. No hay JAR ejecutable generado. El arranque mediante spring-boot:run y un paquete de producción no se han validado.
+En AIR-014, `mvnw.cmd -o ... package` falló por maven-jar-plugin3.5.1 ausente de caché, sin descargar nada o alterar el POM. AIR-015 no repitió ni acredita empaquetado. Se valida arranque Java directo; spring-boot:run y un paquete de producción siguen sin acreditar.
 
 ## Arranque Java independiente comprobado
 
@@ -40,13 +41,13 @@ $airwiseReport = Get-ChildItem backend/target/surefire-reports/TEST-*.xml | Sele
 [xml]$airwiseXml = Get-Content -Raw -LiteralPath $airwiseReport.FullName
 $airwiseClasspath = ($airwiseXml.testsuite.properties.property | Where-Object name -eq 'java.class.path').value
 $airwiseClasspath = (($airwiseClasspath -split ';' | Where-Object { $_ -notlike '*test-classes*' }) -join ';').Replace('\', '/')
-New-Item -ItemType Directory -Force .local/air014 | Out-Null
+New-Item -ItemType Directory -Force .local/air015 | Out-Null
 $airwiseArguments = @('-Dspring.devtools.restart.enabled=false', '-cp', ('"' + $airwiseClasspath + '"'), 'com.airwise.backend.BackendApplication', '--spring.profiles.active=demo', '--server.port=0')
-[System.IO.File]::WriteAllLines((Join-Path (Get-Location).Path '.local/air014/demo-java.args'), $airwiseArguments, [System.Text.UTF8Encoding]::new($false))
-java '@.local/air014/demo-java.args'
+[System.IO.File]::WriteAllLines((Join-Path (Get-Location).Path '.local/air015/demo-java.args'), $airwiseArguments, [System.Text.UTF8Encoding]::new($false))
+java '@.local/air015/demo-java.args'
 ```
 
-Se ejecutó `java @.local/air014/demo-java.args` con esas opciones desde la raíz, entorno hijo saneado y caché existente. Tomcat anunció puerto63937 en la verificación final; no se reserva como puerto permanente. curl verificó catálogo200, búsqueda200/COMPLETE, fallo503 y comparación403. El proceso fue detenido al terminar. Use Ctrl+C cuando lo arranque manualmente. El classpath contiene librerías de pruebas, aunque no sus clases: no se presenta como empaquetado de producción.
+Se ejecutó `java @.local/air015/demo-java.args` con esas opciones desde la raíz, entorno hijo saneado y caché existente. En la verificación final AIR-015 Tomcat anunció el puerto temporal63505; curl verificó24 comprobaciones, incluidos catálogo/búsqueda anteriores, comparación200 por las cuatro primarias y errores400/409/422/503. El proceso fue detenido al terminar. Use Ctrl+C cuando lo arranque manualmente. El classpath contiene librerías de pruebas, aunque no sus clases: no se presenta como distribución de producción.
 
 ## Relojes, cotas y límites de transporte
 
@@ -58,7 +59,7 @@ Bytes efectivos 65536, lectura máxima65537, incluidos chunked/sin Content-Lengt
 
 **Lectura absoluta5s comprobada:** BodyReadDeadline delimita el scope síncrono y DemoDeadlineProtocol espera con Selector local únicamente por el tiempo monotónico restante, incluido framing/trailers chunked. BodyReadValve evita drenaje posterior de cuerpos incompletos. Sin tareas lectoras diferidas; recursos retirados en finally. Goteo continuo, bloqueo a4,2s, chunk-header/trailers y desconexión probados; el proceso Java independiente rechazó goteo en5.01s con400 JSON. El diagnóstico anterior6,06s se conserva como fallo corregido, no como garantía actual. Este transporte se configura solo en demo, HTTP/1.1 NIO; TLS/HTTP2 fallan antes del bind y requieren validación propia. No se promete scheduling en tiempo real del SO. [ADR-0005](../decisions/0005-demo-body-read-deadline.md) registra mantenimiento y alcance.
 
-Sin demo no se filtran estos beans/exclusiones. El test original sigue con su exclusión local. Persistencia/producción requerirán tarea autorizada y pruebas reales de PostgreSQL/JPA/Flyway. AIR-015, frontend y proveedores externos no se han iniciado.
+Sin demo no se filtran estos beans/exclusiones. El test original sigue con su exclusión local. Persistencia/producción requerirán tarea autorizada y pruebas reales de PostgreSQL/JPA/Flyway. AIR-015 incorpora comparación manteniendo estas restricciones; frontend y proveedores externos no se han iniciado.
 
 ## Verificación de DevTools y classloaders
 

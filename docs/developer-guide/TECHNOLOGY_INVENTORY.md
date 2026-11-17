@@ -2,6 +2,8 @@
 
 Inventario inicial del **11/11/2026**, con histórico AIR-011/013 preservado y actualización AIR-014 del **16/11/2026**: perfil demo, catálogo/búsqueda REST, DTO explícitos, Security/JSON/admisión y 181 pruebas satisfactorias. No se han modificado POM, Wrapper, aplicación principal, configuración común ni test original en AIR-014. Se conservan las 15 dependencias y las versiones siguientes. Empaquetado offline no disponible por ausencia de maven-jar-plugin 3.5.1; no hay JAR generado. Plazo absoluto de lectura verificado en HTTP/1.1 NIO demo; tarea Hecha. TLS/HTTP2 se rechazan hasta validación posterior.
 
+**Actualización AIR-015 del17/11/2026:** módulo flightcomparison y endpoint demo implementados, reutilizando Search para reconstrucción completa. Versiones y15 dependencias sin cambios; no se añadió tecnología de persistencia, frontend o transporte externo. Wrapper offline clean test compila74 fuentes principales y25 de tests:238 pruebas satisfactorias en24 clases JUnit. El histórico181 anterior se conserva como tal; resultados actuales en [VALIDATION](VALIDATION.md).
+
 ## Base existente
 
 | Elemento | Evidencia observada | Límite de la afirmación |
@@ -68,7 +70,7 @@ El generado incluye directorios vacíos `src/main/resources/static`, `templates`
 - H2 y Testcontainers están ausentes del árbol resuelto. Una herramienta OpenAPI no aparece como dependencia directa. No hay especificación OpenAPI ejecutable ni Javadoc del dominio.
 - React, TypeScript, Vite, Tailwind CSS, TanStack Query, Vitest y Playwright: sin proyecto frontend ni `package.json`.
 - PostgreSQL como servidor, Docker Compose y GitHub Actions: previstos; no se han configurado ni comprobado servicios.
-- Monolito modular: dominio, aplicación y proveedor AIR-013; Airport/api, Flight Search/api, proyecciones HTTP compartidas y configuración/seguridad demo añadidos en AIR-014. Sin Comparison ni adaptadores reales.
+- Monolito modular: dominio/aplicación/proveedor AIR-013, fronteras HTTP y seguridad AIR-014, y flightcomparison.domain/application/api AIR-015. Search expone reconstrucción completa y Comparison no depende de fuentes reales. Adaptadores Travelpayouts/SerpApi siguen sin implementar.
 
 ## Compatibilidad estática revisada en AIR-016
 

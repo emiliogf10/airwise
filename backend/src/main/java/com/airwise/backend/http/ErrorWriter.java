@@ -18,6 +18,9 @@ public final class ErrorWriter {
             + "(?:/(?:tripType|origins|destination|outboundDate|returnDate|travellers|adults|cabin|currency|"
             + "maxConnections|maxDurationMinutes|departureTimeFrom|departureTimeTo|airlineCodes|includeUnknown|"
             + "minPrice|maxPrice|[0-9]|1[0-9])){0,5}");
+    private static final Pattern COMPARISON_POINTER = Pattern.compile("(?:/offerIds(?:/[0-3])?|/primary"
+            + "|/requiredComponents(?:/[01])?|/groundEstimates(?:/[0-7](?:/(?:offerId|component|basis|travellerCount|"
+            + "source|assumption|money(?:/(?:amount|currency))?))?)?)");
     private final JsonMapper mapper;
     public ErrorWriter(JsonMapper mapper) { this.mapper = mapper; }
 
@@ -40,7 +43,7 @@ public final class ErrorWriter {
         mapper.writeValue(response.getOutputStream(), error);
     }
     private static String safePath(String path) {
-        return path != null && POINTER.matcher(path).matches() ? path : "/";
+        return path != null && (POINTER.matcher(path).matches() || COMPARISON_POINTER.matcher(path).matches()) ? path : "/";
     }
     private static String message(String code) {
         return switch (code) {

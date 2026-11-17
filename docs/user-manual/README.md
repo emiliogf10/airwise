@@ -1,6 +1,6 @@
 # Manual de usuario — alcance inicial
 
-Airwise dispone de una API de catálogo y búsqueda con datos sintéticos, pero todavía no tiene interfaz de usuario. Su uso técnico se documenta en [DEMO_USAGE](../api/DEMO_USAGE.md). No hay registro, compra, pantallas, capturas ni usuarios de prueba. AIR-014 consta Hecha; sus límites constan en la guía de ejecución.
+Airwise dispone de una API de catálogo, búsqueda y comparación con datos sintéticos, verificada en AIR-014/015; todavía no tiene interfaz de usuario. Su uso técnico se documenta en [DEMO_USAGE](../api/DEMO_USAGE.md). No hay registro, compra, pantallas, capturas ni usuarios de prueba. Comparar no confirma disponibilidad, equipaje o coste total: los grupos, desconocidos y estimaciones se explican en cada respuesta. Los límites constan en la guía de ejecución.
 
 Cuando se implementen y verifiquen los flujos autorizados, este manual explicará búsqueda por ruta/fechas, interpretación de itinerarios y escalas, comparación de alternativas, procedencia/actualidad de los precios y estados vacíos o parciales.
 
