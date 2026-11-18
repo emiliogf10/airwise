@@ -118,7 +118,7 @@ HSTS solo en HTTPS público comprobado: max-age 31536000, sin includeSubDomains/
 
 Actuator demo: exposure.exclude=* web/JMX, JMX deshabilitado y denegación de rutas adicional; sin excepción pública health. Sondas futuras requieren canal/ruta/autorización propios. Sin env, configprops, beans, mappings, loggers, heapdump o detalles de health.
 
-Desarrollo: demo explícito, loopback y allowlist vacía salvo configuración concreta. Publicación futura: HTTPS, borde verificado, sin debug/DevTools en artefacto, CORS/límites probados. No frontend hoy; sus variables públicas no contendrán tokens, secretos ni URLs autenticadas.
+Desarrollo: demo explícito, loopback y allowlist vacía salvo configuración concreta. Publicación futura: HTTPS, borde verificado, sin debug/DevTools en artefacto, CORS/límites probados. AIR-018 implementa el cliente demo sin alterar esta política backend; sus variables públicas no contendrán tokens, secretos ni URLs autenticadas. La conexión de desarrollo y sus límites se documentan en la [guía frontend](../developer-guide/FRONTEND.md).
 
 ## Riesgos priorizados
 

@@ -2,7 +2,7 @@
 
 Proyecto de portfolio full stack para explorar y comparar alternativas de viaje: precio del vuelo, aeropuerto de origen, fechas, escalas, duración y estimaciones de transporte terrestre. Su propuesta es explicar los compromisos entre coste y comodidad con información trazable.
 
-**Estado actual: catálogo, buscador y comparador REST demo implementados y verificados en AIR-014/015.** El perfil `demo` arranca sin PostgreSQL. La suite completa pasa238 pruebas, incluidas comparación, seguridad y Tomcat real. Consulte el [arranque y sus límites](docs/developer-guide/DEMO_RUNTIME.md), la [política HTTP](docs/security/BASELINE.md) y los [ejemplos HTTP verificados](docs/api/DEMO_USAGE.md). El frontend sigue pendiente.
+**Estado actual: backend demo operativo y frontend AIR-018 En revisión.** El cliente incorpora búsqueda, filtros, paginación, selección y comparación; queda pendiente la revisión visual, de teclado real y tamaños de pantalla por una limitación del entorno. El perfil `demo` arranca sin PostgreSQL. La evidencia backend incluye238 pruebas, incluidas comparación, seguridad y Tomcat real. Consulte el [arranque y sus límites](docs/developer-guide/DEMO_RUNTIME.md), la [política HTTP](docs/security/BASELINE.md), la [guía frontend](docs/developer-guide/FRONTEND.md) y la [evidencia por nivel](docs/developer-guide/VALIDATION.md).
 
 ## Qué está presente y qué está previsto
 
@@ -10,8 +10,8 @@ Proyecto de portfolio full stack para explorar y comparar alternativas de viaje:
 |---|---|---|
 | Backend | Java21, Spring Boot4.1.2, dominio/proveedor demo, catálogo/búsqueda/comparación REST y perfil aislado | Controles de publicación y evolución autorizada |
 | Dependencias backend | Web MVC, Security, Data JPA, Validation, Flyway, PostgreSQL, Actuator y DevTools resueltos | Configuración de persistencia/seguridad de negocio e integración completa |
-| Pruebas | Jupiter6.0.3;238 pruebas satisfactorias, incluidas regresiones AIR-014 | Persistencia, TLS/HTTP2 y publicación pendientes |
-| Frontend | No existe | React, TypeScript, Vite, Tailwind CSS, TanStack Query; Vitest y Playwright |
+| Pruebas | Backend: Jupiter6.0.3 y 238 pruebas históricas. Frontend: 53 casos ordinarios y 1 integración opt-in satisfactorios; HTTP real por cliente y App/jsdom | Revisión visual/teclado/viewports; persistencia, TLS/HTTP2 y publicación pendientes |
+| Frontend | React/TypeScript/Vite; búsqueda, filtros/páginas servidor, selección y comparación; Oxlint y Vitest/Testing Library | Revisión visual, teclado real y viewports; AIR-018 En revisión |
 | Infraestructura | Git inicializado y plantillas GitHub | Docker Compose, GitHub Actions, observabilidad y despliegue |
 | Documentación | Instrucciones, roles, skills, planificación, ADR y [contratos normalizados](docs/architecture/NORMALIZED_CONTRACTS.md) con [ejemplos JSON](docs/api/EXAMPLES.md) | OpenAPI, Javadoc del dominio y manual de funciones cuando existan |
 
@@ -45,9 +45,10 @@ airwise/
 ├── .agents/skills/                   # Cinco procedimientos reutilizables
 ├── .github/                         # Plantillas de issues y PR, sin pipelines
 ├── backend/                         # Base Initializr conservada; dominio y API demo añadidos
+├── frontend/                        # React/TypeScript/Vite; cliente demo AIR-018 en revisión
 ├── planning/                        # Roadmap, backlog, mejoras y changelog
 ├── docs/
-│   ├── user-manual/                  # Alcance del manual, sin pantallas ficticias
+│   ├── user-manual/                  # Uso del cliente demo y límites
 │   ├── developer-guide/              # Entorno real, flujo Codex y validación
 │   ├── architecture/                 # Diseño y contratos; implementación parcial con demo
 │   ├── api/                          # Límites del contrato y política de proveedores
@@ -59,7 +60,7 @@ airwise/
 └── .gitignore
 ```
 
-El árbol detallado y los resultados están en [VALIDATION.md](docs/developer-guide/VALIDATION.md). No se ha creado un frontend, un proyecto Maven raíz ni una base de datos.
+El frontend tiene su [estructura y comandos](docs/developer-guide/FRONTEND.md); los resultados están en [VALIDATION.md](docs/developer-guide/VALIDATION.md). No se ha creado un proyecto Maven raíz ni una base de datos.
 
 ## Trabajar desde PowerShell
 
@@ -89,4 +90,4 @@ Skills locales: `$task-planning`, `$api-integration`, `$database-migrations`, `$
 - [Changelog](planning/CHANGELOG.md): cambios sin versión publicada.
 - [Contribución y revisión](CONTRIBUTING.md), [seguridad](SECURITY.md) y [manual de usuario](docs/user-manual/README.md).
 
-AIR-011 conserva su test de contexto. AIR-012/013/014 constan Hechas y AIR-015 incorpora comparación verificada el17/11/2026. PostgreSQL, JPA y Flyway mantienen integración pendiente; AIR-018 no se ha iniciado. El [registro de validación](docs/developer-guide/VALIDATION.md) conserva histórico y resultados actuales. No se han creado commits durante esta tarea.
+AIR-011 conserva su test de contexto. AIR-012/013/014 constan Hechas y AIR-015 incorpora comparación verificada el17/11/2026. PostgreSQL, JPA y Flyway mantienen integración pendiente; AIR-018 permanece En revisión, con seguimiento recuperable conservado y revisión visual pendiente. El siguiente paso es completar esa revisión antes de cerrar la tarea. El [registro de validación](docs/developer-guide/VALIDATION.md) conserva histórico y resultados actuales. No se han creado commits durante esta tarea.

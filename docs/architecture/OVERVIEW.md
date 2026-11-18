@@ -1,6 +1,6 @@
 # Arquitectura y alcance del MVP
 
-**Diseño AIR-010, contratos AIR-012 y primer componente demo implementado en AIR-013.** AIR-011 verificó Java 21, Spring Boot 4.1.2, dependencias, compilación y contexto de test sin persistencia. El arranque de ejecución demo y la integración PostgreSQL/JPA/Flyway siguen pendientes. Esta decisión no autoriza código, BD, React ni llamadas externas.
+**Diseño AIR-010 y contratos AIR-012, materializados en el backend demo AIR-013/014/015.** Catálogo, búsqueda y comparación REST, arranque aislado y seguridad HTTP están implementados y verificados; la evidencia y sus límites se conservan en [VALIDATION](../developer-guide/VALIDATION.md). PostgreSQL/JPA/Flyway siguen sin integración de negocio. AIR-018 tiene autorización expresa para implementar el cliente React/TypeScript/Vite; este diseño por sí solo no autoriza otros cambios ni llamadas externas.
 
 ## MVP acordado
 
@@ -22,7 +22,7 @@ Para el MVP demo, el calendario admitido y su fecha de referencia se publicarán
 
 ## Diferenciación y aplazamientos
 
-Se aprueba un núcleo del Travel Cost Engine por reglas y preferencias transitorias; AIR-015 desarrollará su comparación. El mismo diseño admite estimaciones terrestres aportadas voluntariamente por el usuario, sin geocodificación ni direcciones privadas. Es posible comparar solo vuelos sin estimaciones. Fuentes automáticas, conversión monetaria, exploración económica con Travelpayouts y consultas detalladas con SerpApi se incorporarán solo tras tareas y permisos propios.
+Se aprueba un núcleo del Travel Cost Engine por reglas y preferencias transitorias; AIR-015 implementa su comparación. El mismo diseño admite estimaciones terrestres aportadas voluntariamente por el usuario, sin geocodificación ni direcciones privadas. Es posible comparar solo vuelos sin estimaciones. Fuentes automáticas, conversión monetaria, exploración económica con Travelpayouts y consultas detalladas con SerpApi se incorporarán solo tras tareas y permisos propios.
 
 **Fuera del MVP inicial:** compra/emisión/reserva, pagos, chatbot, ML predictivo, alertas, suscripciones, infraestructura distribuida, APIs de pago obligatorias, cuentas, favoritos persistentes, historial, perfiles y recomendaciones personalizadas persistidas. Tampoco se aprueba búsqueda multicity o calendario flexible avanzado.
 
@@ -30,13 +30,13 @@ Posponer cuentas y favoritos evita autenticación, autorización por propietario
 
 ## Monolito modular
 
-Un backend desplegable como unidad con cuatro límites: **Airport, Flight Search, Flight Provider y Flight Comparison**. No son módulos Maven, paquetes creados ni servicios independientes. React/TypeScript será el cliente posterior; PostgreSQL/JPA/Flyway están previstos/declarados, pero no hay caso de persistencia de negocio inicial.
+Un backend desplegable como unidad con cuatro límites: **Airport, Flight Search, Flight Provider y Flight Comparison**. Son fronteras funcionales implementadas en paquetes del backend, sin módulos Maven ni servicios independientes. React/TypeScript es el cliente autorizado en AIR-018; PostgreSQL/JPA/Flyway están previstos/declarados, pero no hay caso de persistencia de negocio inicial.
 
 Las dependencias, interfaces, riesgos y decisión de persistencia están en [MODULES.md](MODULES.md). El dominio se define en [DOMAIN_MODEL.md](DOMAIN_MODEL.md); los adaptadores en [PROVIDERS.md](PROVIDERS.md); las reglas en [TRAVEL_COST_ENGINE.md](TRAVEL_COST_ENGINE.md). Separar dominio, aplicación, infraestructura y API solo cuando haya comportamiento o fronteras concretos. No crear capas, librerías comunes ni módulos de seguridad vacíos.
 
 ## Experiencia de usuario prevista
 
-Dos vistas funcionales bastan: formulario de búsqueda y resultados con detalle/comparador. No se crean componentes ni prototipos en AIR-010.
+El diseño AIR-010 acotó formulario y resultados con detalle/comparador, sin crear componentes o prototipos en esa tarea. AIR-018 los implementa en una página con secciones Buscar, Resultados y Comparar; [ADR-0006](../decisions/0006-demo-frontend.md) justifica navegación y herramientas. La tarea está En revisión por comprobaciones visuales pendientes.
 
 1. Elegir modo demo visible, aeropuertos concretos y fechas; mostrar la condición un adulto/turista y el calendario simulado.
 2. Buscar; anunciar carga y evitar envíos duplicados. Validar campos con mensajes asociados y resumen de errores enfocable.
@@ -54,12 +54,12 @@ Dos vistas funcionales bastan: formulario de búsqueda y resultados con detalle/
 | Caducado | Marcar antigüedad o simulación; sin recomendación vigente; repetir búsqueda explícitamente |
 | Versión retirada | Explicar conflicto y reiniciar el contexto; no reutilizar IDs con otra versión |
 
-Teclado, foco visible y retorno previsible al cerrar detalles/comparador; etiquetas y estructura semántica, mensajes breves de estado, sin depender solo de color. En móvil, tarjetas y comparación por atributos con lectura lineal, zoom y sin tabla ancha como único acceso. AIR-018 detallará componentes y pruebas, no ejecutadas aquí.
+Teclado, foco visible y retorno previsible al cerrar detalles/comparador; etiquetas y estructura semántica, mensajes breves de estado, sin depender solo de color. En móvil, tarjetas y comparación por atributos con lectura lineal, zoom y sin tabla ancha como único acceso. Componentes, pruebas y límites de AIR-018 se documentan en [FRONTEND](../developer-guide/FRONTEND.md): los tests automatizados no sustituyen la revisión pendiente de teclado real y layout en navegador.
 
 ## Contratos, seguridad y decisiones
 
-[API_DESIGN.md](../api/API_DESIGN.md) ratifica en AIR-012 tres rutas demo y sus DTO. [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md) fija campos/invariantes y [BASELINE.md](../security/BASELINE.md) los requisitos de seguridad que AIR-016 concretará. Los endpoints se implementarán en tareas posteriores.
+[API_DESIGN.md](../api/API_DESIGN.md) ratifica en AIR-012 las tres rutas demo y sus DTO, implementados en AIR-014/015. [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md) fija campos/invariantes y [BASELINE.md](../security/BASELINE.md) la política de seguridad concretada en AIR-016 e implementada en el backend demo.
 
 Se aceptan ADR-0002 y ADR-0003, con contratos ratificados en AIR-012 e historial conservado. [ADR-0004](../decisions/0004-demo-mvp-and-persistence.md) registra alcance demo y ausencia de BD/cuentas. ADR-0001 conserva el historial de la base generada. Permisos y coste permanecen en AIR-019, según la [evidencia histórica](PROVIDER_EVIDENCE.md).
 
-AIR-011 comprobó base Java/Wrapper y contexto demo de prueba. AIR-012 ratifica enums, payloads, cotas de entrada, reglas y ejemplos. AIR-013 materializa fixtures sintéticas y el proveedor demo, con referencias mínimas manuales. Permanecen pendientes un catálogo externo verificado/licenciado si se incorpora, preparar ejecución demo/seguridad, endpoints y cualquier esquema de persistencia futuro. Cada tarea posterior necesita autorización propia.
+AIR-011 comprobó base Java/Wrapper y contexto demo de prueba. AIR-012 ratifica enums, payloads, cotas de entrada, reglas y ejemplos. AIR-013 materializa fixtures sintéticas y el proveedor demo, con referencias mínimas manuales. AIR-014/015 completan ejecución demo, seguridad HTTP, endpoints y comparación. Permanecen pendientes un catálogo externo verificado/licenciado si se incorpora y cualquier esquema de persistencia futuro. Cada tarea posterior necesita autorización propia.

@@ -4,6 +4,10 @@
 
 ## Base y herramientas reales
 
+AIR-018 añade pruebas frontend con Vitest, React Testing Library, user-event, jest-dom y jsdom instalados localmente. `npm test`, `npm run typecheck`, `npm run lint` (Oxlint) y `npm run build` están definidos en `frontend/package.json`; los resultados ejecutados se registran en [VALIDATION](VALIDATION.md), sin inferirlos de estos scripts. Las fixtures respetan el contrato demo y no consumen APIs de vuelos.
+
+Las pruebas de cliente/componentes deben observar solicitudes, validación, cargas, errores, vacío/parcial, selección entre vistas, versiones, grupos y desconocidos. jsdom no acredita layout responsive, navegación E2E ni integración real del proxy/backend. Esas verificaciones necesitan un navegador y procesos locales, con evidencia propia y limitaciones explícitas; no se requiere instalar Playwright por estar previsto en el stack. Guía de conexión en [FRONTEND](FRONTEND.md).
+
 AIR-013 documenta 62 invocaciones satisfactorias: contexto 1, proveedor 18, corpus 6, aislamiento 2, aplicación 6 y dominio 29. AIR-016 inspecciona fuentes/reportes históricos; no acredita una nueva ejecución Maven.
 
 Las dependencias ya resuelven Jupiter/Platform 6.0.3, parametrizadas, Mockito, AssertJ, MockMvc y soporte Security. No añadir H2, Testcontainers, WireMock, starter genérico o cliente de proveedor para estos casos.

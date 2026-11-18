@@ -64,11 +64,33 @@ El diagnóstico inicial reprodujo `Failed to determine a suitable driver class` 
 
 El generado incluye directorios vacíos `src/main/resources/static`, `templates` y `db/migration`. Se conservan por la instrucción de preservar el backend; no indican frontend ni migraciones implementadas. No se crearon nuevos directorios vacíos fuera de esa base.
 
+## Frontend instalado en AIR-018 — 18/11/2026
+
+El coordinador observó Node.js 24.21.0 y npm 11.7.0, ejecutó el generador oficial create-vite 9.3.4 para React/TypeScript y realizó la instalación local en `frontend/`. `package.json` declara rangos; `package-lock.json` fija el árbol resuelto y `npm ls --depth=0` informó estas versiones. No son instalaciones globales ni versiones publicadas de Airwise; `frontend:0.0.0` es un marcador privado del paquete.
+
+El campo `engines.node` declara `^22.22.2 || ^24.15.0 || >=26.0.0` tras contrastar los requisitos de las herramientas resueltas; la versión realmente probada es 24.21.0. No se afirma haber ejecutado la matriz completa de versiones admitidas.
+
+| Dependencia directa | Versión resuelta observada | Uso |
+|---|---|---|
+| react / react-dom | 19.3.1 / 19.3.1 | Interfaz y renderizado |
+| typescript | 7.0.2 | Comprobación estricta de tipos |
+| vite / @vitejs/plugin-react | 8.3.8 / 6.3.0 | Desarrollo y build del cliente |
+| oxlint | 1.94.0 | Lint del template; no se añade ESLint |
+| vitest | 5.1.1 | Ejecución de pruebas |
+| @testing-library/react | 16.3.3 | Comportamiento de componentes |
+| @testing-library/user-event | 14.6.12 | Interacciones en pruebas |
+| @testing-library/jest-dom | 7.0.1 | Aserciones del DOM |
+| jsdom | 31.0.1 | Entorno DOM simulado |
+| @types/node | 24.19.2 | Tipos de configuración Node |
+| @types/react / @types/react-dom | 19.3.0 / 19.3.0 | Tipos de React |
+
+La instalación npm informó cero vulnerabilidades conocidas en su comprobación; no acredita una auditoría exhaustiva ni elimina el seguimiento de dependencias. Typecheck, lint y build se ejecutaron satisfactoriamente; pruebas unitarias y dos niveles de integración local se detallan en [VALIDATION](VALIDATION.md), separados del navegador pendiente. [FRONTEND](FRONTEND.md) contiene los comandos y [ADR-0006](../decisions/0006-demo-frontend.md) justifica las dependencias añadidas y aplazadas.
+
 ## Objetivos documentales y componentes pendientes
 
 - **JUnit 5** fue el objetivo documental inicial. AIR-011 comprobó Jupiter/Platform **6.0.3**, gestionados por el parent actual. La propiedad heredada `junit.version=4.13.2` no supone que JUnit 4 participe en las pruebas. El árbol examinado carece de `junit:junit`. Se actualiza la descripción al resultado ejecutado.
 - H2 y Testcontainers están ausentes del árbol resuelto. Una herramienta OpenAPI no aparece como dependencia directa. No hay especificación OpenAPI ejecutable ni Javadoc del dominio.
-- React, TypeScript, Vite, Tailwind CSS, TanStack Query, Vitest y Playwright: sin proyecto frontend ni `package.json`.
+- React, TypeScript, Vite y Vitest están instalados para AIR-018. Tailwind CSS, TanStack Query, React Router y Redux no son necesarios para este flujo; Playwright no está instalado como dependencia del proyecto. No confundir herramienta prevista con componente presente.
 - PostgreSQL como servidor, Docker Compose y GitHub Actions: previstos; no se han configurado ni comprobado servicios.
 - Monolito modular: dominio/aplicación/proveedor AIR-013, fronteras HTTP y seguridad AIR-014, y flightcomparison.domain/application/api AIR-015. Search expone reconstrucción completa y Comparison no depende de fuentes reales. Adaptadores Travelpayouts/SerpApi siguen sin implementar.
 

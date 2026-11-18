@@ -165,15 +165,16 @@ AIR-010 autoriza únicamente análisis y documentación de diseño. Las tareas d
 - Aceptación: necesidad de persistencia demostrada o decisión explícita de posponerla; si se introduce, migraciones probadas sin datos/servicios de producción.
 - Evidencia: pendiente de ejecución; AIR-010 justifica MVP sin BD de negocio ni migraciones iniciales. AIR-017 ratificará aplazamiento o justificará un caso durable concreto; no hay base ni entidades creadas.
 
-### AIR-018 — Preparar experiencia frontend tras aprobar el contrato
+### AIR-018 — Implementar frontend React y TypeScript sobre demo local
 
-- Descripción: decidir estructura React/TypeScript y diseñar estados accesibles de búsqueda y comparación antes de generar el proyecto.
+- Descripción: implementar experiencia React/TypeScript/Vite de catálogo, búsqueda y comparación sobre los tres endpoints demo locales. El adjunto AIR-018 autoriza expresamente ampliar la preparación inicial a implementación completa; backend protegido.
 - Prioridad: P1.
-- Estado: Pendiente.
+- Estado: En revisión.
 - Responsable: Frontend Agent.
 - Dependencias: AIR-014, AIR-015, AIR-016.
-- Aceptación: flujo acotado, contratos y estados de carga/vacío/error/parcialidad aprobados; herramientas justificadas antes de instalar.
-- Evidencia: pendiente de ejecución; AIR-010 define flujo, estados, accesibilidad y necesidades de contrato, sin componentes, prototipos ni frontend generado. AIR-018 concretará su preparación tras contratos/componentes backend disponibles.
+- Aceptación: frontend funcional responsive/accesible, catálogo real local, formulario validado, filtros/orden/páginas de servidor, selección2–4 conservada dentro de consulta/versión y comparación de cuatro criterios por grupos con estimaciones explícitas. Errores/parcialidad/desconocidos/demo claros; typecheck/build/lint/tests satisfactorios, integración UI local y documentación actualizada; backend íntegro y sin credenciales ni APIs de vuelos.
+- Evidencia: implementación verificada el18/11/2026 tras autorización ampliada: estructura/dependencias justificadas en ADR-0006, React/TS/Vite, controles nativos, filtros/orden/páginas servidor y comparación de cuatro criterios con estimaciones explícitas. Delegación real Frontend, Security & QA y Documentation; hallazgos corregidos e integrados por Orchestrator. `npm test`:53 pasadas, cero fallos y una integración omitida por ser opt-in; `npm run test:integration:ui`:esa prueba pasada con6HTTP reales entre React/jsdom, proxy y backend; `npm run test:integration`:12HTTP reales del cliente con tres endpoints/cuatro criterios, subtotal, desconocidos/cero, parcial/vacío y409/503. Typecheck/build/lint código0 sin avisos;22pares de contraste de la paleta calculados satisfactoriamente (no auditoría renderizada). SHA-256 de109archivos backend idéntico al inicio. Evidencia y límites en [VALIDATION](../docs/developer-guide/VALIDATION.md); guía [FRONTEND](../docs/developer-guide/FRONTEND.md). Sin claves, APIs de vuelos, cambios globales, commits ni push.
+- Pendiente para DoD: comprobación visual responsive en móvil/tablet/escritorio y teclado en navegador real. Tras autorización expresa del usuario, Computer Use se detuvo porque no pudo determinar la URL actual de Brave en Windows con confianza suficiente para aplicar su política. No se eludió el bloqueo ni se acredita E2E de navegador con jsdom. Permanece En revisión; se conserva `.local/ACTIVE_TASK.md` para retomar esas verificaciones con entorno operativo y no se inicia la siguiente tarea.
 
 ### AIR-019 — Aclarar permisos y presupuesto antes de adaptadores reales
 

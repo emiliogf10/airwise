@@ -59,7 +59,7 @@ Bytes efectivos 65536, lectura máxima65537, incluidos chunked/sin Content-Lengt
 
 **Lectura absoluta5s comprobada:** BodyReadDeadline delimita el scope síncrono y DemoDeadlineProtocol espera con Selector local únicamente por el tiempo monotónico restante, incluido framing/trailers chunked. BodyReadValve evita drenaje posterior de cuerpos incompletos. Sin tareas lectoras diferidas; recursos retirados en finally. Goteo continuo, bloqueo a4,2s, chunk-header/trailers y desconexión probados; el proceso Java independiente rechazó goteo en5.01s con400 JSON. El diagnóstico anterior6,06s se conserva como fallo corregido, no como garantía actual. Este transporte se configura solo en demo, HTTP/1.1 NIO; TLS/HTTP2 fallan antes del bind y requieren validación propia. No se promete scheduling en tiempo real del SO. [ADR-0005](../decisions/0005-demo-body-read-deadline.md) registra mantenimiento y alcance.
 
-Sin demo no se filtran estos beans/exclusiones. El test original sigue con su exclusión local. Persistencia/producción requerirán tarea autorizada y pruebas reales de PostgreSQL/JPA/Flyway. AIR-015 incorpora comparación manteniendo estas restricciones; frontend y proveedores externos no se han iniciado.
+Sin demo no se filtran estos beans/exclusiones. El test original sigue con su exclusión local. Persistencia/producción requerirán tarea autorizada y pruebas reales de PostgreSQL/JPA/Flyway. AIR-015 incorpora comparación manteniendo estas restricciones. El cliente demo AIR-018 está En revisión, sin modificar archivos de este arranque; consulte la [conexión frontend](FRONTEND.md) y sus opciones locales de puerto/allowlist. Los proveedores externos siguen sin implementar.
 
 ## Verificación de DevTools y classloaders
 

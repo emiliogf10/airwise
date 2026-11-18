@@ -1,6 +1,83 @@
 # Registro de validación de Airwise
 
-Evidencia desde el **2026-11-11**, actualizada con AIR-015 del **17/11/2026**. Cada apartado conserva su alcance, resultados y límites; los238 tests actuales no sustituyen el histórico181 de AIR-014.
+Evidencia desde el **2026-11-11**, actualizada con AIR-018 del **18/11/2026**. Cada apartado conserva su alcance, resultados y límites. Las 238 pruebas backend de AIR-015 y las 181 históricas de AIR-014 se distinguen de las pruebas frontend nuevas; AIR-018 no repite ni acredita una ejecución Maven nueva.
+
+## AIR-018 — frontend funcional en revisión
+
+El adjunto autoriza expresamente implementar React/TypeScript/Vite en `frontend/` sobre catálogo, búsqueda y comparación demo, ampliando la preparación prevista inicialmente. El backend no forma parte del alcance de edición. El coordinador mantiene `.local/ACTIVE_TASK.md` mientras queden implementación o verificaciones pendientes.
+
+Documentation Agent aplicó `documentation-sync` y contrastó planificación, contrato HTTP, reglas de comparación, guía de ejecución y documentación de seguridad antes de preparar la guía frontend. Se corrigieron referencias arquitectónicas obsoletas que aún presentaban los endpoints y el arranque AIR-014/015 como futuros, conservando la evidencia histórica. No se atribuye a esta revisión documental ninguna ejecución Maven, npm, navegador o petición HTTP.
+
+### Coordinación y procedimientos aplicados
+
+El coordinador delegó realmente en los agentes de esta sesión `air018_frontend`, `air018_qa` y `air018_docs`, con propiedad separada de UI, pruebas y documentación. El principal mantuvo configuración, cliente HTTP, integración, backlog y seguimiento. Esta evidencia corresponde a esos procesos reales y no supone que todo agente configurado se invoque automáticamente.
+
+Se descubrieron las cinco skills locales y las globales/sistema del catálogo. Se aplicaron `task-planning`, `testing-and-review` y `documentation-sync`, que concretan planificación, comprobaciones y documentación de Airwise. `api-integration` y `database-migrations` no se activaron: no hay integración de proveedor ni cambios de esquema autorizados. `modern-web-guidance` aportó guías de formularios, HTML, accesibilidad, CSS y responsive antes de implementar; no se instaló como skill nueva ni se cambió configuración global. La skill de computer-use se leyó para el intento de comprobación visual; el acceso fallido no acredita una prueba ejecutada. Las herramientas de artefactos, sitios alojados, AWS y creación/instalación de skills no eran pertinentes. La revisión de seguridad fue proporcional al frontend y sus dependencias, no una auditoría integral.
+
+Comprobación incremental inicial tras esos cambios: `py -3.14 scripts/validate_repository.py`, código0, 215 destinos locales y17 tareas; `git diff --check -- README.md docs planning/ROADMAP.md planning/CHANGELOG.md`, código0. Se conserva como evidencia documental parcial anterior a las verificaciones finales siguientes.
+
+### Candidato final y alcance pendiente — 18/11/2026
+
+El coordinador comunicó la ejecución final a las 18:53; Documentation contrastó además el JSON de Vitest, los scripts versionados, la configuración y las fuentes. No se atribuyen estas ejecuciones al agente documental.
+
+| Comando / comprobación | Resultado y límite |
+|---|---|
+| `npm test -- --reporter=json --outputFile=../.local/air018/vitest-final.json` | Código 0, 54 casos: 53 satisfactorios, 0 fallidos y 1 omitido intencionadamente por ser integración local opt-in. JSON con `success:true`. Pruebas de cliente/componentes en jsdom con respuestas sintéticas |
+| `npm run test:integration:ui` | Código 0, 1 prueba satisfactoria, 6 peticiones HTTP reales: catálogo, búsqueda y cuatro comparaciones, incluido subtotal. Monta App en jsdom con user-event y usa proxy/backend; no es navegador E2E |
+| `npm run test:integration` | Código 0, 12 peticiones reales mediante cliente TypeScript y proxy, tres endpoints, cuatro criterios y casos de error/datos descritos abajo |
+| `npm run typecheck` | Código 0 tras corregir el modo opt-in de la prueba; TypeScript estricto |
+| `npm run build` | Código 0, 25 módulos; JS 276,21 kB/gzip 84,13 kB, CSS 13,48 kB/gzip 3,57 kB e index 0,67 kB. Build estático, sin acreditar despliegue |
+| `npm run lint` | Código 0, sin advertencias; Oxlint |
+| Integridad backend | 109 archivos fuente/configuración con hashes idénticos al snapshot previo AIR-018; sin cambios en POM, Wrapper o configuración versionada |
+| Paleta y accesibilidad | 22 pares calculados estáticamente cumplieron los umbrales seleccionados; foco sobre fondo oscuro 8,31:1. Labels, controles nativos, mensajes, selección/foco y desconocidos cubiertos por pruebas de componentes; no auditoría completa de accesibilidad |
+
+Vitest usa workers de tipo threads, máximo 2, dentro del sandbox gestionado. Los intentos iniciales mediante fork encontraron EPERM; la configuración final no necesita rebajar permisos ni controles. El test de integración UI se habilita solo mediante el wrapper `scripts/verify-ui.mjs` y el modo Vite `local-integration`, sin variables nuevas o globals Node dentro del componente/test. La suite normal no necesita servicios activos ni convierte fallos de conexión en fixtures.
+
+AIR-018 permanece **En revisión**: implementación y automatización verificadas, pero el cierre necesita la revisión visual/responsive y teclado real pendiente del entorno de navegador. `.local/ACTIVE_TASK.md` se conserva con ese siguiente paso; no se inicia otra AIR, no se publica, no se hace commit ni push. La instalación npm informó cero vulnerabilidades conocidas; eso no es una auditoría exhaustiva.
+
+El coordinador detuvo los procesos Java y Vite de verificación y comprobó que no quedan listeners en 8080/5173. Volvió a contrastar los 109 hashes backend, todos idénticos. Tras la sincronización final ejecutó el validador del repositorio: código 0, 239 destinos locales y 17 tareas; `git diff --check` también devolvió código 0, solo con avisos informativos LF/CRLF. No se deja un servidor local en ejecución como supuesto de la entrega.
+
+### Integración local nueva — 18/11/2026
+
+El coordinador ejecutó `npm run test:integration` desde `frontend/` con backend en 127.0.0.1:8080 y Vite en 127.0.0.1:5173. El script versionado `frontend/scripts/verify-demo.mjs` carga `src/api/client.ts` mediante Vite SSR, usa fetch real y fuerza la procedencia exacta autorizada. Restringe sus destinos a las tres rutas demo locales. Resultado código 0: 12 peticiones HTTP a través del proxy, catálogo y búsqueda, cuatro criterios de comparación, subtotal con estimaciones, paginación de ocho ofertas, cero frente a precio desconocido, resultados vacíos/parciales y errores 409/503. No modifica backend ni usa APIs de proveedores.
+
+Esta es evidencia de integración del cliente HTTP TypeScript con proxy/backend reales. No monta la interfaz React ni acredita E2E en navegador. La prueba opt-in de UI registrada arriba sí monta App en jsdom y realiza seis peticiones reales; tampoco observa layout de navegador, CSS renderizado o teclado físico. Los resultados unitarios, integración HTTP e integración UI se conservan como niveles distintos.
+
+Los intentos de revisión en navegador no pudieron ejecutarse. Primero, el browser host no estaba disponible y la herramienta de acceso nativo rechazó Brave con «Computer Use was not approved to use Brave». El usuario autorizó después ese navegador; al reintentar, la herramienta no pudo determinar con confianza la URL de la ventana en Windows para aplicar su política y mantuvo el bloqueo técnico. No hubo acciones de interfaz ni capturas, ni se cambió configuración para eludir controles. La revisión visual, teclado real y viewports quedan sin ejecutar; responsive solo puede acreditarse por inspección estática de CSS y la accesibilidad básica por las pruebas de componentes que se documenten. No hay conformidad de accesibilidad completa. AIR-018 permanece **En revisión** y el seguimiento recuperable se conserva para completar ese alcance.
+
+Comprobación documental posterior a instalación/guías/manual/ADR: `py -3.14 scripts/validate_repository.py`, código0,233 destinos locales y17 tareas. `git diff --check -- README.md docs planning/ROADMAP.md planning/CHANGELOG.md frontend/README.md`, código0, con advertencia informativa de normalización LF/CRLF. El validador busca valores de proveedor disponibles en el entorno sin mostrarlos; no es un escáner general de secretos.
+
+## Reverificación de AIR-015 y seguimiento recuperable — 17/11/2026
+
+El nuevo adjunto vuelve a solicitar AIR-015 e incorpora descubrimiento de skills y seguimiento para tareas futuras. Se contrastó con la implementación ya completada y el checkout inicialmente limpio. Las revisiones reales de Backend, Security & QA y Documentation no identificaron carencias nuevas verificables frente al adjunto. AIR-015 conserva estado Hecha; no se reimplementó negocio ni se inició AIR-018.
+
+Se añadieron reglas permanentes en AGENTS.md y un procedimiento breve en la guía de desarrollo: crear/leer `.local/ACTIVE_TASK.md`, registrar alcance, plan, responsables, hitos, comandos/resultados, pendientes y siguiente paso; conservarlo si queda trabajo y eliminarlo únicamente al completar las verificaciones. `.local/` ya estaba ignorado. El checkpoint se mantuvo durante esta tarea, sin credenciales ni payloads sensibles; no sustituye al backlog ni a evidencia persistente.
+
+### Descubrimiento y selección de skills
+
+Se consultaron el catálogo de esta sesión, las descripciones actuales y los directorios reales. Estar instalado en disco no se trató como registro ejecutable o disponibilidad en catálogo.
+
+| Ámbito descubierto | Skills | Aplicación en esta petición |
+|---|---|---|
+| Local, `.agents/skills/` | task-planning, testing-and-review, documentation-sync, api-integration, database-migrations | Aplicadas las tres primeras: planificación, verificaciones normales del proyecto y sincronización documental |
+| Global personal, `~/.agents/skills/` | aws-emulator, find-skills, modern-web-guidance, security-audit | Aplicada security-audit únicamente como guidance/source-first para inspección estática de Security & QA, sin auditoría integral ni ejecución objetivo bajo ese procedimiento |
+| Sistema, `~/.codex/skills/.system/` | imagegen, openai-docs, review-agent, skill-creator, skill-installer | Ninguna aplicada. review-agent está instalado pero no figura en el catálogo de esta sesión; no se afirma su registro ni se usa |
+| Plugins visibles en el catálogo | Documentos, PDF, presentaciones, hojas de cálculo, sitios, visualización y otras herramientas de producto | Descartados por no aportar un procedimiento pertinente para esta revisión Java/Markdown |
+
+Las skills locales resultan más ajustadas para pruebas y documentación de Airwise. La global security-audit se limita a fronteras de confianza y evidencia estática, complementando la revisión sin repetir la ejecución local. No se instalan skills: no hay tarea de AWS, frontend/HTML, migraciones, integración real, artefactos visuales ni configuración ejecutable nueva de Codex. No se ejecutaron pruebas bajo el sandbox especializado de auditoría ni se les atribuye esa garantía.
+
+### Evidencia nueva, separada del cierre original
+
+| Comprobación del coordinador | Resultado actual |
+|---|---|
+| `py -3.14 .local/air015-recheck/run_maven.py full-tests clean test` | Wrapper existente offline, código0/BUILD SUCCESS,238 pruebas en24 clases, sin fallos/errores/omitidas; compilación Java21 incluida |
+| `py -3.14 .local/air015-recheck/verify_runtime.py` | Java independiente y curl,24 comprobaciones correctas en loopback, puerto temporal60387; servidor detenido al terminar |
+| Catálogo, búsqueda y comparación | Endpoint `POST /api/v1/demo/comparisons` operativo; cuatro criterios, selección2–4, grupos, unknown/vigencia, estimaciones, subtotales incompletos, permisos y errores comprobados |
+| Reproducibilidad | Cuatro seleccionados con rangos1,2,3,3; invertir IDs no cambia la clasificación comercial; los ejemplos de precio100/110EUR y subtotal130/160EUR siguen siendo sintéticos |
+| Revisiones delegadas | Backend: modelos/motor/reconstrucción/DTO; Security & QA: entrada/dinero/frontera HTTP, source-first; Documentation: contratos/ejemplos y procedimiento. Conformidades estáticas acotadas, sin afirmar auditoría exhaustiva |
+| Validación documental y formato | `py -3.14 scripts/validate_repository.py`: código0,204 enlaces/17tareas; `git diff --check`: código0. Sin diff del backend |
+
+Los runners reutilizan únicamente la distribución/caché existentes, retiran variables de proveedores/opciones externas del proceso hijo y guardan salida en `.local/air015-recheck/`. Los logs y capturas originales de AIR-015 permanecen intactos. No hubo cambios del backend, POM, Wrapper, dependencias, corpus, configuración global, commits o push; ninguna llamada a Travelpayouts, SerpApi u otros proveedores. Se mantienen los límites ya documentados de HTTP/1.1 demo, TLS/HTTP2 y empaquetado offline.
 
 ## AIR-015 — comparación demo implementada y verificada
 

@@ -9,5 +9,6 @@ Un ADR registra contexto, decisión, estado, consecuencias y pendientes. **Acept
 | [0003](0003-provider-boundaries.md) | Principios AIR-010 y contratos AIR-012 aceptados | Capacidades/precios explícitos, normalización, identidad y DTO ratificados |
 | [0004](0004-demo-mvp-and-persistence.md) | Aceptado en AIR-010 | MVP demo, preferencias transitorias y ausencia de cuentas/BD inicial |
 | [0005](0005-demo-body-read-deadline.md) | Aceptado en AIR-014 | Plazo absoluto de lectura en HTTP/1.1 NIO demo; acoplamiento y validación |
+| [0006](0006-demo-frontend.md) | Aceptado para implementar AIR-018 | Cliente React/TypeScript/Vite, estado transitorio, CSS propio, pruebas y proxy demo local |
 
-AIR-010 acepta alcance, UX y persistencia aplazada. AIR-011 verifica el contexto demo de test y AIR-012 ratifica los contratos serializados. Implementación de negocio, esquema eventual PostgreSQL, frontend, seguridad efectiva y despliegue necesitan sus tareas propias. ADR-0001 conserva el historial de la base generada.
+AIR-010 acepta alcance, UX y persistencia aplazada. AIR-011 verifica el contexto demo de test, AIR-012 ratifica los contratos serializados y AIR-013/014/015 implementan el backend demo. AIR-018 autoriza el frontend funcional; su decisión no acredita por sí sola la implementación ni los tests. Esquema eventual PostgreSQL, proveedores y despliegue conservan sus tareas propias. ADR-0001 conserva el historial de la base generada.

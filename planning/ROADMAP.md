@@ -12,7 +12,7 @@ Este documento ordena trabajo; no autoriza iniciarlo. El [backlog](BACKLOG.md) c
 | 5 — Fuentes reales y operación | Depende de permisos/coste y demanda concreta | Adaptadores independientes, cuotas, caché autorizada y automatización progresiva | Ninguna llamada fuera del presupuesto; datos y errores no equivalentes bien diferenciados; CI solo sobre comandos validados |
 | Posteriores, opcionales | Requieren priorización independiente | Usuarios, preferencias, favoritos, historial, alertas y recomendaciones más avanzadas | Cada propuesta aprobada y con permisos, coste y criterios propios; no son requisitos automáticos del MVP |
 
-## Alcance acordado en AIR-010, implementación parcial en AIR-013/014
+## Alcance acordado en AIR-010 e implementación demo
 
 Demo determinista sin Internet/credenciales/BD de negocio: ida e ida/vuelta, un adulto/turista, 1–3 aeropuertos de origen, un destino, segmentos/conexiones, filtros, orden, paginación y comparación explicable de 2–4 ofertas. Preferencias transitorias y estimaciones terrestres manuales opcionales, sin total exacto cuando falten componentes. Cuentas, favoritos, historial, alertas, compra/pagos y proveedores reales se aplazan. Requisitos y UX en [OVERVIEW.md](../docs/architecture/OVERVIEW.md); persistencia y módulos en [MODULES.md](../docs/architecture/MODULES.md).
 
@@ -27,4 +27,6 @@ Demo determinista sin Internet/credenciales/BD de negocio: ida e ida/vuelta, un 
 
 La fase 1, el diseño AIR-010 y el contexto demo comprobado en AIR-011 constan en [VALIDATION.md](../docs/developer-guide/VALIDATION.md). AIR-012 fija contratos serializados; AIR-013 incorpora el proveedor demo y sus fixtures, con compilación y 62 tests offline satisfactorios. Las implementaciones posteriores conservan sus tareas y autorizaciones propias.
 
-AIR-016 fija la política objetivo. AIR-014 completó catálogo, búsqueda REST, perfil y seguridad demo. AIR-015 incorpora comparación, estimaciones explícitas y endpoint sobre el conjunto demo reconstruido:238 pruebas satisfactorias y24 comprobaciones HTTP locales el17/11/2026. AIR-017 y AIR-018 no se han iniciado y requieren petición propia; el siguiente paso funcional recomendado es preparar la experiencia frontend AIR-018, sin comenzar automáticamente. Fuentes reales necesitan además AIR-019 y autorización específica.
+AIR-016 fija la política objetivo. AIR-014 completó catálogo, búsqueda REST, perfil y seguridad demo. AIR-015 incorpora comparación, estimaciones explícitas y endpoint sobre el conjunto demo reconstruido:238 pruebas satisfactorias y24 comprobaciones HTTP locales el17/11/2026, conservadas como evidencia backend.
+
+AIR-018 está **En revisión**: la petición expresa amplió la preparación inicial a una interfaz funcional React/TypeScript/Vite sobre los tres endpoints demo existentes. Código, pruebas e integración local están preparados; la revisión visual, de teclado real y viewports queda pendiente porque la herramienta de navegador no pudo operar de forma autorizada y verificable. La evidencia se registra por nivel en VALIDATION y se conserva `.local/ACTIVE_TASK.md` para retomar. La evidencia backend anterior no acredita el frontend. El siguiente paso es completar esa revisión y cerrar AIR-018, sin iniciar otra fase. El backend permanece protegido y no se inicia AIR-017; fuentes reales necesitan además AIR-019 y autorización específica.

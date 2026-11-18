@@ -1,6 +1,6 @@
 # Guía de desarrollo inicial
 
-La raíz contiene instrucciones, planificación, agentes y documentación. El único proyecto de aplicación es `backend/`: proveedor Java AIR-013 y catálogo/búsqueda REST AIR-014 completada. Perfil demo y [arranque](DEMO_RUNTIME.md) comprobados; consulte el [inventario](TECHNOLOGY_INVENTORY.md) y los [ejemplos HTTP](../api/DEMO_USAGE.md).
+La raíz contiene instrucciones, planificación, agentes y documentación. `backend/` contiene el proveedor Java AIR-013 y catálogo/búsqueda REST AIR-014 completada. Perfil demo y [arranque](DEMO_RUNTIME.md) comprobados; consulte el [inventario](TECHNOLOGY_INVENTORY.md) y los [ejemplos HTTP](../api/DEMO_USAGE.md). El cliente React/TypeScript/Vite de AIR-018 está implementado en `frontend/` y **En revisión**; su uso, comandos y comprobaciones pendientes se registran en la [guía frontend](FRONTEND.md).
 
 AIR-015 añade el módulo flightcomparison, reconstrucción completa mediante Search y POST /api/v1/demo/comparisons, verificados el17/11/2026. Wrapper clean test pasa238 pruebas; Java independiente/curl confirma24 comprobaciones, incluidos ambos JSON publicados, sin APIs externas. Entradas y resultados en [DEMO_USAGE](../api/DEMO_USAGE.md) y [VALIDATION](VALIDATION.md); los181 tests de AIR-014 se conservan como histórico.
 
@@ -9,6 +9,14 @@ AIR-015 añade el módulo flightcomparison, reconstrucción completa mediante Se
 Use [CONTRIBUTING.md](../../CONTRIBUTING.md), seleccione una tarea del [backlog](../../planning/BACKLOG.md) y lea el ADR afectado. AIR-011 autoriza ejecutar Maven, diagnosticar y documentar. Las correcciones de código o configuración requieren autorización específica.
 
 El [roadmap](../../planning/ROADMAP.md) ordena dependencias. `IMPROVEMENTS.md` conserva ideas no aprobadas. Un plan no es autorización para tocar la base del backend o ejecutar proveedores.
+
+## Seguimiento recuperable y selección de skills
+
+Antes de iniciar o retomar trabajo, lea `.local/ACTIVE_TASK.md` si existe y contraste sus notas con el estado de Git y las evidencias disponibles. El coordinador crea ese archivo al comenzar y mantiene un único seguimiento, también cuando delega. `.local/` está ignorado por Git; el archivo permite reanudar el trabajo en este workspace y no sustituye al backlog ni al registro permanente de validación.
+
+Registre petición y alcance autorizado, plan, archivos y responsables, avances, comandos con resultados comprobados, pendientes o bloqueos y siguiente paso. Actualícelo después de cada hito y antes de una interrupción prevista, sin credenciales ni payloads sensibles. Si la tarea queda incompleta, consérvelo; una vez terminadas la tarea y sus verificaciones, elimine únicamente `.local/ACTIVE_TASK.md`, conservando las evidencias necesarias en su ubicación correspondiente.
+
+Descubra las skills del catálogo actual y las instaladas globalmente y en `.agents/skills/`. Un `SKILL.md` presente en disco no acredita por sí solo que esté registrado en la sesión. Lea las instrucciones de las pertinentes y elija el procedimiento más ajustado: una skill local puede concretar mejor las reglas de Airwise que una global similar. Justifique solapamientos, evite procedimientos duplicados y registre cuáles se utilizaron realmente. Descubrir una skill no autoriza instalarla ni cambiar configuración global. Las reglas persistentes están en [AGENTS.md](../../AGENTS.md).
 
 ## Comandos disponibles y comprobados
 
@@ -51,7 +59,7 @@ try {
 
 Revisar el código de salida de cada comando mediante `$LASTEXITCODE`. Los resultados de las operaciones diagnósticas posteriores se evalúan individualmente. Los logs y reportes permanecen en rutas ignoradas y se sanitizan antes de compartirlos. Cargar el contexto de test y arrancar la aplicación con su configuración principal son comprobaciones de alcance diferente.
 
-No hay un comando raíz `mvn verify`, scripts npm, servidor de frontend, Compose ni pipeline que ejecutar. No se debe inventar una URL local, un usuario por defecto o un flujo de login para Airwise.
+No hay un proyecto Maven raíz, Compose ni pipeline que ejecutar. AIR-018 incorpora scripts npm dentro de `frontend/`, documentados en [FRONTEND](FRONTEND.md); su presencia se distingue del resultado ejecutado. No se debe inventar un usuario por defecto o un flujo de login para Airwise.
 
 ## Histórico: proveedor demo comprobado en AIR-013
 
