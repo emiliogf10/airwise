@@ -2,12 +2,20 @@
 
 ## Unreleased
 
-### 2026-11-18 — frontend demo AIR-018 en revisión
+### 2026-11-19 — investigación documental AIR-019 completada
+
+- Documentadas condiciones de Travelpayouts Data API y SerpApi Google Flights desde fuentes oficiales públicas, con fecha, alcance acreditado, inferencias y dudas en la [evaluación de proveedores](../docs/api/PROVIDER_ASSESSMENT.md). AIR-019 Hecha tras revisión independiente sin bloqueos y validación documental/local; las dudas externas siguen bloqueando la habilitación real.
+- [ADR-0007](../docs/decisions/0007-real-provider-admission.md) mantiene DEMO como única fuente habilitada y los proveedores reales UNVERIFIED, sin adaptadores. Las dudas de publicación, retención, reutilización y cuota bloquean una habilitación posterior.
+- Definido un plan documental de consumo de 0 €, pendiente de implementación autorizada. Sin llamadas API/cuenta/continuaciones, contactos, cambios de producto, versión publicada ni siguiente fase iniciada.
+- Preservados por SHA-256 los 153 archivos de código/configuración al inicio de AIR-019 y los artefactos previos de revisión AIR-018. Validador y diff-check satisfactorios; evidencia y límites en [VALIDATION](../docs/developer-guide/VALIDATION.md).
+
+### 2026-11-18 — frontend demo AIR-018 completado
 
 - Creado `frontend/` con el generador oficial React/TypeScript/Vite e instalación local reproducible mediante lockfile. Dependencias de pruebas añadidas; se conserva Oxlint del template sin añadir ESLint.
 - Implementados cliente HTTP separado, estado transitorio, navegación por anclas, CSS propio, búsqueda/filtros/páginas, selección y comparación con estimaciones. ADR-0006 registra dependencias justificadas, alternativas aplazadas y límites de operación.
-- Guía frontend, manual e inventario sincronizados; integración HTTP local real separada de componentes simulados y de navegador E2E. Revisión visual/teclado real/viewports pendiente por limitación del entorno; AIR-018 no se marca Hecha y conserva seguimiento. Sin cambios backend, proveedores, publicación ni versión publicada.
-- Verificados 53 casos ordinarios, sin fallos y con 1 integración opt-in omitida; esa integración ejecutada aparte pasa con 6 peticiones reales desde App/jsdom. Cliente HTTP real verificado con 12 peticiones; typecheck, build y Oxlint satisfactorios. Son niveles automatizados locales, sin navegador E2E ni revisión manual acreditada.
+- Guía frontend, manual e inventario sincronizados; integración HTTP local real separada de componentes simulados y revisión asistida en navegador. AIR-018 Hecha tras revisión independiente conforme, sin cambios backend, proveedores, publicación ni versión publicada.
+- Verificados 53 casos ordinarios, sin fallos y con 1 integración opt-in omitida; esa integración ejecutada aparte pasa con 6 peticiones reales desde App/jsdom. Cliente HTTP real verificado con 12 peticiones; typecheck, build y Oxlint satisfactorios, repetidos tras corregir CSS donde correspondía.
+- Completadas 18 comprobaciones asistidas en Chrome real headless: flujos, teclado, estados y cinco viewports. Corregido contraste efectivo del antetítulo (ISSUE-001, 1,97→8,31:1); ocho auditorías posteriores sin violaciones y una regla incompleta de nodos decorativos revisados manualmente. No se afirma zoom nativo, suite E2E completa o certificación WCAG.
 
 ### 2026-11-17 — motor de comparación demo AIR-015
 

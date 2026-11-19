@@ -1,8 +1,8 @@
-# Política inicial de contratos y proveedores
+# Política de contratos y proveedores
 
-No hay endpoints de negocio ni especificación OpenAPI implementados en Airwise. Spring Web MVC está declarado, pero no se inventan rutas como si ya estuvieran disponibles. OpenAPI y Javadoc útil se incorporarán cuando existan contratos y código autorizados.
+Airwise implementa catálogo, búsqueda y comparación REST **demo** mediante los tres endpoints descritos en [API_DESIGN.md](API_DESIGN.md), con frontend local de AIR-018. No hay adaptadores reales habilitados ni una especificación OpenAPI generada. La existencia del cliente demo no habilita datos reales.
 
-AIR-010 acepta el diseño de [API_DESIGN.md](API_DESIGN.md) y los límites de [PROVIDERS.md](../architecture/PROVIDERS.md); su contenido es conceptual, no una integración ejecutada.
+AIR-010 fijó el diseño y AIR-012 sus contratos; AIR-013/014/015 implementaron el backend demo. [PROVIDERS.md](../architecture/PROVIDERS.md) distingue esa implementación de los límites futuros. AIR-019 añade la [evaluación documental de permisos y presupuesto](PROVIDER_ASSESSMENT.md), fechada y con preguntas pendientes, y [ADR-0007](../decisions/0007-real-provider-admission.md). No sustituye permisos de cuenta ni autoriza integración.
 
 ## Categorías de información
 
@@ -19,11 +19,13 @@ Cada adaptador deberá declarar capacidades y límites. Separar DTO externo y mo
 
 ## Restricciones vigentes
 
-- **Ninguna llamada a Travelpayouts o SerpApi sin autorización específica**, incluidos endpoints de cuenta, continuación y reserva. AIR-010 realiza cero llamadas y no ejecuta PoC; fuentes reales deshabilitadas por defecto.
+- **Ninguna llamada a Travelpayouts o SerpApi sin autorización específica**, incluidos endpoints de cuenta, continuación y opciones de vendedor. AIR-019 lee solo páginas públicas de documentación/condiciones, realiza cero llamadas API y no repite PoC; fuentes reales deshabilitadas por defecto.
 - Presupuesto económico 0 €; no planes de pago, datos bancarios, renovaciones o créditos adicionales.
 - Variables previstas: `TRAVELPAYOUTS_API_TOKEN` y `SERPAPI_API_KEY`; sus valores nunca deben ir al repositorio, frontend, informes o logs.
-- Integración posterior sujeta a documentación vigente, autorización, cuota y condiciones concretas de publicación/retención/reutilización. No se contactará con proveedores sin petición autorizada.
+- Integración posterior sujeta a cerrar las preguntas aplicables de la evaluación, acreditar permisos de visualización/retención/reutilización y terceros, cuota efectiva y autorización de operaciones/máximo de intentos. No se contactará con proveedores sin petición autorizada.
+- El plan de consumo versionado está en la evaluación: separar intentos HTTP de créditos comerciales y reservar conservadoramente de forma atómica/durable antes de enviar. Saldo o consumo incierto no permite enviar ni liberar reservas por inferencia. **Control diseñado, todavía sin implementación para proveedores reales.**
+- Caché técnica del servicio, retención en servidores del proveedor y licencia de almacenamiento/publicación de Airwise son condiciones distintas; no copiar sus plazos como permiso implícito.
 - No seguir tokens ni enlaces automáticamente, no tratar identificadores temporales como permanentes y no ejecutar mecanismos de compra por inferencia del contexto.
 - No asumir equipaje incluido, peso permitido, condiciones de cambios/cancelación ni costes adicionales exactos cuando falten datos fiables por vendedor.
 
-Los tests futuros de adaptadores serán sintéticos y locales. La evidencia histórica está en [PROVIDER_EVIDENCE.md](../architecture/PROVIDER_EVIDENCE.md); el contrato de dominio y errores pertenece a AIR-012 y la revisión de permisos a AIR-019.
+Los tests futuros de adaptadores serán sintéticos y locales. La evidencia histórica está en [PROVIDER_EVIDENCE.md](../architecture/PROVIDER_EVIDENCE.md); el contrato de dominio y errores pertenece a AIR-012. La revisión documental AIR-019 no altera las capacidades operativas UNVERIFIED ni resuelve las preguntas externas registradas.

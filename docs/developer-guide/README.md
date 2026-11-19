@@ -1,6 +1,6 @@
 # Guía de desarrollo inicial
 
-La raíz contiene instrucciones, planificación, agentes y documentación. `backend/` contiene el proveedor Java AIR-013 y catálogo/búsqueda REST AIR-014 completada. Perfil demo y [arranque](DEMO_RUNTIME.md) comprobados; consulte el [inventario](TECHNOLOGY_INVENTORY.md) y los [ejemplos HTTP](../api/DEMO_USAGE.md). El cliente React/TypeScript/Vite de AIR-018 está implementado en `frontend/` y **En revisión**; su uso, comandos y comprobaciones pendientes se registran en la [guía frontend](FRONTEND.md).
+La raíz contiene instrucciones, planificación, agentes y documentación. `backend/` contiene el proveedor Java AIR-013 y catálogo/búsqueda REST AIR-014 completada. Perfil demo y [arranque](DEMO_RUNTIME.md) comprobados; consulte el [inventario](TECHNOLOGY_INVENTORY.md) y los [ejemplos HTTP](../api/DEMO_USAGE.md). El cliente React/TypeScript/Vite de AIR-018 está implementado y verificado en `frontend/`; su uso y comandos constan en la [guía frontend](FRONTEND.md), con [revisión asistida de navegador](BROWSER_REVIEW.md) y límites explícitos.
 
 AIR-015 añade el módulo flightcomparison, reconstrucción completa mediante Search y POST /api/v1/demo/comparisons, verificados el17/11/2026. Wrapper clean test pasa238 pruebas; Java independiente/curl confirma24 comprobaciones, incluidos ambos JSON publicados, sin APIs externas. Entradas y resultados en [DEMO_USAGE](../api/DEMO_USAGE.md) y [VALIDATION](VALIDATION.md); los181 tests de AIR-014 se conservan como histórico.
 

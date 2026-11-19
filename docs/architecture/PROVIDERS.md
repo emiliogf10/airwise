@@ -1,6 +1,6 @@
 # Adaptadores y capacidades de proveedores
 
-**Principios AIR-010, contrato AIR-012 y proveedor demo implementado en AIR-013.** Campos y estados normalizados en [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md). Las fuentes reales corresponden a tareas posteriores. Los hechos externos se limitan a [PROVIDER_EVIDENCE.md](PROVIDER_EVIDENCE.md), aportados por el usuario. La [política](../api/PROVIDER_POLICY.md) sigue siendo obligatoria.
+**Principios AIR-010, contrato AIR-012 y proveedor demo implementado en AIR-013.** Campos y estados normalizados en [NORMALIZED_CONTRACTS.md](NORMALIZED_CONTRACTS.md). Las fuentes reales corresponden a tareas posteriores. Separar [evidencia histórica de PoC](PROVIDER_EVIDENCE.md), aportada por el usuario, de la [evaluación documental oficial AIR-019](../api/PROVIDER_ASSESSMENT.md), del 19/11/2026. La [política](../api/PROVIDER_POLICY.md) sigue siendo obligatoria.
 
 ## Implementación local de AIR-013
 
@@ -28,7 +28,7 @@ Clock del constructor es exclusivamente operativo. El deadline real se comprueba
 
 El cargador lee solo el recurso de classpath, UTF-8 estricto y máximo 64 KiB. Rechaza claves duplicadas/ajenas, recordKey reutilizadas, consultas duplicadas, referencias inválidas, contradicciones de precio/ruta/fechas/tiempo, unidades incoherentes y más de 20 ofertas o 20 observaciones por escenario/origen. Valida todo antes de publicar colecciones inmutables. Recurso ausente o inválido produce un fallo explícito de construcción, sin otro dataset de reserva. La entrada InputStream para negativos es de ámbito de paquete y no acepta rutas/URLs de un cliente.
 
-Las capacidades DEMO descritas abajo están implementadas; las reales permanecen UNVERIFIED y sin adaptador. Compilación y 62 tests offline satisfactorios, incluida independencia de transporte y contexto existente; evidencia y límites en [VALIDATION.md](../developer-guide/VALIDATION.md). No se ha implementado normalización de DTO externos, filtrado/paginación HTTP ni comparación.
+Las capacidades DEMO descritas abajo están implementadas; las reales permanecen UNVERIFIED y sin adaptador. Compilación y 62 tests offline de AIR-013 satisfactorios, incluida independencia de transporte y contexto existente; evidencia y límites en [VALIDATION.md](../developer-guide/VALIDATION.md). AIR-014/015 añadieron filtrado/paginación HTTP y comparación demo; no hay normalización de DTO de proveedores reales.
 
 ## Puerto y normalización
 
@@ -70,7 +70,7 @@ ProviderStatus incluye COMPLETE, EMPTY, PARTIAL, FAILED y UNSUPPORTED. Sus invar
 | Regreso | Fixture completa vinculada a ida | No construirlo desde tarifa de ida | Regreso observado; fases/continuaciones por confirmar |
 | Vendedores | Información sintética opcional, sin compra | No asumir detalle suficiente | Opciones observadas, no reserva confirmada |
 | Equipaje/condiciones | Conocido o desconocido, casos explícitos | Insuficiente en evidencia aportada | Parcial; no garantía de franquicia o coste |
-| Red/cuota | Cero red, claves y cuota | Integración no autorizada | Integración no autorizada; 250/mes fue dato histórico, no cuota actual |
+| Red/cuota | Cero red de proveedores, claves y cuota | Integración no autorizada; condiciones publicadas en AIR-019 | Integración no autorizada; Free publicado250/mes en AIR-019, saldo de cuenta no verificado |
 
 La disponibilidad real de cada capacidad se verificará antes de implementar el adaptador. Que Airwise soporte tres orígenes no significa que el proveedor tenga una operación nativa equivalente: el planificador deberá contabilizar todo el fan-out.
 
@@ -94,7 +94,7 @@ No fallback silencioso de real a demo ni cascada automática a otro proveedor qu
 
 ## Admisión y presupuesto futuros
 
-Diseño para AIR-019 y una integración posterior expresamente autorizada, no implementación de AIR-010:
+Diseño documentado en AIR-019 para una integración posterior expresamente autorizada; no existe control de consumo real implementado. El [plan persistente y sus fuentes](../api/PROVIDER_ASSESSMENT.md) es la referencia normativa de permisos, intentos y créditos:
 
 1. Fuentes reales deshabilitadas por defecto. Autorizar proveedor, operación, capacidades, permisos de visualización/retención y presupuesto de peticiones antes de habilitarlos.
 2. Estimar coste máximo del flujo completo: orígenes, ida/regreso, opciones de vendedor, continuaciones y reintentos. No planificar con el coste de una sola llamada.
@@ -103,10 +103,10 @@ Diseño para AIR-019 y una integración posterior expresamente autorizada, no im
 5. No disparar continuaciones/reintentos por render, página o filtro sin admisión. Tokens permanecen internos y no se siguen URLs arbitrarias del cliente.
 6. Reutilizar resultados solo si permisos/retención lo permiten; clave incluye consulta canónica y semántica. No cachear para eludir condiciones ni convertir recepción reciente en observación reciente.
 
-La cuota gratuita vigente, coste real por operación y control de sobreconsumo son desconocidos hoy. En despliegues futuros con varios procesos podría requerirse coordinación durable de reservas; no se crea infraestructura ahora.
+AIR-019 documenta la oferta gratuita publicada y el cómputo por proveedor, sin comprobar saldo ni plan de cuenta. Antes de enviar, se necesita control probado y coordinación durable/atómica de reservas entre procesos y reinicios; no se crea infraestructura ahora. Preguntas de permiso y presupuesto abiertas se identifican en la evaluación, con [ADR-0007](../decisions/0007-real-provider-admission.md).
 
 ## Conservación y publicación
 
 El MVP conserva solo recursos sintéticos y referencia mínima lícita. Ninguna autorización de retención de payloads reales está implícita, ni siquiera “solo en memoria”. Resolver licencia del catálogo, datos personales, duración de conservación y derechos de reutilización/publicación antes de integrar. No guardar tokens como identidad permanente o valores de negocio.
 
-La matriz ratificada en AIR-012 cubre capacidades, campos ausentes, ámbito/moneda/tiempo, fases incompletas, duplicados, fallo total/parcial y presupuesto agotado. Se ejecutará contra fixtures y dobles al implementar componentes. AIR-013 materializa el proveedor demo y sus escenarios; los niveles HTTP/comparación y adaptadores reales conservan sus tareas posteriores.
+La matriz ratificada en AIR-012 cubre capacidades, campos ausentes, ámbito/moneda/tiempo, fases incompletas, duplicados, fallo total/parcial y presupuesto agotado. AIR-013 materializa el proveedor demo; AIR-014/015 cubren HTTP y comparación sobre fixtures. Los adaptadores reales y sus pruebas con dobles conservan una autorización posterior; AIR-019 es solo revisión documental.

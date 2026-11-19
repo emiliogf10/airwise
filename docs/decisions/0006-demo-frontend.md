@@ -1,6 +1,6 @@
 # ADR-0006 — Cliente demo React con estado transitorio
 
-- Estado: Aceptado e implementado en AIR-018, En revisión por verificación visual/teclado real/viewports pendiente.
+- Estado: Aceptado, implementado y verificado en AIR-018; tarea Hecha.
 - Fecha: 18/11/2026.
 - Alcance: `frontend/`, sin modificar fuentes ni configuración versionada del backend.
 
@@ -22,6 +22,6 @@ El navegador usa rutas relativas `/api` a través del proxy Vite local: frontend
 
 ## Consecuencias y límites
 
-El cliente conserva consulta canónica, versión y selección; no recalcula rankings, dinero ni grupos del motor. La complejidad de estado sigue siendo local y debe revisarse si aparecen nuevas rutas o casos reales de caché. Las versiones realmente instaladas y los comandos ejecutados se registran en el [inventario](../developer-guide/TECHNOLOGY_INVENTORY.md) y [VALIDATION](../developer-guide/VALIDATION.md), no se deducen de esta decisión. La evidencia automatizada incluye componentes y cliente, integración HTTP real y App montada en jsdom con HTTP real. Ningún nivel se declara E2E de navegador; el bloqueo técnico de la herramienta deja AIR-018 En revisión y mantiene su seguimiento.
+El cliente conserva consulta canónica, versión y selección; no recalcula rankings, dinero ni grupos del motor. La complejidad de estado sigue siendo local y debe revisarse si aparecen nuevas rutas o casos reales de caché. Las versiones realmente instaladas y los comandos ejecutados se registran en el [inventario](../developer-guide/TECHNOLOGY_INVENTORY.md) y [VALIDATION](../developer-guide/VALIDATION.md), no se deducen de esta decisión. La evidencia automatizada incluye componentes y cliente, integración HTTP real y App montada en jsdom con HTTP real. Se añadió una [revisión asistida en navegador real](../developer-guide/BROWSER_REVIEW.md) con responsive, teclado y auditorías acotadas; no se presenta como suite E2E completa ni conformidad integral de accesibilidad. El bloqueo anterior de Computer Use se conserva como histórico resuelto mediante una herramienta autorizada diferente.
 
 Vite y su proxy son herramientas locales de desarrollo. Este ADR no define publicación, cabeceras de producción, TLS, despliegue, usuarios, persistencia ni proveedores reales. La guía operativa es [FRONTEND](../developer-guide/FRONTEND.md).

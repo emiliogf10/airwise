@@ -36,7 +36,7 @@ Las dependencias, interfaces, riesgos y decisión de persistencia están en [MOD
 
 ## Experiencia de usuario prevista
 
-El diseño AIR-010 acotó formulario y resultados con detalle/comparador, sin crear componentes o prototipos en esa tarea. AIR-018 los implementa en una página con secciones Buscar, Resultados y Comparar; [ADR-0006](../decisions/0006-demo-frontend.md) justifica navegación y herramientas. La tarea está En revisión por comprobaciones visuales pendientes.
+El diseño AIR-010 acotó formulario y resultados con detalle/comparador, sin crear componentes o prototipos en esa tarea. AIR-018 los implementa en una página con secciones Buscar, Resultados y Comparar; [ADR-0006](../decisions/0006-demo-frontend.md) justifica navegación y herramientas. La tarea está Hecha tras verificaciones automatizadas y revisión asistida en navegador real.
 
 1. Elegir modo demo visible, aeropuertos concretos y fechas; mostrar la condición un adulto/turista y el calendario simulado.
 2. Buscar; anunciar carga y evitar envíos duplicados. Validar campos con mensajes asociados y resumen de errores enfocable.
@@ -54,7 +54,7 @@ El diseño AIR-010 acotó formulario y resultados con detalle/comparador, sin cr
 | Caducado | Marcar antigüedad o simulación; sin recomendación vigente; repetir búsqueda explícitamente |
 | Versión retirada | Explicar conflicto y reiniciar el contexto; no reutilizar IDs con otra versión |
 
-Teclado, foco visible y retorno previsible al cerrar detalles/comparador; etiquetas y estructura semántica, mensajes breves de estado, sin depender solo de color. En móvil, tarjetas y comparación por atributos con lectura lineal, zoom y sin tabla ancha como único acceso. Componentes, pruebas y límites de AIR-018 se documentan en [FRONTEND](../developer-guide/FRONTEND.md): los tests automatizados no sustituyen la revisión pendiente de teclado real y layout en navegador.
+Teclado, foco visible y retorno previsible al cerrar detalles/comparador; etiquetas y estructura semántica, mensajes breves de estado, sin depender solo de color. En móvil, tarjetas y comparación por atributos con lectura lineal y sin tabla ancha como único acceso. Componentes, pruebas y límites de AIR-018 se documentan en [FRONTEND](../developer-guide/FRONTEND.md): pruebas automatizadas y revisión de teclado/layout son evidencias separadas. Se revisó aumento de texto CSS, sin acreditar zoom nativo ni conformidad integral de accesibilidad.
 
 ## Contratos, seguridad y decisiones
 

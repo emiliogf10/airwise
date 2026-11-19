@@ -1,10 +1,52 @@
 # Registro de validación de Airwise
 
-Evidencia desde el **2026-11-11**, actualizada con AIR-018 del **18/11/2026**. Cada apartado conserva su alcance, resultados y límites. Las 238 pruebas backend de AIR-015 y las 181 históricas de AIR-014 se distinguen de las pruebas frontend nuevas; AIR-018 no repite ni acredita una ejecución Maven nueva.
+Evidencia desde el **2026-11-11**, actualizada con AIR-019 del **19/11/2026**. Cada apartado conserva su alcance, resultados y límites. AIR-019 solo verifica documentación e integridad; no repite ni acredita nuevas ejecuciones Maven, npm o navegador. Las pruebas de aplicación de AIR-014/015/018 conservan su fecha y alcance históricos.
 
-## AIR-018 — frontend funcional en revisión
+## AIR-019 — permisos y presupuesto: investigación documental completada
 
-El adjunto autoriza expresamente implementar React/TypeScript/Vite en `frontend/` sobre catálogo, búsqueda y comparación demo, ampliando la preparación prevista inicialmente. El backend no forma parte del alcance de edición. El coordinador mantiene `.local/ACTIVE_TASK.md` mientras queden implementación o verificaciones pendientes.
+La petición «Adelante con AIR-019» autoriza revisar condiciones públicas, no integrar ni consumir proveedores. Se consultaron páginas oficiales de Travelpayouts/Aviasales, SerpApi y condiciones de contenido de Google el 19/11/2026. La [evaluación](../api/PROVIDER_ASSESSMENT.md) conserva matriz, fecha, fuentes, inferencias y pendientes; [ADR-0007](../decisions/0007-real-provider-admission.md) mantiene solo DEMO habilitado. El plan de consumo0€ es una política versionada; sus controles durables/atómicos todavía necesitan implementación autorizada y pruebas con dobles.
+
+### Evidencia ejecutada
+
+| Comando / comprobación | Resultado y alcance |
+|---|---|
+| `py -3.14 scripts/validate_repository.py` | Código0; TOML de seis especialistas, cinco skills,274destinos locales y17tareas coherentes; seguridad acotada y directorios comprobados. No valida contratos externos ni ejecuta producto |
+| `py -3.14 .local/air019/verify_integrity.py` | Código0;153SHA-256 idénticos al inicio:109backend,31frontend,5skills,7Codex,1script; sin altas/bajas en esos conjuntos. Dos artefactos AIR-018 (informe de navegador y CSS) también idénticos |
+| Revisión dirigida de12documentos de AIR-019 | Sin valores de las credenciales de proveedor disponibles en entorno, URLs autenticadas ni marcadores de clave privada encontrados;18URLs de fuentes documentales oficiales y ningún enlace ejecutable de búsqueda/cuenta. Escaneo acotado, no auditoría general de secretos |
+| `git diff --check` | Código0, sin errores; avisos informativos LF/CRLF de Git, sin cambiar configuración |
+| Revisión independiente Security & QA | Sin bloqueos tras contrastar fuentes oficiales de las dos APIs y coherencia de permiso/caché/retención/cuota. Integrada precisión sobre conexión a Aviasales también en FAQ Data API; sin atribuir llamadas API ni pruebas de producto a la revisión |
+
+El validador compara además el snapshot histórico de fase1: nueve archivos originales iguales, un test modificado y99archivos posteriores. Es historial autorizado por AIR-011/013/014/015; **no son cambios de AIR-019**. Para esta tarea el contraste relevante son los153hashes iniciales idénticos. Los cambios de AIR-018 que ya estaban pendientes de commit se preservaron; no se revierten ni se atribuyen a AIR-019.
+
+### Coordinación, skills y límites
+
+Delegación real y selectiva: `air019_travelpayouts` (backend) investigó Travelpayouts en solo lectura; `air019_qa` revisó matriz/ADR y fuentes; `air019_docs` editó exclusivamente README, ROADMAP y CHANGELOG. Orchestrator investigó SerpApi, redactó matriz/ADR/política, integró precisión/revisión, verificó y cerró backlog. No se presume ejecución automática de los seis roles ni disponibilidad de herramientas por tener archivos TOML.
+
+Se descubrieron catálogo de sesión y disco: cinco skills locales; globales agent-browser, aws-emulator, find-skills, modern-web-guidance y security-audit; sistema y skills de artefactos/cloud del catálogo. `review-agent` hallada en disco no equivale a registrada en sesión. Aplicadas `task-planning`, `api-integration`, `documentation-sync` y `testing-and-review`; la de integración guía esta investigación y las otras cubren sus etapas. Security & QA consultó también orientación acotada de `security-audit`, sin ejecutar auditoría integral. No se instalaron skills ni herramientas, ni se modificó configuración global. No eran pertinentes migraciones, UI/navegador, artefactos o despliegue.
+
+Límites: reglas completas actuales del programa Aviasales no recuperadas desde el panel privado; algunas páginas FAQ SerpApi no entregaron cuerpo, con alternativas oficiales accesibles registradas en la evaluación. Cuenta, plan efectivo, saldo, elegibilidad, licencias específicas de Airwise y derechos de terceros pendientes. Solo se leyeron páginas públicas; **cero endpoints API, cuenta, archivo, continuación o reintento ejecutados**, sin contactos externos ni gasto. No hay adaptadores, persistencia de consumo real, pruebas de proveedor ni cambios backend/frontend. No se repiten suites de aplicación para documentación. El cierre satisface la aceptación de registrar condiciones/dudas y plan persistente, y no declara las dudas resueltas.
+
+Tras la revisión y comprobaciones, AIR-019 pasa En revisión → Hecha. El checkpoint temporal se retira al finalizar la verificación; la evaluación, ADR y este informe conservan evidencia permanente. No hay commit, push, publicación, versión nueva ni siguiente AIR iniciada.
+
+## AIR-018 — frontend funcional completado
+
+El adjunto autoriza expresamente implementar React/TypeScript/Vite en `frontend/` sobre catálogo, búsqueda y comparación demo, ampliando la preparación prevista inicialmente. El backend no forma parte del alcance de edición. AIR-018 queda **Hecha** tras automatizaciones, revisión asistida en navegador real y revisión independiente conforme. El coordinador conservó `.local/ACTIVE_TASK.md` durante el trabajo y elimina únicamente ese seguimiento al completar las verificaciones finales; las evidencias locales se conservan.
+
+### Reanudación con navegador real — revisión ejecutada
+
+El usuario solicitó expresamente repetir la revisión con `agent-browser`, ahora disponible en el catálogo e instalado por él. El coordinador aplica esa skill con una sesión dedicada, perfil temporal y dominio permitido `127.0.0.1`; no usa el perfil personal de Brave ni modifica configuración global. La herramienta observada es agent-browser 0.39.1 con Chrome 155.0.8059.39. Esto resuelve la limitación operativa de aquella revisión CUA; el histórico de rechazo y su autorización posterior se conserva abajo, sin atribuirle pruebas que no ejecutó.
+
+La revisión final del coordinador observa React y CSS renderizados en navegador headless, con HTTP real del demo local y sin respuestas simuladas: tres endpoints, ida/vuelta, los cuatro criterios y estimaciones, selección máxima, páginas/orden/filtros, grupos de monedas, desconocidos y estados vacío/parcial/fallo. Matriz, viewports y límites exactos en [BROWSER_REVIEW](BROWSER_REVIEW.md). No son precios reales ni se presenta una suite E2E de navegador versionada.
+
+Teclado observado: Tab/Enter en el enlace de salto lleva foco al título principal; Space activa orígenes/selección; Enter abre detalles; los errores llevan foco a su resumen. Se inspeccionaron capturas en 1440×1000, 768×1024, 720×900, 390×844 y 320×740, sin desbordamiento horizontal en las mediciones. Redimensionado CSS de texto al 200%/32 px en escritorio sin desbordamiento; no se acredita zoom nativo. La revisión independiente y el cierre del coordinador completan la DoD.
+
+Se reprodujo ISSUE-001 en el antetítulo «Vuela con criterio»: la cascada de capas CSS aplicaba color #00685f sobre #173342, con contraste renderizado 1,97:1, pese al cálculo previo de la paleta. Frontend movió la regla correspondiente a la capa de componentes. Reverificación: color efectivo #abd7be y contraste 8,31:1; incidencia corregida. Ocho auditorías axe posteriores devolvieron cero violaciones y una regla incompleta que agrupa de 3 a 9 nodos decorativos según el estado (puntos y flechas con aria-hidden); se revisó manualmente su redundancia respecto al texto y nombres accesibles. No es una certificación WCAG completa. Informe, JSON y capturas permanecen en `.local/air018/browser-review/`; el informe permanente conserva resultados sin duplicar evidencia sensible.
+
+Gates repetidos después del cambio CSS: 53 pruebas satisfactorias y una integración opt-in omitida; typecheck/build/lint con código 0 y sin advertencias. Build 25 módulos, JS 276,21 kB y CSS 13,48 kB. Los 109 hashes backend permanecen idénticos; no se ejecuta Maven de nuevo. Las integraciones locales de 12 y 6 peticiones de la etapa anterior conservan su alcance y se complementan con la revisión de navegador.
+
+Tras la sincronización de cierre, `py -3.14 scripts/validate_repository.py` devolvió código 0: 248 destinos locales y 17 tareas comprobados. `git diff --check` no detectó errores; solo avisos informativos LF/CRLF. Se confirmó de nuevo la igualdad de los 109 hashes, la ausencia de daemons activos de agent-browser y de listeners en 8080/5173. El coordinador retiró únicamente el checkpoint de tarea al terminar; los informes y capturas locales se conservaron. No hubo commits, push ni inicio de otra fase.
+
+Security & QA revisó independientemente el informe, los ocho JSON de axe, el JSON de Vitest, el diff CSS mínimo y capturas 768/320. Confirmó resultados y alcance, sin bloqueos reproducibles; no se le atribuyen ejecuciones del coordinador. El navegador se cerró por la CLI y se verificaron Java/Vite detenidos y puertos 8080/5173 sin listeners. El cierre no publica una versión, no hace commit/push ni inicia otra AIR. Los rechazos CUA y el estado En revisión anteriores se conservan abajo como etapas pasadas.
 
 Documentation Agent aplicó `documentation-sync` y contrastó planificación, contrato HTTP, reglas de comparación, guía de ejecución y documentación de seguridad antes de preparar la guía frontend. Se corrigieron referencias arquitectónicas obsoletas que aún presentaban los endpoints y el arranque AIR-014/015 como futuros, conservando la evidencia histórica. No se atribuye a esta revisión documental ninguna ejecución Maven, npm, navegador o petición HTTP.
 
@@ -16,7 +58,7 @@ Se descubrieron las cinco skills locales y las globales/sistema del catálogo. S
 
 Comprobación incremental inicial tras esos cambios: `py -3.14 scripts/validate_repository.py`, código0, 215 destinos locales y17 tareas; `git diff --check -- README.md docs planning/ROADMAP.md planning/CHANGELOG.md`, código0. Se conserva como evidencia documental parcial anterior a las verificaciones finales siguientes.
 
-### Candidato final y alcance pendiente — 18/11/2026
+### Etapa anterior — automatización verificada, navegador pendiente
 
 El coordinador comunicó la ejecución final a las 18:53; Documentation contrastó además el JSON de Vitest, los scripts versionados, la configuración y las fuentes. No se atribuyen estas ejecuciones al agente documental.
 
@@ -33,7 +75,7 @@ El coordinador comunicó la ejecución final a las 18:53; Documentation contrast
 
 Vitest usa workers de tipo threads, máximo 2, dentro del sandbox gestionado. Los intentos iniciales mediante fork encontraron EPERM; la configuración final no necesita rebajar permisos ni controles. El test de integración UI se habilita solo mediante el wrapper `scripts/verify-ui.mjs` y el modo Vite `local-integration`, sin variables nuevas o globals Node dentro del componente/test. La suite normal no necesita servicios activos ni convierte fallos de conexión en fixtures.
 
-AIR-018 permanece **En revisión**: implementación y automatización verificadas, pero el cierre necesita la revisión visual/responsive y teclado real pendiente del entorno de navegador. `.local/ACTIVE_TASK.md` se conserva con ese siguiente paso; no se inicia otra AIR, no se publica, no se hace commit ni push. La instalación npm informó cero vulnerabilidades conocidas; eso no es una auditoría exhaustiva.
+En esta etapa AIR-018 quedó **En revisión**: implementación y automatización verificadas, con revisión visual/responsive y teclado real pendientes del entorno de navegador. Se conservó `.local/ACTIVE_TASK.md` con ese siguiente paso; no se inició otra AIR, no se publicó, no se hizo commit ni push. La instalación npm informó cero vulnerabilidades conocidas; eso no es una auditoría exhaustiva.
 
 El coordinador detuvo los procesos Java y Vite de verificación y comprobó que no quedan listeners en 8080/5173. Volvió a contrastar los 109 hashes backend, todos idénticos. Tras la sincronización final ejecutó el validador del repositorio: código 0, 239 destinos locales y 17 tareas; `git diff --check` también devolvió código 0, solo con avisos informativos LF/CRLF. No se deja un servidor local en ejecución como supuesto de la entrega.
 
@@ -43,7 +85,7 @@ El coordinador ejecutó `npm run test:integration` desde `frontend/` con backend
 
 Esta es evidencia de integración del cliente HTTP TypeScript con proxy/backend reales. No monta la interfaz React ni acredita E2E en navegador. La prueba opt-in de UI registrada arriba sí monta App en jsdom y realiza seis peticiones reales; tampoco observa layout de navegador, CSS renderizado o teclado físico. Los resultados unitarios, integración HTTP e integración UI se conservan como niveles distintos.
 
-Los intentos de revisión en navegador no pudieron ejecutarse. Primero, el browser host no estaba disponible y la herramienta de acceso nativo rechazó Brave con «Computer Use was not approved to use Brave». El usuario autorizó después ese navegador; al reintentar, la herramienta no pudo determinar con confianza la URL de la ventana en Windows para aplicar su política y mantuvo el bloqueo técnico. No hubo acciones de interfaz ni capturas, ni se cambió configuración para eludir controles. La revisión visual, teclado real y viewports quedan sin ejecutar; responsive solo puede acreditarse por inspección estática de CSS y la accesibilidad básica por las pruebas de componentes que se documenten. No hay conformidad de accesibilidad completa. AIR-018 permanece **En revisión** y el seguimiento recuperable se conserva para completar ese alcance.
+En aquella etapa los intentos de revisión en navegador no pudieron ejecutarse. Primero, el browser host no estaba disponible y la herramienta de acceso nativo rechazó Brave con «Computer Use was not approved to use Brave». El usuario autorizó después ese navegador; al reintentar, la herramienta no pudo determinar con confianza la URL de la ventana en Windows para aplicar su política y mantuvo el bloqueo técnico. No hubo acciones de interfaz ni capturas en esos intentos, ni se cambió configuración para eludir controles. AIR-018 quedó **En revisión** con seguimiento conservado. La reanudación agent-browser descrita arriba resolvió después esa verificación pendiente por un mecanismo autorizado y operativo.
 
 Comprobación documental posterior a instalación/guías/manual/ADR: `py -3.14 scripts/validate_repository.py`, código0,233 destinos locales y17 tareas. `git diff --check -- README.md docs planning/ROADMAP.md planning/CHANGELOG.md frontend/README.md`, código0, con advertencia informativa de normalización LF/CRLF. El validador busca valores de proveedor disponibles en el entorno sin mostrarlos; no es un escáner general de secretos.
 

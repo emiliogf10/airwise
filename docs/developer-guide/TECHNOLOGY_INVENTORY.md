@@ -84,7 +84,7 @@ El campo `engines.node` declara `^22.22.2 || ^24.15.0 || >=26.0.0` tras contrast
 | @types/node | 24.19.2 | Tipos de configuración Node |
 | @types/react / @types/react-dom | 19.3.0 / 19.3.0 | Tipos de React |
 
-La instalación npm informó cero vulnerabilidades conocidas en su comprobación; no acredita una auditoría exhaustiva ni elimina el seguimiento de dependencias. Typecheck, lint y build se ejecutaron satisfactoriamente; pruebas unitarias y dos niveles de integración local se detallan en [VALIDATION](VALIDATION.md), separados del navegador pendiente. [FRONTEND](FRONTEND.md) contiene los comandos y [ADR-0006](../decisions/0006-demo-frontend.md) justifica las dependencias añadidas y aplazadas.
+La instalación npm informó cero vulnerabilidades conocidas en su comprobación; no acredita una auditoría exhaustiva ni elimina el seguimiento de dependencias. Typecheck, lint y build se ejecutaron satisfactoriamente; pruebas unitarias y dos niveles de integración local se detallan en [VALIDATION](VALIDATION.md), separados de la [revisión asistida de navegador](BROWSER_REVIEW.md). Para esta revisión se observó agent-browser 0.39.1, Chrome 155.0.8059.39 headless y axe 4.12.1, en perfil/sesión temporal sin añadir dependencias al frontend. No se infiere cobertura de otros navegadores. [FRONTEND](FRONTEND.md) contiene los comandos y [ADR-0006](../decisions/0006-demo-frontend.md) justifica las dependencias añadidas y aplazadas.
 
 ## Objetivos documentales y componentes pendientes
 

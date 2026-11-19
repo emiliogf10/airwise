@@ -55,7 +55,6 @@
   .hero h1 { font-size: clamp(2.4rem, 1.65rem + 3dvw, 4.75rem); letter-spacing: -.055em; margin-block: .9rem 1.4rem; }
   .hero h1 span { color: #abd7be; }
   .hero :focus-visible { outline-color: #abd7be; }
-  .hero .eyebrow { color: #abd7be; }
   .hero-description { max-inline-size: 36rem; color: #e0e9e8; font-size: 1.1rem; }
   .hero-note { max-inline-size: 23rem; border-inline-start: 1px solid #658080; padding-inline-start: 1.4rem; align-self: end; }
   .hero-note p { font-weight: 600; margin-block: 1rem .5rem; font-size: 1.25rem; }
@@ -92,6 +91,7 @@
   .demo-indicator { display: inline-flex; align-items: center; gap: .5rem; font-size: .8rem; font-weight: 600; }
   .demo-indicator > span { color: var(--teal); font-size: .65rem; }
   .eyebrow { text-transform: uppercase; letter-spacing: .16em; color: var(--teal); font-size: .72rem; font-weight: 750; }
+  .hero .eyebrow { color: #abd7be; }
   .pill { display: inline-flex; align-items: center; gap: .4rem; background: #f0eee6; color: var(--ink); border: 1px solid #deded2; border-radius: 2rem; padding: .35rem .7rem; font-size: .75rem; line-height: 1.5; font-weight: 650; }
   .pill-soft { background: var(--teal-soft); color: var(--teal-dark); border-color: #c3d8cd; }
   .hero .pill { background: #ffffff0a; color: #d2e7dc; border-color: #749189; }

@@ -2,7 +2,7 @@
 
 Proyecto de portfolio full stack para explorar y comparar alternativas de viaje: precio del vuelo, aeropuerto de origen, fechas, escalas, duración y estimaciones de transporte terrestre. Su propuesta es explicar los compromisos entre coste y comodidad con información trazable.
 
-**Estado actual: backend demo operativo y frontend AIR-018 En revisión.** El cliente incorpora búsqueda, filtros, paginación, selección y comparación; queda pendiente la revisión visual, de teclado real y tamaños de pantalla por una limitación del entorno. El perfil `demo` arranca sin PostgreSQL. La evidencia backend incluye238 pruebas, incluidas comparación, seguridad y Tomcat real. Consulte el [arranque y sus límites](docs/developer-guide/DEMO_RUNTIME.md), la [política HTTP](docs/security/BASELINE.md), la [guía frontend](docs/developer-guide/FRONTEND.md) y la [evidencia por nivel](docs/developer-guide/VALIDATION.md).
+**Estado actual: backend demo operativo y frontend AIR-018 completado.** El cliente incorpora búsqueda, filtros, paginación, selección y comparación, con revisión de flujos, teclado y responsive en navegador real. El perfil `demo` arranca sin PostgreSQL. La evidencia backend incluye238 pruebas históricas; las verificaciones frontend y sus límites se detallan por separado. Consulte la [guía frontend](docs/developer-guide/FRONTEND.md), el [manual de usuario](docs/user-manual/README.md), la [revisión de navegador](docs/developer-guide/BROWSER_REVIEW.md) y la [evidencia por nivel](docs/developer-guide/VALIDATION.md).
 
 ## Qué está presente y qué está previsto
 
@@ -10,8 +10,8 @@ Proyecto de portfolio full stack para explorar y comparar alternativas de viaje:
 |---|---|---|
 | Backend | Java21, Spring Boot4.1.2, dominio/proveedor demo, catálogo/búsqueda/comparación REST y perfil aislado | Controles de publicación y evolución autorizada |
 | Dependencias backend | Web MVC, Security, Data JPA, Validation, Flyway, PostgreSQL, Actuator y DevTools resueltos | Configuración de persistencia/seguridad de negocio e integración completa |
-| Pruebas | Backend: Jupiter6.0.3 y 238 pruebas históricas. Frontend: 53 casos ordinarios y 1 integración opt-in satisfactorios; HTTP real por cliente y App/jsdom | Revisión visual/teclado/viewports; persistencia, TLS/HTTP2 y publicación pendientes |
-| Frontend | React/TypeScript/Vite; búsqueda, filtros/páginas servidor, selección y comparación; Oxlint y Vitest/Testing Library | Revisión visual, teclado real y viewports; AIR-018 En revisión |
+| Pruebas | Backend: Jupiter6.0.3 y 238 pruebas históricas. Frontend: 53 casos ordinarios, 1 integración opt-in y revisión asistida en navegador; build/typecheck/lint correctos | Persistencia, TLS/HTTP2 y publicación pendientes; sin certificación integral de accesibilidad |
+| Frontend | React/TypeScript/Vite; búsqueda, filtros/páginas servidor, selección y comparación; responsive/teclado revisados; AIR-018 Hecha | Usuarios, persistencia y proveedores reales aplazados |
 | Infraestructura | Git inicializado y plantillas GitHub | Docker Compose, GitHub Actions, observabilidad y despliegue |
 | Documentación | Instrucciones, roles, skills, planificación, ADR y [contratos normalizados](docs/architecture/NORMALIZED_CONTRACTS.md) con [ejemplos JSON](docs/api/EXAMPLES.md) | OpenAPI, Javadoc del dominio y manual de funciones cuando existan |
 
@@ -32,7 +32,9 @@ Resultados aportados por el usuario, sin repetir las pruebas ni copiar las PoC e
 - Travelpayouts: 16 consultas HTTP 200 y 25 registros de precios observados; exploración económica, cobertura irregular, caché y equipaje insuficiente.
 - SerpApi: 6 peticiones HTTP 200, incluida una de cuenta; 61 entradas con fases y solapamientos; segmentos, múltiples orígenes, regreso y vendedor comprobados; equipaje parcial y plan observado de 250 búsquedas mensuales.
 
-El presupuesto de API es **0 €**. Publicación, conservación y reutilización siguen pendientes para ambos proveedores. No hay adaptadores implementados en `backend/`. Consulte la [política de proveedores](docs/api/PROVIDER_POLICY.md) y la [evidencia previa](docs/architecture/PROVIDER_EVIDENCE.md).
+El presupuesto de API es **0 €**. AIR-019 está **Hecha** como investigación documental de fuentes oficiales públicas del **19/11/2026**, con revisión independiente y validación local. La [evaluación de proveedores](docs/api/PROVIDER_ASSESSMENT.md) reúne fuentes, condiciones, dudas pendientes y el plan de consumo de 0 €, todavía sin implementar. Publicación, conservación, reutilización y cuota efectiva requieren evidencia adicional antes de habilitar fuentes reales.
+
+**DEMO sigue siendo la única fuente habilitada.** Travelpayouts Data API y SerpApi Google Flights mantienen capacidades operativas **UNVERIFIED**, sin adaptadores implementados en `backend/`. Las dudas bloquean su habilitación posterior; esta investigación no autoriza llamadas, contactos ni integración. Consulte [ADR-0007](docs/decisions/0007-real-provider-admission.md), la [política de proveedores](docs/api/PROVIDER_POLICY.md) y la [evidencia previa](docs/architecture/PROVIDER_EVIDENCE.md).
 
 ## Estructura actual
 
@@ -45,7 +47,7 @@ airwise/
 ├── .agents/skills/                   # Cinco procedimientos reutilizables
 ├── .github/                         # Plantillas de issues y PR, sin pipelines
 ├── backend/                         # Base Initializr conservada; dominio y API demo añadidos
-├── frontend/                        # React/TypeScript/Vite; cliente demo AIR-018 en revisión
+├── frontend/                        # React/TypeScript/Vite; cliente demo AIR-018 verificado
 ├── planning/                        # Roadmap, backlog, mejoras y changelog
 ├── docs/
 │   ├── user-manual/                  # Uso del cliente demo y límites
@@ -90,4 +92,4 @@ Skills locales: `$task-planning`, `$api-integration`, `$database-migrations`, `$
 - [Changelog](planning/CHANGELOG.md): cambios sin versión publicada.
 - [Contribución y revisión](CONTRIBUTING.md), [seguridad](SECURITY.md) y [manual de usuario](docs/user-manual/README.md).
 
-AIR-011 conserva su test de contexto. AIR-012/013/014 constan Hechas y AIR-015 incorpora comparación verificada el17/11/2026. PostgreSQL, JPA y Flyway mantienen integración pendiente; AIR-018 permanece En revisión, con seguimiento recuperable conservado y revisión visual pendiente. El siguiente paso es completar esa revisión antes de cerrar la tarea. El [registro de validación](docs/developer-guide/VALIDATION.md) conserva histórico y resultados actuales. No se han creado commits durante esta tarea.
+AIR-011 conserva su test de contexto. AIR-012/013/014 constan Hechas, AIR-015 incorpora comparación verificada el17/11/2026 y AIR-018 completa el cliente demo con revisión de navegador el18/11/2026. PostgreSQL, JPA y Flyway mantienen integración pendiente. El [registro de validación](docs/developer-guide/VALIDATION.md) conserva histórico y resultados actuales. No se inicia otra tarea, se publica una versión ni se hacen commits durante este cierre.

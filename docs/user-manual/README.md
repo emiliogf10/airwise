@@ -1,6 +1,6 @@
 # Manual de usuario — demo de Airwise
 
-El cliente AIR-018 incorpora búsqueda, resultados y comparación en una página, con navegación **Buscar**, **Resultados** y **Comparar**. La tarea está **En revisión**: quedan pendientes revisión visual, teclado real y tamaños de pantalla por una limitación del entorno de navegador, detallada en [VALIDATION](../developer-guide/VALIDATION.md). Para instalar y conectar los dos procesos locales, consulte la [guía frontend](../developer-guide/FRONTEND.md).
+El cliente AIR-018 incorpora búsqueda, resultados y comparación en una página, con navegación **Buscar**, **Resultados** y **Comparar**. La tarea está **Hecha**, con flujos, teclado y tamaños de pantalla revisados en navegador real dentro del alcance del [informe](../developer-guide/BROWSER_REVIEW.md). Para instalar y conectar los dos procesos locales, consulte la [guía frontend](../developer-guide/FRONTEND.md).
 
 **Todo el contenido de vuelos es sintético.** El modo demo no confirma disponibilidad, reserva, precios comerciales ni equipaje real. No hay registro, compra, favoritos persistentes, historial o alertas. Los datos y la selección pertenecen a esta sesión de página; no son una búsqueda guardada.
 
