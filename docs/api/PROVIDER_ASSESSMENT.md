@@ -10,7 +10,27 @@ Revisión documental: **19/11/2026**. Fuentes públicas oficiales, sin iniciar s
 - **Inferencia de diseño:** consecuencia conservadora adoptada por Airwise, identificada como tal; no condición impuesta por el proveedor.
 - **Pendiente:** no acreditado con las fuentes accesibles. Ausencia de prohibición encontrada no equivale a licencia.
 
-Las [PoC históricas](../architecture/PROVIDER_EVIDENCE.md) siguen separadas: sus respuestas y cuotas observadas no se han reproducido ni sirven como autorización vigente. Los permisos de datos normalizados también deben resolverse; eliminar el JSON original no concede derechos nuevos.
+Las [PoC históricas](../architecture/PROVIDER_EVIDENCE.md) siguen separadas: sus respuestas y cuotas observadas no se han reproducido ni sirven como autorización vigente. Los permisos de datos normalizados también deben resolverse; eliminar el JSON original no concede derechos nuevos. El adjunto detallado de AIR-019 amplía esta evaluación el mismo 19/11/2026 con clasificación, comparación técnica y topes diarios/mensuales; se conserva la revisión anterior.
+
+## Clasificación para el uso previsto
+
+Ámbito evaluado: portfolio web público, comparación multifuente, backend propio y presupuesto de APIs de 0 €. Clasificación documental de Airwise, no dictamen jurídico ni certificado del proveedor. APTO exige acreditar viabilidad del uso; APTO CON CONDICIONES requiere permisos del uso acreditados y requisitos restantes delimitados; NO APTO exige incompatibilidad demostrada; PENDIENTE DE ACLARACIÓN significa que falta evidencia decisiva.
+
+| Proveedor | Clasificación global | Técnica y economía | Permisos y riesgo que impiden habilitarlo |
+|---|---|---|---|
+| Travelpayouts Data API | **PENDIENTE DE ACLARACIÓN** | Candidato a observaciones en caché; gratuidad y límites publicados, sin comprobar cuenta. | Reglas aplicables Aviasales, comparación/publicación normalizada, retención y atribución pendientes Q-T1–Q-T4. Prioridad alta de aclaración antes de integrar. |
+| SerpApi Google Flights Free | **PENDIENTE DE ACLARACIÓN** | Candidato a detalle de vuelos mediante fases; cuota gratuita publicada finita, sin saldo efectivo verificado. | Uso público/afiliado, reutilización, derechos subyacentes y sobrecuota pendientes Q-S1–Q-S3. Prioridad alta; no hay Legal Shield en Free [S4]. |
+
+No se declara APTO solo porque exista una clave, un plan gratis o una PoC exitosa. Tampoco se concluye NO APTO sin una incompatibilidad acreditada. Ambos permanecen excluidos del flujo operativo.
+
+### Permitido, prohibido y no aclarado
+
+| Proveedor | Expresamente previsto o permitido bajo sus condiciones | Expresamente restringido/prohibido | No aclarado para este uso |
+|---|---|---|---|
+| Travelpayouts Data API | Contenido informativo, integración en recursos propios afiliados y almacenamiento técnico recomendado [T1,T4–T6]. | Usos no autorizados o ajenos a la finalidad de la red, vulneración de derechos y cesión contractual sin consentimiento [T6,T8]. | Portfolio multifuente, API de redistribución, históricos/derivados y conservación tras afiliación; reglas concretas de programa. |
+| SerpApi | Servicio sujeto a términos y Free publicado; caché del proveedor documentada [S1–S3]. | Uso ilegal/no autorizado, infracción de terceros y reventa/explotación del servicio sin permiso escrito [S3]. | Visualización normalizada, elegibilidad pública/comercial/afiliada de Free, retención local y derechos de datos/imágenes/marcas. No extender la restricción sobre reventa del servicio a una prohibición automática de toda visualización. |
+
+Las obligaciones de atribución y enlaces no reemplazan permisos. El uso público no se presume autorizado mientras subsistan estas preguntas.
 
 ## Travelpayouts: Aviasales Data API
 
@@ -26,6 +46,8 @@ Se evalúa **Data API**, no Search API de búsqueda en vivo. El catálogo difere
 | Caché | El artículo de límites recomienda caché y almacenamiento técnico; FAQ recomienda 24 h [T5,T9]. | Recomendación técnica no determina retención contractual de históricos ni permiso tras finalizar afiliación. Resolver Q-T3. |
 | Atribución | ID/marker y enlaces de afiliado mediante herramientas oficiales [T4,T6,T8,T10]. | Falta regla específica vigente Aviasales para texto/logos/disclosure en Airwise. Resolver Q-T4. |
 | Reutilización/terceros | Licencia funcional no transferible y derechos de titulares/terceros preservados; transmisión de derechos sujeta a consentimiento [T6,T8]. | No interpretar esto como licencia general de base de datos, imágenes, marcas o exportación. |
+
+T8 §3.2 contempla adhesión por defecto a Aviasales/JetRadar y Hotellook desde la primera autorización; esto matiza las distintas descripciones de acceso, pero no comprueba adhesión ni condiciones efectivas de la cuenta de Airwise. T4 recomienda descartar precios vencidos según `expires_at` cuando esté presente; no se presenta esa fecha aproximada como garantía comercial.
 
 ### Tres ventanas diferentes
 
@@ -51,6 +73,28 @@ Es un servicio de extracción de Google Flights [S2]; no se ha acreditado que se
 
 S3 publica actualización de 27/08/2026. No se deduce la elegibilidad comercial actual de Free desde entradas antiguas del foro ni desde una PoC. S6 se mostró en versión de Estados Unidos, efectiva 30/07/2026: sirve para identificar derechos distintos, **no acredita jurisdicción aplicable a Airwise** ni resuelve su relación con un intermediario. No se emite dictamen jurídico.
 
+S1 describe renovación anticipada manual y opción automática, con reposición/cambio de ciclo. No se ha acreditado el comportamiento específico de Free al agotar cuota ni la ausencia universal de cargos; no deducirlos del precio anunciado. Airwise prohíbe activar esa opción o pagos y mantiene la admisión cerrada mientras Q-S3/Q-B1 estén pendientes.
+
+## Matriz técnica comparativa
+
+**P** = PoC histórica aportada por el usuario, sin reproducir; **D** = documentación oficial del registro de fuentes. Ninguna celda acredita un adaptador operativo. Comparación de capacidades potenciales, no permisos de publicación.
+
+| Capacidad | Travelpayouts Data API | SerpApi Google Flights | Encaje e incertidumbre en Airwise |
+|---|---|---|---|
+| Precios observados | P:25 registros/16HTTP200; D: datos de búsquedas previas [T4]. | P: resultados de detalle; D: búsqueda con caché posible [S2]. | `PriceObservation` para datos sin itinerario; no convertir recepción reciente en observación reciente. |
+| Itinerarios completos | P: no acreditados; no exigirlos a precios por ruta. | P: segmentos entre61entradas con fases/solapamientos; no61viajes únicos. | `FlightOffer` exige itinerario estructural válido; no inventar tramos ausentes. |
+| Ida/vuelta | P: cobertura irregular; tarifa de ida no acredita viaje completo. | P: regreso observado; D: continuación de fase [S2]. | `ROUND_TRIP` exige2trayectos vinculados. Itinerario completo con precio `OUTBOUND_ONLY` no tiene precio completo comparable. |
+| Múltiples orígenes | P: irregularidad por ruta; operación múltiple nativa no acreditada. | P: OPO/SCQ/VGO; D: varios aeropuertos por parámetro [S2]. | Consulta acepta1–3orígenes, puerto obliga1por llamada. No inferir equivalencia del parámetro externo con el fan-out actual. |
+| Segmentos/escalas | No acreditados para todas las observaciones Data API. | P: segmentos/escalas; cobertura actual sin prueba nueva. | Trayecto admite1–4segmentos coherentes; conexión descrita no certifica viabilidad comercial. |
+| Vendedores | No inferir detalle desde enlaces afiliados. | P: opciones observadas; D: fase adicional con token [S2]. | Anuncio de vendedor separado de reserva; tokens internos, no identidad pública. |
+| Equipaje | P: insuficiente. | P: parcial. | Desconocido nunca significa incluido/coste0; ausencia opcional no fuerza `PARTIAL`. |
+| Frescura | D: ventanas de origen/local diferentes; ver sección Travelpayouts. | D: caché técnica del proveedor; ver sección SerpApi. | Separar observado/recuperado/caducidad; `UNKNOWN` si falta evidencia, sin TTL universal. |
+| Disponibilidad | Observación no acredita inventario actual. | Búsqueda/vendedor no confirman compra. | Elegibilidad de comparación no equivale a disponibilidad; no emitir confirmación de reserva. |
+| Coste de consultas | D: límites por método, condiciones económicas anteriores. | D: cuota/cómputo anteriores; varias fases posibles. | Intentos HTTP, créditos y `requiredUnits` son contadores distintos. |
+| Uso público | Permisos específicos abiertos Q-T. | Permisos y derechos abiertos Q-S. | Ambos PENDIENTE DE ACLARACIÓN; solo demo operativo. |
+
+Inspección estática del checkout: [FlightProvider](../../backend/src/main/java/com/airwise/backend/flightsearch/application/FlightProvider.java), [ProviderCapabilities](../../backend/src/main/java/com/airwise/backend/flightsearch/application/ProviderCapabilities.java), [ProviderSearchRequest](../../backend/src/main/java/com/airwise/backend/flightsearch/application/ProviderSearchRequest.java) y [ProviderResult](../../backend/src/main/java/com/airwise/backend/flightsearch/application/ProviderResult.java). `requiredUnits` representa obligaciones lógicas (1–16), no llamadas ni créditos. `DemoSearchService` rechaza proveedores distintos de DEMO o que requieran red/credenciales; no existe un coordinador genérico real habilitable cambiando un flag. Los identificadores de fuentes reales en enums y la clasificación documental UNVERIFIED no son instancias operativas verificadas. Falta diseñar su coordinación y normalización antes de una integración autorizada.
+
 ## Preguntas que bloquean una futura habilitación
 
 Son condiciones pendientes, no solicitudes enviadas ni nuevas tareas implementadas. Solo contactar con autorización expresa; una respuesta deberá identificar producto, versión contractual, cuenta/proyecto, ámbito y fecha, sin guardar datos privados en el repositorio.
@@ -63,6 +107,7 @@ Son condiciones pendientes, no solicitudes enviadas ni nuevas tareas implementad
 | Q-T4 | Precisar marker/enlaces, atribución/disclosure, logotipos y otros derechos de terceros. | Orchestrator + Documentation |
 | Q-S1 | Confirmar elegibilidad Free para el uso público/afiliado descrito y alcance contractual de mostrar/comparar resultados normalizados frente a reventa del servicio. | Orchestrator / revisión de condiciones |
 | Q-S2 | Acreditar almacenamiento local, histórico/derivados, redistribución, atribución, imágenes/marcas y derechos del contenido de Google/aerolíneas/vendedores. No basta permiso del intermediario si no cubre esos derechos. | Orchestrator + Security & QA |
+| Q-S3 | Acreditar comportamiento específico de Free al agotar cuota, reposición/ciclo, bloqueo, renovaciones y cualquier cargo automático; verificar configuración concreta solo mediante actuación posterior autorizada. | Orchestrator / revisión de condiciones |
 | Q-B1 | Verificar plan y límites de cuenta, periodo/renovación, remanente y ausencia de recarga/renovación anticipada de pago; definir tope autorizado de intentos. | Orchestrator, con autorización específica |
 | Q-B2 | Antes de consumo, implementar y probar con dobles el registro durable de reservas, concurrencia, fallos inciertos y bloqueo por saldo desconocido. | Backend + Security & QA, tarea posterior autorizada |
 
@@ -78,11 +123,46 @@ Son condiciones pendientes, no solicitudes enviadas ni nuevas tareas implementad
 6. Sin continuaciones, fan-out, reintentos, polling o fallback a otra fuente automáticos por render/filtro/paginación. Cualquier intento adicional requiere admisión; 429 no habilita un reintento. Cancelar no demuestra que el proveedor no consumió crédito.
 7. Registrar cantidades/estado/fecha y motivo sanitizado, sin claves, tokens, URLs autenticadas o payloads sensibles. Preservar causas operativas; no convertir cuota agotada en vuelos vacíos ni demo silencioso. Probar límites con dobles locales antes de cualquier autorización real.
 
+### Topes configurables por proveedor y operación
+
+Diseño de configuración **solo de backend**, no propiedades/variables implementadas. Todos los máximos siguientes arrancan en **0 intentos** y todas las operaciones reales deshabilitadas. El frontend no puede sustituirlos. Credenciales exclusivamente en configuración externa del backend; ninguna clave real en tests/CI. No llamar a proveedores al montar componentes, ejecutar tests, CI, paginar o filtrar; los dobles/servidores locales sintéticos sí permiten verificación sin cuota real.
+
+| Proveedor / ámbito | Operaciones a presupuestar separadamente | Máximo diario propio inicial | Máximo mensual propio inicial |
+|---|---|---:|---:|
+| Travelpayouts, agregado de proveedor/cuenta | Suma de todos sus métodos y recursos, aunque estén separados internamente | 0 | 0 |
+| Travelpayouts, cada operación | `prices_for_dates`, `get_latest_prices`, `grouped_prices`, GraphQL u otro método aprobado; cuenta/otros si existieran, nunca presupuestos implícitos | 0 cada una | 0 cada una |
+| SerpApi, agregado de proveedor/cuenta | Suma de iniciales, regresos, vendedores y cualquier otro intento | 0 | 0 |
+| SerpApi, cada operación | Inicial, regreso/siguiente tramo, vendedor, cuenta, archivo, polling y reintento, cada uno con admisión independiente | 0 cada una | 0 cada una |
+
+Al autorizar un incremento, establecer máximos por operación **y agregados** sin multiplicar el saldo compartido. La admisión exige satisfacer simultáneamente ambos, el tope de sesión/flujo, el límite horario/minuto aplicable y la cuota comercial acreditada. Ningún máximo propio se deduce automáticamente de250/mes o600/min publicados. Coste comercial no conocido para una operación implica operación bloqueada, nunca coste0 por omisión.
+
+- Ventanas propias: día00:00–24:00UTC y mes natural UTC según reloj de servidor. Además, aplicar el periodo comercial real del proveedor, que puede tener otra renovación. Sin periodo/saldo/reloj fiable, cerrar admisión. Definir vigencia máxima de la evidencia de saldo antes de habilitar; sin vigencia aprobada no es utilizable.
+- Reservar atómicamente intentos/créditos potenciales y cupo de concurrencia antes del envío. Propuesta conservadora para una futura autorización: como máximo1petición real simultánea por cuenta, además del tope global aprobado; no es un servicio implementado ni un permiso para enviar ahora. Reintentos automáticos iniciales0.
+- Si falla o es inaccesible el registro durable, no enviar. Crash entre reserva y envío deja estado incierto, sin reenvío automático. Reinicio, redeploy, cambio de límites o de ventana no borran deuda/reservas inciertas; la conciliación necesita evidencia fiable y autorización para cualquier consulta externa.
+- Un intento HTTP enviado no se devuelve por caché, error o cancelación. Solo el crédito comercial potencial puede conciliarse si existe evidencia fiable de no consumo; sin ella permanece retenido conservadoramente. Una nueva muestra de saldo no repone unidades ya comprometidas ni elimina reservas concurrentes.
+- Retener por separado auditoría mínima de consumo y datos de vuelos, con acceso y plazo acordados antes de implementarla; el control de presupuesto no concede permiso para archivar payloads o históricos. No se crea almacenamiento en esta tarea.
+
 ### Ejemplos de planificación, no ejecutados
 
 Con SerpApi, una búsqueda inicial, una selección de regreso y una consulta de vendedor serían **tres peticiones de búsqueda potencialmente facturables**. Es un ejemplo, no una constante de todos los flujos. En el puerto actual de Airwise, cada llamada lógica admite un origen: tres búsquedas iniciales y un regreso/vendedor elegidos serían cinco; repetir el flujo completo para tres orígenes serían nueve. La API externa documenta también múltiples aeropuertos en un parámetro [S2], pero no se cambia el contrato ni se presume que una llamada cubre cualquier comparación.
 
 Fórmula conservadora: `N_iniciales + N_regresos + N_vendedores + N_reintentos + N_polling_de_búsqueda`; añadir archivo/cuenta/otros intentos al presupuesto HTTP aunque su cómputo comercial difiera. Ninguno está autorizado en esta tarea. Un mes gratuito publicado no garantiza un número fijo de sesiones de usuario ni un despliegue público sostenible.
+
+| Flujo SerpApi de ejemplo | 1 origen | 3 orígenes según el puerto actual |
+|---|---:|---:|
+| Solo iniciales | 1 | 3 |
+| Iniciales + regreso de una alternativa elegida | 2 | 4 |
+| Iniciales + regreso y vendedor de una alternativa elegida | 3 | 5 |
+| Inicial + regreso para cada origen | 2 | 6 |
+| Inicial + regreso + vendedor para cada origen | 3 | 9 |
+
+Son peticiones de búsqueda potencialmente facturables sin descontar caché, para una alternativa por fase, sin reintentos ni polling; otras elecciones aumentan el coste. No se ejecutaron estos flujos ni se confunden tres orígenes con tres créditos de viaje completo.
+
+## Propuesta siguiente y promoción posterior a AIR-021
+
+La propuesta original [IMP-008](../../planning/IMPROVEMENTS.md) de AIR-019 recomendó un núcleo con **dobles sintéticos y sin transporte real**. El adjunto posterior la promueve a AIR-021 y autoriza implementar ese alcance aislado. Debe demostrar topes compartidos, concurrencia, ventanas, cuota desconocida y consumo incierto dentro de sus garantías; **no demuestra reserva durable ni recuperación de crash con memoria**. Esos usos se bloquean y conservan una decisión posterior vinculada a AIR-017, sin BD implícita.
+
+Entrega autorizada de AIR-021: contrato/invariantes, componente aislado y pruebas de carreras/fallos/rechazo de recuperación no soportada, sin adaptadores, credenciales, consultas, dependencias nuevas o UI. [ADR-0008](../decisions/0008-synthetic-admission-ledger.md) y [PROVIDER_ADMISSION](../architecture/PROVIDER_ADMISSION.md) concretan la separación entre lo implementable en memoria y lo pendiente. No se ejecuta otra tarea. Las preguntas Q-T/Q-S no se envían sin autorización; ninguno de los proveedores queda elegido para publicación mientras su clasificación siga pendiente.
 
 ## Registro de fuentes oficiales
 

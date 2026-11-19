@@ -1,6 +1,77 @@
 # Registro de validación de Airwise
 
-Evidencia desde el **2026-11-11**, actualizada con AIR-020 del **19/11/2026**. Cada apartado conserva su alcance, resultados y límites. AIR-020 ejecuta de nuevo comandos locales de build/test para preparar CI; AIR-019 solo verifica documentación e integridad. No se atribuyen ejecuciones nuevas de navegador ni de GitHub a estas tareas.
+Evidencia desde el **2026-11-11**, actualizada con AIR-021 del **19/11/2026**, posterior a la ampliación AIR-019. Cada apartado conserva su alcance, resultados y límites; las pruebas históricas no acreditan cambios nuevos. No hay nueva ejecución de navegador o GitHub en AIR-021.
+
+## AIR-021 — núcleo de admisión sintético completado
+
+El adjuntoefd878ab autoriza promover IMP-008 e implementar núcleo Java con dobles sin transporte, dependencias nuevas o persistencia. Se creó AIR-021 con dependencias AIR-012/016/019 y vínculo futuro AIR-017; se conservan11documentos previos AIR-019 pendientes de commit. Snapshot157archivos previos protegido antes de añadir código; Orchestrator coordinó y mantuvo checkpoint recuperable durante la ejecución.
+
+Contrato de [PROVIDER_ADMISSION](../architecture/PROVIDER_ADMISSION.md) y [ADR-0008](../decisions/0008-synthetic-admission-ledger.md) implementado para simulación: AdmissionModel, FlowEstimator, AdmissionLedger, InMemoryAdmissionLedger y AdmissionService; cuatro clases de tests nuevas. Reserva del máximo flujo, ámbitos operación/proveedor/cuenta, reloj y evidencia explícitos, estados RESERVED/STARTED/UNCERTAIN/CONFIRMED/CANCELLED. No hay callback/HTTP/wiring o credenciales. La afirmación de consumo fiable de `confirm` pertenece al llamante sintético y no valida una prueba de proveedor.
+
+### Comprobaciones ejecutadas
+
+Los comandos siguientes usan el Wrapper existente con `-o -B -ntp`, repositorio/MAVEN_USER_HOME de AIR-011 dentro del workspace y propiedad de logger que evita contraseña temporal del contexto original. El helper retira variables de proveedores/opciones externas Java/Maven/Spring solo del hijo y sanitiza logs. No se descarga nada ni se cambian ajustes globales.
+
+| Comando / comprobación | Resultado y alcance |
+|---|---|
+| `py -3.14 .local/air021/run_maven.py compile clean compile` | Código 0 / BUILD SUCCESS,79fuentes Java21. Compilación inicial; la regresión limpia recompiló el estado final |
+| `py -3.14 .local/air021/run_maven.py admission-tests -Dtest=AdmissionTests,AdmissionFailureTests,FlowEstimatorTests,AdmissionIsolationTests test` | Código 0,42tests nuevos:30admisión/6fallos/5estimación/1aislamiento;0fallos/errores/omitidas |
+| `py -3.14 .local/air021/run_maven.py full-tests clean test` | Código 0 / BUILD SUCCESS,280tests en28clases,0fallos/errores/omitidas;79main y29test compiladas. Regresión incluye los238tests anteriores;50,072s |
+| Regresión de concurrencia del reloj | Muestreo/operación/cierre bajo el mismo monitor compartido; dos servicios con latches no invierten muestras fiables ni provocan cierre falso. Incluida en las suites anteriores |
+| Última cuota y cancelación/inicio | Carreras con latches prueban una sola autorización por unidad en operación/proveedor/cuenta y exclusión entre cancelación e inicio. El marcador sintético aparece solo después de start permitido; no se ejecuta transporte |
+| Aislamiento y fallos | Bytecode del paquete principal revisado por test para referencias red/procesos/Spring/JPA/SQL/demo/Search; fallos antes reserva/después inicio/durante conciliación, cierre fallido, handles ajenos y scopes no soportados cubiertos. No prueba aislamiento egress del SO ni recuperación real |
+| `py -3.14 scripts/validate_repository.py` | Código 0;327destinos locales,18tareas, seis TOML, cinco skills y estructura comprobados. Histórico fase1 informativo; no implica modificaciones nuevas a su base |
+| `py -3.14 .local/air021/verify_scope.py` | Código 0;157archivos previos intactos y9Java añadidos solo en admission main/test. Escaneo dirigido de claves disponibles en entorno, URLs autenticadas, claves privadas y whitespace sin hallazgos; imports/API de transporte en main sin hallazgos |
+| `git diff --check` | Código 0; solo avisos informativos LF/CRLF. Comprobación adicional del helper incluye archivos nuevos aún no versionados |
+
+El primer escáner local confundió la lista de dependencias prohibidas del test de aislamiento con uso de esas APIs. Se corrigió solo el helper ignorado para revisar main y dejar al test/QA la comprobación de referencias compiladas. No se quitó un test ni se modificó producto para ocultar un fallo. Maven no tuvo ejecuciones fallidas en esta tarea. Evidencias ignoradas: `.local/air021/*-result.json`, logs y snapshot previos; este registro conserva resultados sin depender de ellos para entender el alcance.
+
+### Revisiones y procedimientos
+
+Delegación real selectiva: `air021_backend` poseyó solo cinco fuentes/cuatro tests nuevos; `air021_database` evaluó durabilidad sin escrituras; `air021_devops` revisó topología/imports/wiring en lectura; `air021_qa` revisó código/tests/guía; `air021_docs` editó únicamente README, guía de desarrollo e inventario. Root integró contratos/decisiones, resto de documentos, backlog y verificaciones. Ningún escritor simultáneo sobre las mismas rutas.
+
+Database fue favorable solo a simulación con la misma instancia; dos ledgers no coordinan incluso en una JVM. DevOps confirmó que scope es declarado, sin detectar réplicas/despliegue ni proteger HA. QA encontró una incidencia funcional media: muestrear reloj antes del monitor podía cerrar falsamente el ledger por scheduling; Backend corrigió y añadió regresión. Relectura final QA favorable sin hallazgos abiertos, condicionada a ejecución luego satisfecha por Orchestrator. No se atribuyen Maven o tests ejecutados a revisores. Documentation preservó AIR-019 y verificó67enlaces de sus tres documentos antes del cierre global.
+
+Descubiertos catálogo de sesión y skills en disco local/global/sistema; cinco locales disponibles, `review-agent` en disco sin registro inferido. Aplicadas `task-planning`, `api-integration`, `testing-and-review` y `documentation-sync`, con cometidos separados de alcance/límites/revisión/documentación. Database utilizó `database-migrations` solo como evaluación de necesidad, sin esquema; QA consultó guidance acotada `security-audit`, sin auditoría integral. No se instalaron skills, dependencias ni herramientas globales.
+
+### Límites y cierre
+
+Garantías demostradas únicamente dentro del ledger sintético compartido: estimación acotada, cero euros conocido, reserva completa, autorización única ordenada, topes/ventanas y retención de incertidumbre. No hay durabilidad, recuperación de crash/reinicio, fencing/exclusión multiproceso, coordinación de ledgers independientes, transporte, recibo externo fiable ni tasas minuto/hora. Los scopes real/reinicio/multiproceso/múltiples ledgers se deniegan; no detectan un llamante que declare falsamente topología o uso. Deuda comercial lifetime deliberadamente conservadora, sin reposición real automática.
+
+La base previa (incluidos POM, Wrapper,109archivosbackend,31frontend y CI) conserva hashes; se añaden9Java sin modificar clases/tests previos. La documentación AIR-019 que estaba sin commit se integra sin revertirla. Sin APIs, claves, pagos, frontend/endpoints, tablas/JPA/Flyway, despliegues, commits o push. No se repiten pruebas frontend/navegador ni CI remota porque no cambiaron; las evidencias históricas conservan sus límites.
+
+AIR-021 satisface DoD tras En curso → En revisión → Hecha, con contrato/ADR, revisiones, compilación, tests específicos, regresión y comprobaciones documentales. El checkpoint se retira solo al terminar la comprobación final; logs locales se conservan. Siguiente decisión recomendada AIR-017: almacenamiento mínimo compartido, recuperación, conciliación y tests de crash antes de uso real; no se inicia ahora ni resuelve permisos AIR-019.
+
+## AIR-019 — ampliación según adjunto detallado, 19/11/2026
+
+El adjunto76142507 pide exclusivamente investigación/documentación de viabilidad legal/técnica/económica del portfolio público0€, sin modificar producción/tests ni instalar dependencias. Se reabre AIR-019 preservando el informe y cierre anteriores. Inicio limpio, HEADca3f736 (AIR-020); sin checkpoint anterior. Se registra seguimiento nuevo y snapshot157archivos protegidos antes de editar documentación.
+
+### Entrega y revisión
+
+- [PROVIDER_ASSESSMENT](../api/PROVIDER_ASSESSMENT.md): clasificación global PENDIENTE DE ACLARACIÓN de ambos; usos previstos, prohibidos y no aclarados; matriz de11capacidades con PoC/documentación/contrato separados; tabla de consumo por1/3orígenes y fases; Q-S3 sobre sobrecuota Free sin acreditar. Registro de18URLs oficiales conserva fecha/ámbito de la revisión anterior.
+- Política/ADR-0007: topes diarios/mensuales por operación y agregados de cuenta0por defecto, ventanas propias UTC frente a ciclo comercial, saldo vigente, reservas atómicas/durables, concurrencia, crash/fallo de registro y deuda incierta. Intentos HTTP enviados no se devuelven al conciliar crédito comercial; coste desconocido cierra admisión. Custodia de claves externa/backend, sin llamadas reales en tests/CI/UI y sin fallback silencioso. **Todo es diseño, no control implementado.**
+- Inspección de interfaces FlightProvider, ProviderCapabilities, ProviderSearchRequest, ProviderResult y modelos/servicio demo: puerto1origen, consulta1–3, requiredUnits lógicas, DemoSearchService exclusivamente DEMO sin red/credenciales. No hay coordinador genérico real ni adaptadores/instancias de capacidades comerciales habilitables mediante un flag.
+- Propuesta IMP-008 en mejoras: núcleo de admisión con dobles sintéticos, previa autorización de alcance/durabilidad y AIR-017 cuando corresponda. No se promueve a tarea AIR aprobada ni se implementa almacenamiento/adaptador.
+
+Delegación real selectiva: `air019_addendum_backend` analizó contratos y estimación de consumo en solo lectura; `air019_addendum_sources` (Documentation) contrastó públicamente fuentes y trazabilidad; `air019_addendum_qa` (Security & QA) identificó seis huecos documentales y revisó su resolución sin bloqueos. Root fue único escritor e integró evaluación, política, ADR, arquitectura, evidencia, README y planificación. No se necesitó DevOps; diseño de concurrencia/presupuesto cubierto por coordinador y QA.
+
+Documentation revalidó páginas públicas oficiales de requisitos, datos, límites, FAQ, oferta y términos Travelpayouts, así como Pricing, Flights y Terms/Privacy SerpApi. Precisiones: adhesión por defecto contemplada en T8§3.2 no prueba cuenta efectiva; expiración de origen no es retención local; renovación anticipada publicada no acredita mecanismo particular de sobrecuota Free. Se conservan referencias previas del mismo19/11/2026 y sus límites. La FAQ SerpApi siguió sin cuerpo utilizable; no se atribuye contenido no recuperado ni se accedió al panel privado de Aviasales.
+
+QA confirmó resolución de topes compartidos, fallo de ledger/crash, ventanas/saldo vigente, separación intento/crédito, secretos/tests/CI y clasificación documental frente a operación real. Su inspección estática del workflow no demuestra egress bloqueado. Backend no revalidó web; QA no emitió dictamen jurídico ni volvió a consultar términos. No se atribuyen a esos agentes ejecuciones inexistentes.
+
+### Comprobaciones y límites
+
+| Comando / comprobación | Resultado y alcance |
+|---|---|
+| Lecturas UTF-8, `rg` e inspección de interfaces | Ejecutadas; capacidades y restricciones contrastadas con código, sin modificarlo ni compilar |
+| `py -3.14 scripts/validate_repository.py` | Código0;299destinos locales,17tareas, seis TOML y cinco skills comprobados, seguridad acotada y estructura válidas; no verifica permisos externos |
+| `py -3.14 .local/air019-addendum/verify_scope.py` | Código0;157SHA-256 idénticos:109backend/31frontend/5skills/7Codex/1script/4GitHub, incluida CI. Solo documentación autorizada modificada; sin valores de claves del entorno, URLs autenticadas, marcadores de claves privadas o whitespace final encontrados en alcance. No escáner general de secretos |
+| `git diff --check` | Código0; sin errores; avisos informativos LF/CRLF sin cambiar configuración |
+| Revisión independiente QA | Conformidad acotada sin bloqueos tras integrar seis precisiones de diseño; clasificación, retención/terceros y cero consumo permanecen explícitos |
+
+Skills descubiertas en catálogo de sesión y disco local/global/sistema: cinco locales, globales y de artefactos disponibles; `review-agent` solo en disco no equivale a registrado. Aplicadas `task-planning`, `api-integration`, `testing-and-review` y `documentation-sync`; QA consultó además guidance acotada de `security-audit`, sin auditoría integral. Las locales se eligieron por concretar fases del procedimiento Airwise sin duplicarlas; no pertinentes UI, migraciones o instalación. No se instalaron skills ni dependencias ni se alteraron agentes/configuración global.
+
+**Cero consultas autenticadas, endpoints de vuelos/cuenta/saldo/archivo/continuación, contactos externos o gasto.** No Maven/npm/tests de producto en esta ampliación documental, ni CI remota, commits/push o implementación posterior. El código demo y workflow AIR-020 permanecen intactos. Derechos concretos, cuota/configuración de cuenta y reglas privadas de programa pendientes: el informe satisface la petición al exponerlas, sin considerarlas resueltas. Tras revisión y comprobaciones finales, AIR-019 vuelve En revisión → Hecha para este alcance; el checkpoint se retira al finalizar, conservando evidencia permanente y logs locales.
 
 ## AIR-020 — workflow de CI local preparado y verificado
 

@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+### 2026-11-19 — promoción IMP-008 y núcleo sintético AIR-021 completado
+
+- Autorizado núcleo Java puro de admisión y estimación con dobles; contratos de cuota/intentos/coste, ledger atómico limitado y estados explícitos. Sin conectar al demo ni añadir dependencias o transporte.
+- ADR-0008 delimita memoria compartida en un escenario sintético y bloqueo de recuperación/multiproceso/uso real. Durabilidad futura vinculada a AIR-017, sin tablas, JPA, Flyway o infraestructura.
+- Implementadas5clases y4clases de tests; Wrapper offline clean compile,42tests específicos y regresión limpia280/0fallos/0errores/0omitidas. Corregida carrera de reloj encontrada por QA, con regresión; revisiones Database/DevOps/Security & QA conformes y documentación sincronizada.
+- Base previa, frontend, POM, Wrapper y endpoints preservados, sin dependencias nuevas. AIR-021 Hecha tras comprobaciones de alcance/documentación; cambios previos AIR-019 preservados, sin commits/push o consumo de proveedores. Durabilidad y permisos reales siguen pendientes.
+
+### 2026-11-19 — ampliación AIR-019 según adjunto detallado
+
+- Añadidas clasificación PENDIENTE DE ACLARACIÓN para ambos proveedores y tabla de usos previstos, prohibiciones y dudas específicas, sin convertir condiciones provisionales en permisos.
+- Incorporada matriz técnica de11capacidades con PoC/documentación/contrato separados y estimaciones de fases para1/3orígenes. Inspección real de interfaces y DemoSearchService sin cambios de código; no existe coordinación genérica real habilitable por un flag.
+- Precisados topes diarios/mensuales por operación y agregados de cuenta, ventanas UTC/ciclo comercial, reservas inciertas, concurrencia, fallo de registro y exclusión de credenciales/llamadas de proveedores en tests/CI. Todo es diseño, con0intentos y0€ autorizados.
+- Registrada IMP-008 como propuesta de núcleo sintético, sin iniciar desarrollo. Preservadas las entregas anteriores AIR-019/020 y evidencias históricas; revisión/validación de esta ampliación en su registro propio.
+
 ### 2026-11-19 — workflow local de CI AIR-020
 
 - Añadido `.github/workflows/ci.yml` con tres jobs: validador documental Python, compilación/tests backend mediante Wrapper y frontend con instalación por lockfile, tipos, lint, tests y build.

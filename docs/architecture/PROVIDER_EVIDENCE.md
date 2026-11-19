@@ -14,3 +14,5 @@ Presupuesto de API: 0 €. Esta evidencia orienta el diseño de adaptadores y ca
 ## Revisión documental posterior
 
 AIR-019 revisa fuentes públicas oficiales el 19/11/2026, sin repetir las PoC ni acceder a cuentas. La [evaluación de permisos y presupuesto](../api/PROVIDER_ASSESSMENT.md) registra condiciones documentadas, preguntas de publicación/retención/reutilización todavía abiertas y un plan de consumo de 0 €. No modifica los resultados históricos de esta tabla ni habilita fuentes reales; [ADR-0007](../decisions/0007-real-provider-admission.md) mantiene solo DEMO operativo.
+
+La ampliación del adjunto detallado, también el19/11/2026, agrega matriz técnica de11capacidades y clasificación **PENDIENTE DE ACLARACIÓN** de ambos para portfolio público multifuente. Backend inspeccionó el puerto y las restricciones demo en solo lectura; Documentation revalidó fuentes públicas; Security & QA revisó política/retención/cuotas. No hay nuevas respuestas de APIs, saldo de cuenta o condiciones privadas verificadas. Los escenarios de1/3orígenes y fases son estimaciones conservadoras, no peticiones ejecutadas.

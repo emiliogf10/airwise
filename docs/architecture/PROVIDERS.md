@@ -6,6 +6,8 @@
 
 El 13/11/2026 se comprobaron DemoFlightProvider y su corpus cerrado [demo-v1.properties](../../backend/src/main/resources/demo/demo-v1.properties). El adaptador se conserva como componente Java puro; AIR-014 lo registra como bean bajo perfil demo y expone catálogo/búsqueda HTTP. FlightProvider publica capabilities(), supports(request) y search(request), con un origen por ejecución. Search coordina el fan-out secuencial y conserva los resultados por origen. AIR-015 reconstruye selecciones mediante Search sin introducir otro adaptador.
 
+Precisión de inspección AIR-019: el coordinador ejecutable es `DemoSearchService`, que exige DEMO sin red/credenciales y reconstruye fixtures. Search es aquí la frontera arquitectónica; no existe un coordinador genérico de proveedores reales. Los enums de proveedor/UNVERIFIED no constituyen adaptadores ni instancias de capacidades reales disponibles, y no se habilitan cambiando un flag.
+
 El descriptor servidor publica demo-v1, evaluación simulada 2027-01-01T00:00:00Z, calendario inclusivo de 2027, EUR/USD, D1/D2 y cuatro aeropuertos. Las referencias OPO/MAD/SCQ/BCN se redactaron manualmente a partir de los ejemplos; el cargador comprueba sintaxis y zonas IANA mediante Java 21. No se importó un catálogo externo ni payloads de PoC. Esto no valida una fuente comercial, una licencia de catálogo completo ni disponibilidad real.
 
 | Consulta hacia MAD | Resultado sintético disponible |
@@ -74,6 +76,8 @@ ProviderStatus incluye COMPLETE, EMPTY, PARTIAL, FAILED y UNSUPPORTED. Sus invar
 
 La disponibilidad real de cada capacidad se verificará antes de implementar el adaptador. Que Airwise soporte tres orígenes no significa que el proveedor tenga una operación nativa equivalente: el planificador deberá contabilizar todo el fan-out.
 
+La [matriz técnica AIR-019](../api/PROVIDER_ASSESSMENT.md) añade once capacidades, evidencia PoC frente a documentación e inspección del puerto. Clasificación global de Travelpayouts Data API y SerpApi para el portfolio público: **PENDIENTE DE ACLARACIÓN**; no modifica el descriptor demo ni publica capacidades reales. Incluye ejemplos de consumo por1/3orígenes y fases sin ejecutarlos. Una fase de ida aislada no satisface itinerario ROUND_TRIP; datos opcionales de equipaje desconocidos no fuerzan por sí solos un resultado parcial.
+
 ## Demo determinista
 
 Cada `datasetVersion` identifica inmutablemente fixtures, catálogo, calendario admitido, reglas de generación e `evaluationInstant` simulado. Publicar esa metadata para la UI. No cambiar contenido bajo una misma versión ni permitir al cliente sustituir el reloj. Un cambio exige otra versión; una versión retirada devuelve conflicto explícito.
@@ -104,6 +108,10 @@ Diseño documentado en AIR-019 para una integración posterior expresamente auto
 6. Reutilizar resultados solo si permisos/retención lo permiten; clave incluye consulta canónica y semántica. No cachear para eludir condiciones ni convertir recepción reciente en observación reciente.
 
 AIR-019 documenta la oferta gratuita publicada y el cómputo por proveedor, sin comprobar saldo ni plan de cuenta. Antes de enviar, se necesita control probado y coordinación durable/atómica de reservas entre procesos y reinicios; no se crea infraestructura ahora. Preguntas de permiso y presupuesto abiertas se identifican en la evaluación, con [ADR-0007](../decisions/0007-real-provider-admission.md).
+
+La ampliación AIR-019 concreta topes diarios/mensuales por operación y agregados por proveedor/cuenta, inicialmente0, con ventana propia UTC además del ciclo comercial; saldo/coste/registro/periodo inciertos cierran admisión. Ningún reinicio o cambio de ventana elimina deuda incierta, ni un resultado cacheado devuelve el intento HTTP enviado. Tests/CI nunca usan proveedores reales. El adjunto posterior promueve IMP-008 desde [mejoras](../../planning/IMPROVEMENTS.md) a AIR-021 y autoriza solo el núcleo sintético, sin BD o integración real.
+
+AIR-021 se mantiene separado de FlightProvider/DemoSearchService y de los endpoints. Su [contrato de admisión](PROVIDER_ADMISSION.md) implementa estimación/reserva de intentos y créditos sin usar requiredUnits de búsqueda; memoria compartida solo dentro de un escenario sintético. Reinicio/múltiples procesos/uso real no tienen garantía disponible y sus alcances se rechazan. Verificados42tests nuevos y regresión280 satisfactoria; permisos comerciales y durabilidad siguen pendientes.
 
 ## Conservación y publicación
 

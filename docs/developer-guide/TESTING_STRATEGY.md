@@ -12,6 +12,12 @@ AIR-013 documenta 62 invocaciones satisfactorias: contexto 1, proveedor 18, corp
 
 Las dependencias ya resuelven Jupiter/Platform 6.0.3, parametrizadas, Mockito, AssertJ, MockMvc y soporte Security. No añadir H2, Testcontainers, WireMock, starter genérico o cliente de proveedor para estos casos.
 
+## AIR-021 — admisión sintética aislada
+
+El núcleo de [PROVIDER_ADMISSION](../architecture/PROVIDER_ADMISSION.md) requiere pruebas unitarias nuevas sin Spring, HTTP o credenciales: estimación/overflow/cotas, límites por operación/proveedor/cuenta, reloj y día/mes UTC, evidencia caducada/desconocida, coste no cero/desconocido, reserva completa de flujos, permiso único y reintentos con nueva admisión. Una barrera/latch debe observar la carrera por la última unidad entre dos servicios con **el mismo ledger**; no inferir coordinación de dos ledgers.
+
+Cubrir cancelación antes del inicio, incertidumbre/timeout después, conciliación única y conservadora, fallo de dobles y cierre sin permiso, handles ajenos/recreación, retroceso del reloj, cambios de ventana y retención de deuda. Recuperación/multiproceso/uso real se prueban como rechazo, no como durabilidad simulada. La ausencia de imports/transporte y de wiring se revisa estáticamente; no equivale a aislamiento de red del SO. Compilación, tests pertinentes y regresión completa mediante Wrapper se registrarán con resultados reales en VALIDATION. No se alteran los tests previos para conseguir verde.
+
 | Nivel | Qué observa / límite |
 |---|---|
 | Unitario | Invariantes/aplicación/admisión con reloj y dobles; no acredita cadena servlet |

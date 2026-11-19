@@ -11,5 +11,6 @@ Un ADR registra contexto, decisión, estado, consecuencias y pendientes. **Acept
 | [0005](0005-demo-body-read-deadline.md) | Aceptado en AIR-014 | Plazo absoluto de lectura en HTTP/1.1 NIO demo; acoplamiento y validación |
 | [0006](0006-demo-frontend.md) | Aceptado para implementar AIR-018 | Cliente React/TypeScript/Vite, estado transitorio, CSS propio, pruebas y proxy demo local |
 | [0007](0007-real-provider-admission.md) | Aceptado para el alcance documental AIR-019 | Solo DEMO habilitado; permisos pendientes y admisión futura con presupuesto de 0 € |
+| [0008](0008-synthetic-admission-ledger.md) | Aceptado e implementado en AIR-021 sintético | Memoria compartida en un proceso, sin garantías durables ni uso real;42tests nuevos y regresión280 |
 
 AIR-010 acepta alcance, UX y persistencia aplazada. AIR-011 verifica el contexto demo de test, AIR-012 ratifica los contratos serializados y AIR-013/014/015 implementan el backend demo. AIR-018 autoriza el frontend funcional; su decisión no acredita por sí sola la implementación ni los tests. Esquema eventual PostgreSQL, proveedores y despliegue conservan sus tareas propias. ADR-0001 conserva el historial de la base generada.

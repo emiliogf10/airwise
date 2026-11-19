@@ -77,6 +77,12 @@ En una sesión dedicada, con el mismo aislamiento de entorno descrito arriba, lo
 
 No se sustituyó la configuración de producción ni se omitieron tests. La prueba de contexto conserva su exclusión local a DataSource; las pruebas nuevas del componente son puras y sin servicios externos.
 
+## Núcleo de admisión sintético — AIR-021
+
+IMP-008 se promueve a AIR-021 con autorización de implementación; tarea Hecha tras compilación,42tests específicos y regresión280 satisfactoria. El paquete Java puro `flightprovider.admission` separa estimación, admisión y ledger, sin registrarse en Spring ni conectarse al proveedor demo, endpoints o transporte externo. No incorpora dependencias ni persistencia.
+
+El [contrato de admisión](../architecture/PROVIDER_ADMISSION.md) concentra las reglas de presupuesto, reservas y consumo incierto; [ADR-0008](../decisions/0008-synthetic-admission-ledger.md) limita la garantía a un escenario sintético con una misma instancia de ledger compartida. Memoria no ofrece recuperación tras reinicio ni coordinación multiproceso: esos alcances y la ejecución real se rechazan. La inicialización de un escenario nuevo no acredita recuperación de deuda anterior. Resultados ejecutados y pendientes se registran en [VALIDATION](VALIDATION.md); los resultados históricos de AIR-015 no verifican este nuevo paquete.
+
 ## Configuración y secretos
 
 La aplicación generada solo declara su nombre. No añada conexiones, perfiles o credenciales a esa base sin autorización. Las variables de proveedores se documentan como nombres en la [política de API](../api/PROVIDER_POLICY.md); no se usan para autenticar consultas durante AIR-010. El validador local puede comparar valores disponibles para detectar filtraciones, sin mostrarlos.

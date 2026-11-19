@@ -4,6 +4,8 @@ Inventario inicial del **11/11/2026**, con histórico AIR-011/013 preservado y a
 
 **Actualización AIR-015 del17/11/2026:** módulo flightcomparison y endpoint demo implementados, reutilizando Search para reconstrucción completa. Versiones y15 dependencias sin cambios; no se añadió tecnología de persistencia, frontend o transporte externo. Wrapper offline clean test compila74 fuentes principales y25 de tests:238 pruebas satisfactorias en24 clases JUnit. El histórico181 anterior se conserva como tal; resultados actuales en [VALIDATION](VALIDATION.md).
 
+**Actualización AIR-021 del 19/11/2026, Hecha:** IMP-008 se promueve a un núcleo Java puro en `flightprovider.admission`, sin Spring bean, HTTP, conexión al demo o adaptador real. No añade dependencias ni cambia versiones. El ledger en memoria es contabilidad de un escenario sintético, con atomicidad limitada a servicios que comparten la misma instancia; no es persistencia ni garantiza recuperación o coordinación multiproceso. Contrato y límites en [PROVIDER_ADMISSION](../architecture/PROVIDER_ADMISSION.md) y [ADR-0008](../decisions/0008-synthetic-admission-ledger.md). Compilación,42tests específicos y regresión280 satisfactoria en [VALIDATION](VALIDATION.md), con79fuentesmain/29tests y28clases ejecutadas; las cifras anteriores se conservan como histórico.
+
 ## Base existente
 
 | Elemento | Evidencia observada | Límite de la afirmación |
