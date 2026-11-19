@@ -91,7 +91,7 @@ La instalación npm informó cero vulnerabilidades conocidas en su comprobación
 - **JUnit 5** fue el objetivo documental inicial. AIR-011 comprobó Jupiter/Platform **6.0.3**, gestionados por el parent actual. La propiedad heredada `junit.version=4.13.2` no supone que JUnit 4 participe en las pruebas. El árbol examinado carece de `junit:junit`. Se actualiza la descripción al resultado ejecutado.
 - H2 y Testcontainers están ausentes del árbol resuelto. Una herramienta OpenAPI no aparece como dependencia directa. No hay especificación OpenAPI ejecutable ni Javadoc del dominio.
 - React, TypeScript, Vite y Vitest están instalados para AIR-018. Tailwind CSS, TanStack Query, React Router y Redux no son necesarios para este flujo; Playwright no está instalado como dependencia del proyecto. No confundir herramienta prevista con componente presente.
-- PostgreSQL como servidor, Docker Compose y GitHub Actions: previstos; no se han configurado ni comprobado servicios.
+- PostgreSQL como servidor y Docker Compose: previstos; sin servicios configurados. AIR-020 prepara [GitHub Actions](CI.md) localmente mediante ci.yml, con validación estática y comandos equivalentes Windows; ejecución remota/Linux pendiente. No añade dependencias de producto ni cambia versiones de Java/Node/Python observadas.
 - Monolito modular: dominio/aplicación/proveedor AIR-013, fronteras HTTP y seguridad AIR-014, y flightcomparison.domain/application/api AIR-015. Search expone reconstrucción completa y Comparison no depende de fuentes reales. Adaptadores Travelpayouts/SerpApi siguen sin implementar.
 
 ## Compatibilidad estática revisada en AIR-016

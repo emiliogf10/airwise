@@ -14,13 +14,13 @@ Antes de editar, consulta [AGENTS.md](AGENTS.md), el [backlog](planning/BACKLOG.
 
 - Documentación y mensajes de producto: español claro; código y símbolos: nombres coherentes con su módulo. Conserva el formato del código existente.
 - Commits previstos: `tipo(ámbito): descripción`, con tipos `docs`, `feat`, `fix`, `test`, `refactor`, `build` o `chore`. Incluye el AIR cuando aporte trazabilidad. Ejemplo de formato: `docs(planning): delimitar AIR-010`.
-- No hagas commits, push o publicación sin petición expresa. No hay una política de ramas protegidas aplicada ni CI configurada; se definirán cuando exista un repositorio remoto autorizado.
+- No hagas commits, push o publicación sin petición expresa. AIR-020 prepara un [workflow CI local](docs/developer-guide/CI.md), todavía sin ejecución en GitHub. No hay reglas de ramas protegidas aplicadas; configurar ejecución remota o checks obligatorios requiere autorización y comprobación previa de cuota/gasto.
 - Conserva Javadoc existente. Documenta invariantes, contratos y semántica no evidente; no repitas getters o código obvio.
 - Desconocido no equivale a cero. No mezcles un precio observado, una estimación y un resultado reciente como si fueran una oferta confirmada.
 
 ## Revisión y aceptación
 
-La PR debe explicar problema, cambio, AIR, evidencia y riesgos. Usa la [plantilla](.github/pull_request_template.md). Revisa alcance, corrección, seguridad, pruebas, errores y documentación; las comprobaciones automáticas futuras no sustituyen la revisión.
+La PR debe explicar problema, cambio, AIR, evidencia y riesgos. Usa la [plantilla](.github/pull_request_template.md). Revisa alcance, corrección, seguridad, pruebas, errores y documentación; las comprobaciones automáticas no sustituyen la revisión ni acreditan ejecución remota por tener un YAML.
 
 Un cambio se acepta cuando satisface sus criterios y DoD, no expone secretos, no amplía silenciosamente el alcance y declara lo no comprobado. Las tareas exclusivamente documentales se verifican con enlaces, formatos y coherencia; no requieren arrancar una aplicación que no se cambió.
 

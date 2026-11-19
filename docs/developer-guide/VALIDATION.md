@@ -1,6 +1,40 @@
 # Registro de validación de Airwise
 
-Evidencia desde el **2026-11-11**, actualizada con AIR-019 del **19/11/2026**. Cada apartado conserva su alcance, resultados y límites. AIR-019 solo verifica documentación e integridad; no repite ni acredita nuevas ejecuciones Maven, npm o navegador. Las pruebas de aplicación de AIR-014/015/018 conservan su fecha y alcance históricos.
+Evidencia desde el **2026-11-11**, actualizada con AIR-020 del **19/11/2026**. Cada apartado conserva su alcance, resultados y límites. AIR-020 ejecuta de nuevo comandos locales de build/test para preparar CI; AIR-019 solo verifica documentación e integridad. No se atribuyen ejecuciones nuevas de navegador ni de GitHub a estas tareas.
+
+## AIR-020 — workflow de CI local preparado y verificado
+
+La petición «Prosigue con AIR-020» autoriza preparar la automatización mínima de componentes existentes admitida por la tarea. Dependencias AIR-011/016/018 Hechas; workspace limpio al inicio (HEAD47000c9). Se crea [ci.yml](../../.github/workflows/ci.yml) y la [guía CI](CI.md), con tres jobs independientes y acciones oficiales fijadas por SHA. No se modifican aplicación, POM, Wrapper, dependencias o configuración de producto.
+
+### Ejecuciones locales — 19/11/2026
+
+| Comando / comprobación | Resultado y alcance |
+|---|---|
+| `mvnw.cmd -o --batch-mode --no-transfer-progress -Dmaven.repo.local=<cache-workspace> -Dlogging.level.org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration=ERROR clean test` | Código 0 / BUILD SUCCESS; 238 pruebas, 0 fallos, 0 errores, 0 omitidas. Temurin21.0.12+8/Maven3.10.0 y caché existente; incluye HTTP local y no empaqueta JAR |
+| Supresión de contraseña temporal | `backend-result.json` registra `generatedPasswordPresentBeforeSanitization:false`; el argumento de logger llegó al test. No se alteró su comportamiento de autenticación ni backend |
+| `npm ci --offline --no-audit --no-fund` | Código1 / ENOTCACHED para un tarball; caché insuficiente, no instalación satisfactoria. También se observó falta de permiso para log en caché npm externa; no se cambió configuración global |
+| `npm ci --no-audit --no-fund --cache <workspace>/.local/air020/npm-cache` | Reintento con descarga expresamente autorizado mediante escalación; código0,100paquetes instalados. package.json y package-lock idénticos. No se ejecutó la actualización global sugerida por npm |
+| `npm run typecheck` / `npm run lint` | Ambos código0; sin advertencias |
+| `npm test` | Código0;53 pruebas pasadas y1omitida intencionadamente por integración local opt-in. No servidor Vite/backend separado ni navegador en este job |
+| `npm run build` | Código0;25módulos, JS276,21kB/CSS13,48kB. Primera captura local falló al imprimir el carácter de éxito por cp1252; corregida solo la codificación del helper ignorado y repetido el build con resultado registrado. Sin cambios de producto |
+| `java --class-path .local/air011/repository/org/yaml/snakeyaml/2.6/snakeyaml-2.6.jar .local/air020/ValidateCi.java` | Código0; parser YAML seguro con claves duplicadas rechazadas:3jobs,6usos de acciones fijadas,7comandos; assertions de eventos/permisos/topes/credenciales/política satisfactorias. No schema completo de GitHub ni ejecución del runner |
+| `py -3.14 scripts/validate_repository.py` | Código0; seis TOML, cinco skills,290destinos locales y17tareas, seguridad acotada y directorios comprobados. Contraste histórico fase1 informativo, separado del snapshot AIR-020 |
+| `py -3.14 .local/air020/verify_scope.py` | Código0;152 archivos backend/frontend/skills/Codex idénticos al inicio, validador original sin cambios y cambios limitados a workflow/documentación. Sin valores de claves del entorno, URLs autenticadas, marcadores de claves privadas o espacios finales encontrados en el alcance revisado; no escáner general de secretos |
+| `git diff --check` | Código0; sin errores de whitespace, solo avisos informativos LF/CRLF |
+
+Los helpers/logs se conservan ignorados en `.local/air020/`; el informe permanente no necesita esos archivos para entender los resultados. Los hijos de verificación se ejecutaron sin variables de proveedores ni opciones externas Java/Maven/Spring/Node. No se imprimió el entorno completo ni valores de credenciales. Se reutilizó SnakeYAML disponible en caché, sin instalar validador o herramientas globales. No se repiten tests de negocio después de los últimos cambios exclusivamente documentales.
+
+### Revisión, coordinación y límites
+
+Orchestrator posee workflow y documentación. Delegación real selectiva en `air020_devops_review` (DevOps), exclusivamente lectura: comprobó documentación oficial, SHA de las cuatro acciones, sintaxis de versiones, propiedades Surefire, permisos y política de ejecución. Dio conformidad estática acotada sin bloqueos; se corrigió una frase que podía sugerir precedencia entre jobs que realmente son paralelos. No se atribuyen al revisor los tests del coordinador.
+
+Descubiertas cinco skills locales, catálogo global/sistema y paquetes del catálogo; `review-agent` en disco no demuestra registro en sesión. Aplicadas `task-planning`, `testing-and-review` y `documentation-sync`: alcance/coordinación, comprobación de comandos/política y sincronización, respectivamente. No pertinentes UI, APIs, migraciones o artefactos; no se instalaron skills ni cambiaron agentes/configuración global.
+
+**Pendiente:** primera ejecución real de GitHub, instalación de distribuciones fijadas en Linux y resolución Maven desde clon limpio. Los comandos locales usan Windows/caché Maven preexistente; el workflow invoca Bash y descargará herramientas/dependencias. Se declara Python3.14.7/Node24.21.0/Java21.0.12+8, pero no se acredita que esos assets estén resueltos en runner Linux. No se ha registrado/activado el workflow remotamente, configurado protección de ramas o verificado saldo de Actions.
+
+La guía exige comprobar visibilidad, plan/cuota y controles de gasto antes de activarlo. Timeouts/concurrencia no garantizan coste0€. Sin secretos de proveedores, llamadas API, pagos, contenedores, despliegue, commits o push. Las integraciones frontend opt-in, revisión visual, persistencia, TLS/HTTP2 y empaquetado conservan sus evidencias/límites anteriores; no se presentan como cubiertos por este workflow. La ausencia previa de checksum del Wrapper se conserva y documenta, sin modificar esa base.
+
+DoD satisfecha para el entregable local admitido por AIR-020, tras En curso → En revisión → Hecha. README, inventario, guía, contribución y planificación sincronizados. El cierre no afirma CI remota verde ni inicia otra tarea. El checkpoint temporal se retira solo tras las comprobaciones finales.
 
 ## AIR-019 — permisos y presupuesto: investigación documental completada
 

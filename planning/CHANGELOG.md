@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### 2026-11-19 — workflow local de CI AIR-020
+
+- Añadido `.github/workflows/ci.yml` con tres jobs: validador documental Python, compilación/tests backend mediante Wrapper y frontend con instalación por lockfile, tipos, lint, tests y build.
+- Acciones oficiales fijadas por SHA completo; permisos de lectura, checkout sin persistir credenciales, topes temporales y cancelación por referencia. Sin cachés compartidas, artefactos publicados, despliegue ni secretos de proveedores. Logger de contraseña temporal limitado por argumento de pruebas, sin modificar backend.
+- Verificados localmente 238 tests backend, 53 frontend con 1 integración opt-in omitida, npm ci autorizado, typecheck/lint/build, parser YAML y política. DevOps revisó fuentes oficiales y entrega sin bloqueos; documentación y contribución sincronizadas.
+- AIR-020 Hecha para preparación local. GitHub/Linux y descarga de herramientas en runner pendientes; sin activación remota, commits/push ni gasto de API. Integridad de aplicación/configuración conservada; evidencia en [VALIDATION](../docs/developer-guide/VALIDATION.md).
+
 ### 2026-11-19 — investigación documental AIR-019 completada
 
 - Documentadas condiciones de Travelpayouts Data API y SerpApi Google Flights desde fuentes oficiales públicas, con fecha, alcance acreditado, inferencias y dudas en la [evaluación de proveedores](../docs/api/PROVIDER_ASSESSMENT.md). AIR-019 Hecha tras revisión independiente sin bloqueos y validación documental/local; las dudas externas siguen bloqueando la habilitación real.

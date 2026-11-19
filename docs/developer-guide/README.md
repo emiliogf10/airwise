@@ -97,4 +97,6 @@ O-01 y el plazo total de lectura están corregidos y probados en AIR-014. El tra
 
 ## Agentes y verificación
 
+AIR-020 añade el [workflow CI local y su guía](CI.md): documentación, backend y frontend con versiones fijadas, mínimos permisos y sin proveedores. Comandos equivalentes comprobados en Windows; ejecución de acciones y runner Linux pendientes. La guía distingue instalación, tests, integraciones opt-in y publicación; no se ha hecho push ni activado ajustes remotos.
+
 El [manual de Codex](CODEX_SETUP.md) explica los siete roles, las cinco skills, la activación y la diferencia entre archivo configurado y agente invocado. Consulte [VALIDATION.md](VALIDATION.md) para las comprobaciones reales y sus límites. La sesión principal conserva la responsabilidad de revisar y cerrar una tarea con evidencia.

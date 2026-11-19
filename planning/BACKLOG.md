@@ -190,8 +190,8 @@ AIR-010 autoriza únicamente análisis y documentación de diseño. Las tareas d
 
 - Descripción: definir automatización mínima cuando los componentes y pruebas reales estén disponibles; separar validación y publicación.
 - Prioridad: P2.
-- Estado: Pendiente.
+- Estado: Hecha.
 - Responsable: DevOps Agent.
 - Dependencias: AIR-011, AIR-016, AIR-018.
 - Aceptación: plan o workflow autorizado basado en comandos ejecutados, mínimos permisos y secretos externos; ningún despliegue automático no solicitado.
-- Evidencia: no ejecutada; no se han creado workflows ni contenedores.
+- Evidencia: autorizada el19/11/2026; creado [ci.yml](../.github/workflows/ci.yml) con tres jobs sobre componentes existentes, SHA oficiales, permisos de lectura, timeouts y concurrencia. [Guía CI](../docs/developer-guide/CI.md) separa comprobación local de ejecución GitHub/Linux pendiente. Revisión DevOps real sin bloqueos; integrado matiz de jobs paralelos. Wrapper existente offline `clean test` con logger temporal limitado:238/0fallos/0errores/0omitidas; `npm ci` con descarga autorizada tras caché offline incompleta, `npm test`:53pasadas/1opt-inomitida; typecheck/lint/build0. Parser SnakeYAML seguro/política0, validador documental0 y diff-check0;152hashes backend/frontend/skills/Codex idénticos y validador original sin cambios. En curso → En revisión → Hecha para entrega local; comandos/evidencia/límites en [VALIDATION](../docs/developer-guide/VALIDATION.md). Sin cambios de aplicación, activación remota, publicación, contenedores o APIs; configuración y primera ejecución GitHub siguen pendientes y no son condición acreditada del cierre local.

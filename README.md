@@ -12,7 +12,7 @@ Proyecto de portfolio full stack para explorar y comparar alternativas de viaje:
 | Dependencias backend | Web MVC, Security, Data JPA, Validation, Flyway, PostgreSQL, Actuator y DevTools resueltos | Configuración de persistencia/seguridad de negocio e integración completa |
 | Pruebas | Backend: Jupiter6.0.3 y 238 pruebas históricas. Frontend: 53 casos ordinarios, 1 integración opt-in y revisión asistida en navegador; build/typecheck/lint correctos | Persistencia, TLS/HTTP2 y publicación pendientes; sin certificación integral de accesibilidad |
 | Frontend | React/TypeScript/Vite; búsqueda, filtros/páginas servidor, selección y comparación; responsive/teclado revisados; AIR-018 Hecha | Usuarios, persistencia y proveedores reales aplazados |
-| Infraestructura | Git inicializado y plantillas GitHub | Docker Compose, GitHub Actions, observabilidad y despliegue |
+| Infraestructura | Git, plantillas GitHub y [workflow CI local](docs/developer-guide/CI.md) con tres jobs | Primera ejecución en GitHub/Linux, Docker Compose, observabilidad y despliegue |
 | Documentación | Instrucciones, roles, skills, planificación, ADR y [contratos normalizados](docs/architecture/NORMALIZED_CONTRACTS.md) con [ejemplos JSON](docs/api/EXAMPLES.md) | OpenAPI, Javadoc del dominio y manual de funciones cuando existan |
 
 El [inventario tecnológico](docs/developer-guide/TECHNOLOGY_INVENTORY.md) detalla las 15 dependencias directas y las comprobaciones pendientes. Una dependencia declarada no demuestra que una funcionalidad esté implementada o que el contexto Spring arranque.
@@ -45,7 +45,7 @@ airwise/
 │   ├── config.toml                   # Configuración de agentes del proyecto
 │   └── agents/                       # Seis especialistas TOML
 ├── .agents/skills/                   # Cinco procedimientos reutilizables
-├── .github/                         # Plantillas de issues y PR, sin pipelines
+├── .github/                         # Plantillas y workflows/ci.yml local, sin ejecución remota
 ├── backend/                         # Base Initializr conservada; dominio y API demo añadidos
 ├── frontend/                        # React/TypeScript/Vite; cliente demo AIR-018 verificado
 ├── planning/                        # Roadmap, backlog, mejoras y changelog
